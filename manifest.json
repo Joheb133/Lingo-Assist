@@ -1,0 +1,25 @@
+{
+  "name": "Lingo Assist",
+  "version": "0.1.0",
+  "description": "Learn your duolingo word tree",
+  "permissions": ["storage", "activeTab"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*/*", "http://*/*"],
+      "js": ["contentScript.js"]
+    }
+  ],
+  "action": {
+    "default_icon": {
+      "16": "assets/human-handsup.png",
+      "24": "assets/human-handsup.png",
+      "32": "assets/human-handsup.png"
+    },
+    "default_title": "Lingo Assist",
+    "default_popup": "popup.html"
+  },
+  "manifest_version": 3
+}
