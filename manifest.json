@@ -2,7 +2,7 @@
   "name": "Lingo Assist",
   "version": "0.1.0",
   "description": "Learn your duolingo word tree",
-  "permissions": ["storage", "activeTab"],
+  "permissions": ["storage", "activeTab", "tabs"],
   "background": {
     "service_worker": "background.js"
   },
