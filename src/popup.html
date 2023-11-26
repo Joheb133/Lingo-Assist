@@ -1,9 +1,23 @@
-<link rel="stylesheet" href="/dist/output.css">
+<link rel="stylesheet" href="/dist/output.css" />
 <script type="module" src="popup.js" defer></script>
 
-<div class="w-72">
-  <div>
-    <span>Oh Hi Mark</span>
-    <button>Home page</button>
+<div class="w-72 p-2">
+  <div class="flex-row justify-center items-center">
+    <span class="block">Oh Hi Mark</span>
+    <button
+      class="home-btn box-border p-1 bg-green-400 rounded-sm hover:bg-green-500"
+    >
+      Home page
+    </button>
+    <button
+      class="fetch-btn box-border p-1 bg-red-400 rounded-sm hover:bg-red-500"
+    >
+      Sync Duolingo
+    </button>
+    <button
+      class="clear-btn box-border p-1 bg-blue-400 rounded-sm hover:bg-blue-500"
+    >
+      Clear local storage
+    </button>
   </div>
 </div>
