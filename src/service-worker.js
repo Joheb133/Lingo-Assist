@@ -1,5 +1,5 @@
-chrome.runtime.onMessage.addListener(function (req, sender, sendRes) {
-    if (req.type === 'getDuolingo') {
+chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
+    if (message.type === 'getDuolingo') {
         // Users personal duolingo vocabulary list
         fetch('https://www.duolingo.com/vocabulary/overview', {
         })
@@ -18,14 +18,17 @@ chrome.runtime.onMessage.addListener(function (req, sender, sendRes) {
 
                 storeDuolingoData(res)
                     .then(data => {
-                        sendRes(data)
+                        sendRes({ data })
                     }) // Send the data back as a response
                     .catch(error => {
                         console.log("Error storing data", error)
-                        sendRes(error)
+                        sendRes({ error })
                     })
             })
-            .catch(error => { sendRes({ error: error }) }); // Send an error response
+            .catch(error => { sendRes({ error }) }); // Send an error response
+
+        // Leave message open for async code
+        return true;
     }
 });
 
@@ -71,13 +74,11 @@ function storeDuolingoData(res) {
                 chrome.storage.local.set({ [combinedISO]: storage[combinedISO] }).then(() => {
                     // Log total data used
                     chrome.storage.local.getBytesInUse([combinedISO], (dataUsed) => {
-                        console.log(`Data stored successfully...${dataUsed} bytes used`);
-                        console.log(storage[combinedISO])
+                        console.log(`${dataUsed} bytes used`);
                         resolve(storage[combinedISO])
                     });
                 });
             } catch (error) {
-                console.log(error)
                 reject(error);
             }
         });
