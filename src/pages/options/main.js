@@ -33,15 +33,23 @@ function showLocalVocab() {
         for (const [key, value] of Object.entries(obj)) {
             const row = document.createElement("tr")
             const word = document.createElement("td")
-            word.innerText = key
+            word.innerText = formatText(key)
 
             const translation = document.createElement("td")
-            translation.innerText = value
+            translation.innerText = formatText(value)
             row.appendChild(word)
             row.appendChild(translation)
             table.appendChild(row)
         }
     })
+
+    function formatText(string) {
+        // replace underscore with space
+        let formattedText = string.replace(/_/g, ' ')
+        formattedText = formattedText.charAt(0).toUpperCase() + formattedText.slice(1)
+
+        return formattedText
+    }
 }
 
 function clearTable() {
