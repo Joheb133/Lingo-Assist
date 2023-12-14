@@ -1,5 +1,5 @@
 chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
-    if (message.type === 'getDuolingo') {
+    if (message.type === 'syncDuolingo') {
         // Users personal duolingo vocabulary list
         fetch('https://www.duolingo.com/vocabulary/overview', {
         })

@@ -1,17 +1,43 @@
-// Fetch data from duolingo
+let currentISO = 'es_en';
+
+async function syncDuolingo() {
+    try {
+        const res = await chrome.runtime.sendMessage({ type: 'syncDuolingo' });
+        if (res.error) {
+            console.error('Error syncing Duolingo', res.error);
+            return false;
+        } else {
+            showLocalVocab();
+            return true;
+        }
+    } catch (error) {
+        console.error('Error syncing Duolingo', error);
+        return false;
+    }
+}
+
+async function isSignedIn() {
+    const loadingSVG = document.querySelector("#loading-svg")
+    const failSVG = document.querySelector("#cross-svg")
+    const successSVG = document.querySelector("#check-svg")
+
+    loadingSVG.classList.replace("hidden", "inline")
+
+    if (await syncDuolingo()) {
+        loadingSVG.classList.replace("inline", "hidden")
+        successSVG.classList.replace("hidden", "inline")
+    } else {
+        loadingSVG.classList.replace("inline", "hidden")
+        failSVG.classList.replace("hidden", "inline")
+    }
+}
+
+isSignedIn()
+
 const fetchBtn = document.querySelector('.fetch-btn');
 fetchBtn.addEventListener('click', function () {
-    chrome.runtime.sendMessage({ type: 'getDuolingo' }).then((res) => {
-        if (res.error) {
-            console.error('Error syncing Duolingo', res.error)
-        } else {
-            showLocalVocab()
-        }
-    })
+    syncDuolingo()
 });
-
-// Set current language
-const currentISO = 'es_en';
 
 // Clear stored data
 const clearBtn = document.querySelector('.clear-btn');
