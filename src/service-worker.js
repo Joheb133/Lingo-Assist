@@ -17,8 +17,8 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
                 }
 
                 storeDuolingoData(res)
-                    .then(data => {
-                        sendRes(data)
+                    .then(ISO => {
+                        sendRes(ISO)
                     })
                     .catch(error => {
                         console.log("Error storing data", error)
@@ -87,7 +87,7 @@ function storeDuolingoData(res) {
                     // Log total data used
                     chrome.storage.local.getBytesInUse([combinedISO], (dataUsed) => {
                         console.log(`${dataUsed} bytes used`);
-                        resolve(true)
+                        resolve(combinedISO)
                     });
                 });
             } catch (error) {

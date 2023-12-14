@@ -1,4 +1,4 @@
-let currentISO = 'es_en';
+let currentISO;
 
 async function syncDuolingo() {
     try {
@@ -7,6 +7,7 @@ async function syncDuolingo() {
             console.error('Error syncing Duolingo', res.error);
             return false;
         } else {
+            currentISO = res
             showLocalVocab();
             return true;
         }
@@ -39,6 +40,7 @@ fetchBtn.addEventListener('click', function () {
     syncDuolingo()
 });
 
+/* REMOVE from development */
 // Clear stored data
 const clearBtn = document.querySelector('.clear-btn');
 clearBtn.addEventListener('click', function () {
@@ -46,7 +48,13 @@ clearBtn.addEventListener('click', function () {
     clearTable()
 })
 
+// TODO: Add ability to manually choose languages
 function showLocalVocab() {
+    if (!currentISO) {
+        console.log("No language selected...Please sign into Duolingo")
+        return
+    }
+
     chrome.runtime.sendMessage({ type: 'getLocalVocab', ISO: currentISO }).then((res) => {
         if (!res.isData) return
 
@@ -85,5 +93,3 @@ function clearTable() {
     table.innerHTML = ''
     table.appendChild(headings)
 }
-
-showLocalVocab()
