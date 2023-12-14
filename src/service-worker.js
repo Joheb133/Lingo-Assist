@@ -18,8 +18,8 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
 
                 storeDuolingoData(res)
                     .then(data => {
-                        sendRes({ data })
-                    }) // Send the data back as a response
+                        sendRes(data)
+                    })
                     .catch(error => {
                         console.log("Error storing data", error)
                         sendRes({ error })
@@ -29,6 +29,18 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
 
         // Leave message open for async code
         return true;
+    }
+
+    if (message.type === 'getLocalVocab') {
+        const combinedISO = message.ISO;
+        chrome.storage.local.get(combinedISO).then((res) => {
+            if (Object.entries(res).length === 0) { // No data
+                sendRes({ isData: false })
+            } else {
+                sendRes({ isData: true, data: res })
+            }
+        })
+        return true
     }
 });
 
@@ -75,7 +87,7 @@ function storeDuolingoData(res) {
                     // Log total data used
                     chrome.storage.local.getBytesInUse([combinedISO], (dataUsed) => {
                         console.log(`${dataUsed} bytes used`);
-                        resolve(storage[combinedISO])
+                        resolve(true)
                     });
                 });
             } catch (error) {
