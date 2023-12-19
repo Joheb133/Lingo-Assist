@@ -1,3 +1,5 @@
+import { ISO_to_words } from "./ISO.js";
+
 let currentISO;
 
 async function syncDuolingo() {
@@ -8,6 +10,7 @@ async function syncDuolingo() {
             return false;
         } else {
             currentISO = res
+            displayLanguages(res)
             showLocalVocab();
             return true;
         }
@@ -35,6 +38,17 @@ async function isSignedIn() {
 
 isSignedIn()
 
+function displayLanguages(combinedISO) {
+    const learningEl = document.getElementById('learning-language')
+    const nativeEl = document.getElementById('native-language')
+
+    const learningISO = combinedISO.split('_')[0]
+    const nativeISO = combinedISO.split('_')[1]
+
+    learningEl.innerText = ISO_to_words[learningISO]
+    nativeEl.innerText = ISO_to_words[nativeISO]
+}
+
 const fetchBtn = document.querySelector('.fetch-btn');
 fetchBtn.addEventListener('click', function () {
     syncDuolingo()
@@ -61,20 +75,25 @@ function showLocalVocab() {
         clearTable()
 
         const obj = res.data[currentISO];
-        const table = document.querySelector("#vocab-table")
+        const tableEl = document.querySelector("#vocab-table")
+        const bodyEl = document.createElement('tbody')
 
-        // Populate table with vocab
+        // Populate table body with vocab
         for (const [key, value] of Object.entries(obj)) {
             const row = document.createElement("tr")
+
             const word = document.createElement("td")
             word.innerText = formatText(key)
 
             const translation = document.createElement("td")
             translation.innerText = formatText(value)
-            row.appendChild(word)
-            row.appendChild(translation)
-            table.appendChild(row)
+
+            row.append(word, translation)
+
+            bodyEl.appendChild(row)
         }
+
+        tableEl.appendChild(bodyEl)
     })
 
     function formatText(string) {

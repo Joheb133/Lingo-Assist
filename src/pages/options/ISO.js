@@ -1,6 +1,6 @@
 // ISO 639-1
 
-const ISO_to_words = {
+export const ISO_to_words = {
     "af": "Afrikaans",
     "sq": "Albanian",
     "am": "Amharic",

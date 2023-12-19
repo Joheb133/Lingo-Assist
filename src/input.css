@@ -1,27 +1,23 @@
 @tailwind components;
 @tailwind utilities;
 
-.container {
-    width: 280px;
-}
-
 table {
-    width: 600px;
-    border-collapse: collapse;
-    margin: 8px;
+  border-collapse: collapse;
+  margin: 8px 0;
 }
 
 th {
-    font-size: 20px;
-    font-weight: 500;
-    text-align: left;
+  font-size: 20px;
+  font-weight: 500;
+  text-align: left;
 }
 
 td {
-    font-size: 16px;
+  font-size: 16px;
 }
 
-table, th, td {
-    border: 1px solid black;
+table,
+th,
+td {
+  border: 1px solid black;
 }
-
