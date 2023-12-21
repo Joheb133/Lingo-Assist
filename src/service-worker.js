@@ -8,6 +8,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
                 if (!res.ok) {
                     console.log(res)
                     throw new Error(res.statusText)
+                } else if (res.headers.get('Content-Type').includes('text/html')) {
+                    // Duolingo redirects if Auth token invalid
+                    throw new Error('Content-type unusable: text/html...Please login Duolingo')
                 }
                 return res.json()
             })
@@ -25,7 +28,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
                         sendRes({ error })
                     })
             })
-            .catch(error => { sendRes({ error }) }); // Send an error response
+            .catch(error => {
+                sendRes({ error: error.message })
+            });
 
         // Leave message open for async code
         return true;
@@ -35,9 +40,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
         const combinedISO = message.ISO;
         chrome.storage.local.get(combinedISO).then((res) => {
             if (Object.entries(res).length === 0) { // No data
-                sendRes({ isData: false })
+                sendRes({ error: `No data exists on ${combinedISO}` })
             } else {
-                sendRes({ isData: true, data: res[combinedISO] })
+                sendRes(res[combinedISO])
             }
         })
         return true
@@ -91,6 +96,7 @@ function storeDuolingoData(res) {
                     });
                 });
             } catch (error) {
+                console.log(error)
                 reject(error);
             }
         });

@@ -31,7 +31,7 @@ async function initDuolingoSync() {
         // it doesn't justify Promise.all()
         displayLocalVocab(await getLocalVocab(combinedISO))
         displayLanguages(combinedISO)
-        failEl.innerText = !syncStatus ? 'Failed to login Duolingo, please login to sync vocab. Now using cached code course' : ''
+        failEl.innerText = !syncStatus ? 'Failed to login Duolingo, please login to sync vocab. Using cached code course instead' : ''
     } else {
         failEl.innerText = 'Failed to login Duolingo, please login to sync vocab. No course code cached'
     }

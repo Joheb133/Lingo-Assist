@@ -7,7 +7,7 @@ export async function syncDuolingo() {
     try {
         const combinedISO = await chrome.runtime.sendMessage({ type: 'syncDuolingo' });
         if (combinedISO.error) {
-            throw new Error(combinedISO.error);
+            throw combinedISO.error;
         }
         localStorage.setItem('combinedISO', combinedISO)
         return true;
@@ -25,10 +25,10 @@ export async function syncDuolingo() {
 export async function getLocalVocab(combinedISO) {
     try {
         const res = await chrome.runtime.sendMessage({ type: 'getLocalVocab', ISO: combinedISO });
-        if (!res.isData) {
-            throw new Error(res.error);
+        if (res.error) {
+            throw res.error;
         }
-        return res.data;
+        return res;
     } catch (error) {
         console.error(`Error returning vocab on ${combinedISO}.`, error);
         return false
