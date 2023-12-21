@@ -1,4 +1,4 @@
-// ISO 639-1
+// Map follows Microsoft Azure translation API ISO
 
 export const ISO_to_words = {
     "af": "Afrikaans",

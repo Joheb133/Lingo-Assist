@@ -5,13 +5,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="/dist/output.css" />
-  <script src="main.js" defer type="module"></script>
+  <script src="scripts/main.js" defer type="module"></script>
   <title>Lingo Assist home page</title>
 </head>
 
 <body>
   <section class="m-4">
-    <button class="fetch-btn box-border p-1 bg-red-400 rounded-sm hover:bg-red-500">
+    <button class="duolingo-sync-btn box-border p-1 bg-red-400 rounded-sm hover:bg-red-500">
       Sync Duolingo
     </button>
     <button class="clear-btn box-border p-1 bg-blue-400 rounded-sm hover:bg-blue-500">
@@ -28,9 +28,10 @@
         Your browser does not support SVGs.
       </object>
     </div>
-    <div class="text-base">
+    <div class="text-base duolingo-msg-el">
       <span>On Duolingo...you're currently learning: <span id="learning-language" class="font-bold"></span></span><br>
-      <span>Your native language is: <span id="native-language" class="font-bold"></span></span>
+      <span>Your native language is: <span id="native-language" class="font-bold"></span></span><br>
+      <span id="fail-el" class="text-red-700"></span>
     </div>
     <table id="vocab-table" class="w-2/3">
       <thead>
