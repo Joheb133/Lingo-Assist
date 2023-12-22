@@ -21,22 +21,27 @@ async function initDuolingoSync() {
     const failEl = document.querySelector('.duolingo-msg-el').querySelector('#fail-el')
     failEl.innerText = ''
 
+    const baseFailMsg = 'Failed to login Duolingo, please login to sync vocab. '
+
     displayLoginStatus(login.LOADING)
     // syncDuolingo changes localStorage so await here is important
     const syncStatus = await syncDuolingo()
     const combinedISO = localStorage.getItem('combinedISO')
-
-    if (combinedISO !== null) {
-        // Don't care when displayLocalVocab is executed, only using await because it's so quick
-        // it doesn't justify Promise.all()
-        displayLocalVocab(await getLocalVocab(combinedISO))
-        displayLanguages(combinedISO)
-        failEl.innerText = !syncStatus ? 'Failed to login Duolingo, please login to sync vocab. Using cached code course instead' : ''
-    } else {
-        failEl.innerText = 'Failed to login Duolingo, please login to sync vocab. No course code cached'
-    }
+    const vocab = await getLocalVocab(combinedISO)
 
     displayLoginStatus(syncStatus ? login.SUCCESS : login.FAIL)
+
+    if (combinedISO) {
+        displayLanguages(combinedISO)
+    }
+
+    if (!vocab || Object.keys(vocab).length === 0) {
+        failEl.innerText = `${syncStatus ? '' : baseFailMsg} ${combinedISO === null ? 'No course code cached' : 'No vocab in storage'}`
+        return
+    }
+
+    displayLocalVocab(vocab)
+    failEl.innerText = !syncStatus ? baseFailMsg + 'Using cached code course instead' : ''
 }
 
 initDuolingoSync()
