@@ -2,7 +2,6 @@
   "name": "lingo-assist",
   "version": "0.1.0",
   "description": "A website and plugin to assist learning languages with Duolingo.",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
