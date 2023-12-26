@@ -1,3 +1,5 @@
+import { API_KEY } from "../config.js";
+
 chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
     if (message.type === 'syncDuolingo') {
         // Users personal duolingo vocabulary list
@@ -34,6 +36,10 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
 
         // Leave message open for async code
         return true;
+    }
+
+    if (message.type === 'requestTranslations') {
+
     }
 
     if (message.type === 'getLocalVocab') {

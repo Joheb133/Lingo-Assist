@@ -34,3 +34,20 @@ export async function getLocalVocab(combinedISO) {
         return false
     }
 }
+
+/**
+ * @param {string} combinedISO
+ * @return {Promise<true|Error>}
+ */
+export async function requestTranslations(combinedISO) {
+    try {
+        const res = await chrome.runtime.sendMessage({ type: 'requestTranslations', combinedISO })
+        if (res.error) {
+            throw res.error
+        }
+        return true;
+    } catch (error) {
+        console.error('Error translating', error)
+        return false
+    }
+}
