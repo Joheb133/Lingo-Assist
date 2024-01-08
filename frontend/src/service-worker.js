@@ -1,4 +1,5 @@
 import { API_KEY } from "../config.js";
+import { convertBytes } from "./utils/convertBytes.js";
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
     if (message.type === 'syncDuolingo') {
