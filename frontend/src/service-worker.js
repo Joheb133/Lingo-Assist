@@ -38,6 +38,8 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
         return true;
     }
 
+    // send back an object
+    // object should contain info like the type of word it is (determined by duolingo)
     if (message.type === 'requestTranslations') {
 
     }
@@ -74,7 +76,14 @@ function storeDuolingoData(res) {
             // apply logic to each element and return new array
             const word = element.word_string;
             const formattedWord = word.replace(/\s+/g, "_");
-            return formattedWord;
+
+            return {
+                [formattedWord]: {
+                    infinitive: element.infinitive,
+                    pos: element.pos,
+                    translation: "",
+                }
+            };
         });
 
         // Store data under combined ISO
@@ -84,9 +93,10 @@ function storeDuolingoData(res) {
                 storage[combinedISO] = storage[combinedISO] || {}
                 let wordsAdded = 0;
 
-                vocabList.forEach(word => {
+                vocabList.forEach(element => {
+                    const word = Object.keys(element)[0]
                     if (!storage[combinedISO].hasOwnProperty(word)) {
-                        storage[combinedISO][word] = "";
+                        storage[combinedISO][word] = element[word];
                         wordsAdded++;
                     }
                 });

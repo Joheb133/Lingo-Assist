@@ -41,7 +41,7 @@ export async function getLocalVocab(combinedISO) {
  */
 export async function requestTranslations(combinedISO) {
     try {
-        const res = await chrome.runtime.sendMessage({ type: 'requestTranslations', combinedISO })
+        const res = await chrome.runtime.sendMessage({ type: 'requestTranslations', ISO: combinedISO })
         if (res.error) {
             throw res.error
         }

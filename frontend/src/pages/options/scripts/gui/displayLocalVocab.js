@@ -20,7 +20,7 @@ export default function displayLocalVocab(obj) {
         word.innerText = convertSnakeCase(key, true)
 
         const translation = document.createElement("td")
-        translation.innerText = convertSnakeCase(value, true)
+        translation.innerText = convertSnakeCase(value.translation, true)
 
         row.append(word, translation)
 
