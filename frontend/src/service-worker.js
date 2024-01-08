@@ -42,7 +42,42 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
     // send back an object
     // object should contain info like the type of word it is (determined by duolingo)
     if (message.type === 'requestTranslations') {
+        const combinedISO = message.ISO
+        chrome.storage.local.get(combinedISO).then((res) => {
+            if (Object.entries(res).length === 0) return
 
+            const wordsObj = res[combinedISO]
+            const untranslatedWords = (() => {
+                const array = Object.entries(wordsObj)
+                    .filter(([key, value]) => value.translation.length === 0);
+                const object = Object.fromEntries(array)
+                return { [combinedISO]: object }
+            })()
+
+            const url = 'http://localhost:7071/api/dictionary'
+            const options = {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(untranslatedWords)
+            }
+
+            fetch(url, options)
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error(res.statusText)
+                    }
+
+                    return res.json()
+                })
+                .then(data => {
+                    console.log(data)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        })
     }
 
     if (message.type === 'getLocalVocab') {
@@ -108,7 +143,7 @@ function storeDuolingoData(res) {
                 chrome.storage.local.set({ [combinedISO]: storage[combinedISO] }).then(() => {
                     // Log total data used
                     chrome.storage.local.getBytesInUse([combinedISO], (dataUsed) => {
-                        console.log(`${dataUsed} bytes used`);
+                        console.log(`${convertBytes(dataUsed)} used`);
                         resolve(combinedISO)
                     });
                 });
