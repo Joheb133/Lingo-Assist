@@ -56,7 +56,12 @@ app.http('dictionary', {
 
             await Promise.all(wordPromises);
 
-            return { body: [JSON.stringify(words)] }
+            return {
+                body: [JSON.stringify(words)],
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
 
         } catch (error) {
             context.error(`Error processing request ${error.message}`)
@@ -77,7 +82,7 @@ async function getWiktionary(ISO, word) {
     const options = {
         method: 'GET',
         headers: {
-            'User-Agent': `dictionary/${email}`
+            'User-Agent': `dictionary/${email}`,
         }
     }
 
@@ -99,7 +104,14 @@ async function getWiktionary(ISO, word) {
  */
 
 function transformWord(response, wordObj, isInfinitive = false) {
-    const resWordObj = response.find(obj => obj.partOfSpeech.toLowerCase() === wordObj.pos.toLowerCase()) || response[0];
+    let resWordObj;
+    response.forEach(obj => {
+        if (wordObj.pos && obj.partOfSpeech.toLowerCase() === wordObj.pos.toLowerCase()) {
+            resWordObj = obj
+        } else {
+            resWordObj = response[0]
+        }
+    })
 
     const infinitive = wordObj.infinitive
     const pos = isInfinitive ? 'Infinitive' : resWordObj.partOfSpeech
@@ -111,9 +123,8 @@ function transformWord(response, wordObj, isInfinitive = false) {
     };
 
     if (resWordObj.definitions[0].parsedExamples) {
-        console.log(true)
-        example.native = resWordObj.definitions[0].parsedExamples[0].example || null;
-        example.translation = resWordObj.definitions[0].parsedExamples[0].translation || null;
+        example.native = resWordObj.definitions[0].parsedExamples[0].example;
+        example.translation = resWordObj.definitions[0].parsedExamples[0].translation;
     }
 
     return {
