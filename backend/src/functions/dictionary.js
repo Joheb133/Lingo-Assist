@@ -113,7 +113,7 @@ function transformWord(response, wordObj, isInfinitive = false) {
         }
     })
 
-    const infinitive = wordObj.infinitive
+    const infinitive = isInfinitive ? null : wordObj.infinitive
     const pos = isInfinitive ? 'Infinitive' : resWordObj.partOfSpeech
     const translation = resWordObj.definitions[0].definition;
 
