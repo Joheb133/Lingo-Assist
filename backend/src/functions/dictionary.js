@@ -1,4 +1,5 @@
 const { app } = require('@azure/functions');
+const removeHtmlTags = require('../utils/removeHtmlTags')
 
 app.http('dictionary', {
     methods: ['POST'],
@@ -103,7 +104,7 @@ function generateWordData(response, wordObj, isInfinitive = false) {
 
     const infinitive = isInfinitive ? null : wordObj.infinitive
     const pos = isInfinitive ? 'Infinitive' : resWordObj.partOfSpeech
-    const translation = resWordObj.definitions[0].definition;
+    const translation = removeHtmlTags(resWordObj.definitions[0].definition);
 
     let example = {
         native: null,
@@ -111,8 +112,8 @@ function generateWordData(response, wordObj, isInfinitive = false) {
     };
 
     if (resWordObj.definitions[0].parsedExamples) {
-        example.native = resWordObj.definitions[0].parsedExamples[0].example;
-        example.translation = resWordObj.definitions[0].parsedExamples[0].translation;
+        example.native = removeHtmlTags(resWordObj.definitions[0].parsedExamples[0].example);
+        example.translation = removeHtmlTags(resWordObj.definitions[0].parsedExamples[0].translation);
     }
 
     return { infinitive, pos, translation, example }
