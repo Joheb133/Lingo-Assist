@@ -12,5 +12,5 @@ module.exports = function removeHtmlTags(htmlString) {
     parser.write(htmlString);
     parser.end();
 
-    return result;
+    return result.trim();
 }

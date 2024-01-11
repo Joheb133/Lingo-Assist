@@ -134,8 +134,21 @@ async function processWord(combinedISO, word, wordObj, words, isInfinitive = fal
     words[combinedISO][word] = {};
     try {
         const res = await getWiktionary(learningISO, word);
-        const newWord = generateWordData(res, wordObj, isInfinitive);
-        words[combinedISO][word] = newWord;
+        const wordData = generateWordData(res, wordObj, isInfinitive);
+        words[combinedISO][word] = wordData;
+
+        if (wordObj.infinitive !== null) return
+
+        const match = wordData.translation.match(/(?:of\s)([a-zA-Z]+)\b/);
+        const foundWord = match ? match[1] : null;
+
+        // If the word is labeled an infinitive by Wiktionary but not the client
+        if (foundWord) {
+            wordData.infinitive = foundWord
+            words[combinedISO][word] = wordData;
+            // Search the extracted word
+            await processWord(combinedISO, foundWord, {}, words, true)
+        }
     } catch (err) {
         console.error(`Error processing ${isInfinitive ? 'infinitive' : 'word'} "${isInfinitive ? wordObj.infinitive : word}": ${err.message}`);
     }
