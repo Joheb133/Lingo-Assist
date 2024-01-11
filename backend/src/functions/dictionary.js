@@ -15,49 +15,31 @@ app.http('dictionary', {
                 };
             }
 
-            const data = await req.json()
-            const [ISO, wordObjs] = Object.entries(data)[0];
-            const learningISO = ISO.split('_')[0]
+            const requestData = await req.json()
+            const [combinedISO, wordObjs] = Object.entries(requestData)[0];
 
-            let words = {
-                [ISO]: {}
+            const words = { // update var with new data for each word
+                [combinedISO]: {}
             }
 
-            const wordPromises = [];
-
-            Object.entries(wordObjs).forEach(([key, value]) => {
+            const wordPromises = Object.entries(wordObjs).flatMap(([key, value]) => {
                 const word = key;
                 const wordObj = value;
+                const wordPromise = processWord(combinedISO, word, wordObj, words);
 
+                // Check if the word has a valid infinitive
                 if (wordObj.infinitive !== null) {
-                    const infinitivePromise = getWiktionary(learningISO, wordObj.infinitive)
-                        .then(res => {
-                            const newWord = transformWord(res, wordObj, true);
-                            words[ISO][wordObj.infinitive] = newWord;
-                        })
-                        .catch(err => {
-                            context.error(`Error processing infinitive "${wordObj.infinitive}": ${err.message}`);
-                        });
-
-                    wordPromises.push(infinitivePromise);
+                    const infinitivePromise = processWord(combinedISO, wordObj.infinitive, wordObj, words, true);
+                    return [wordPromise, infinitivePromise];
                 }
 
-                const wordPromise = getWiktionary(learningISO, word)
-                    .then(res => {
-                        const newWord = transformWord(res, wordObj);
-                        words[ISO][word] = newWord;
-                    })
-                    .catch(err => {
-                        context.error(`Error processing word "${word}": ${err.message}`);
-                    });
-
-                wordPromises.push(wordPromise);
+                return [wordPromise];
             });
 
             await Promise.all(wordPromises);
 
             return {
-                body: [JSON.stringify(words)],
+                body: JSON.stringify(words),
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -74,6 +56,13 @@ app.http('dictionary', {
         }
     }
 });
+
+/**
+ * Return a promise of a fetch request to Wiktionary
+ * We request a specific word from Wik
+ * @param {string} ISO 
+ * @param {string} word
+ */
 
 async function getWiktionary(ISO, word) {
 
@@ -99,17 +88,18 @@ async function getWiktionary(ISO, word) {
 }
 
 /**
+ * This functions fills in the details of a word and returns that
+ * data as an object. This data is specific to each word
  * @param {Array<object>} response 
  * @param {object} wordObj
+ * @return {object}
  */
 
-function transformWord(response, wordObj, isInfinitive = false) {
-    let resWordObj;
+function generateWordData(response, wordObj, isInfinitive = false) {
+    let resWordObj = response[0];
     response.forEach(obj => {
         if (wordObj.pos && obj.partOfSpeech.toLowerCase() === wordObj.pos.toLowerCase()) {
             resWordObj = obj
-        } else {
-            resWordObj = response[0]
         }
     })
 
@@ -127,10 +117,26 @@ function transformWord(response, wordObj, isInfinitive = false) {
         example.translation = resWordObj.definitions[0].parsedExamples[0].translation;
     }
 
-    return {
-        infinitive,
-        pos,
-        translation,
-        example
+    return { infinitive, pos, translation, example }
+}
+
+/**
+ * Combine getWiktionary and generateWordData
+ * add that result to words
+ * @param {string} combinedISO learningISO_nativeISO
+ * @param {string} word word to lookup on Wiktionary
+ * @param {object} wordObj data associated with word
+ * @param {object} words object to hold all words
+ * @param {boolean} isInfinitive 
+ */
+
+async function processWord(combinedISO, word, wordObj, words, isInfinitive = false) {
+    const learningISO = combinedISO.split('_')[0]
+    try {
+        const res = await getWiktionary(learningISO, word);
+        const newWord = generateWordData(res, wordObj, isInfinitive);
+        words[combinedISO][word] = newWord;
+    } catch (err) {
+        console.error(`Error processing ${isInfinitive ? 'infinitive' : 'word'} "${isInfinitive ? wordObj.infinitive : word}": ${err.message}`);
     }
 }
