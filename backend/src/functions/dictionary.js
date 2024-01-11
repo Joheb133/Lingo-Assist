@@ -18,9 +18,7 @@ app.http('dictionary', {
             const requestData = await req.json()
             const [combinedISO, wordObjs] = Object.entries(requestData)[0];
 
-            const words = { // update var with new data for each word
-                [combinedISO]: {}
-            }
+            const words = { [combinedISO]: {} } // update var with new data for each word
 
             const wordPromises = Object.entries(wordObjs).flatMap(([key, value]) => {
                 const word = key;
@@ -28,7 +26,7 @@ app.http('dictionary', {
                 const wordPromise = processWord(combinedISO, word, wordObj, words);
 
                 // Check if the word has a valid infinitive
-                if (wordObj.infinitive !== null) {
+                if (wordObj.infinitive !== null && !words[combinedISO][wordObj.infinitive]) {
                     const infinitivePromise = processWord(combinedISO, wordObj.infinitive, wordObj, words, true);
                     return [wordPromise, infinitivePromise];
                 }
@@ -132,6 +130,7 @@ function generateWordData(response, wordObj, isInfinitive = false) {
 
 async function processWord(combinedISO, word, wordObj, words, isInfinitive = false) {
     const learningISO = combinedISO.split('_')[0]
+    words[combinedISO][word] = {};
     try {
         const res = await getWiktionary(learningISO, word);
         const newWord = generateWordData(res, wordObj, isInfinitive);
