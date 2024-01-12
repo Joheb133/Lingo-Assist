@@ -15,8 +15,8 @@ module.exports = async function processWord(combinedISO, word, wordObj, words, i
     const learningISO = combinedISO.split('_')[0]
     words[combinedISO][word] = {};
     try {
-        const res = await getWiktionary(learningISO, word);
-        const wordData = generateWordData(res, wordObj, isInfinitive);
+        const res = await getWiktionary(word);
+        const wordData = generateWordData(res[learningISO], wordObj, isInfinitive);
         words[combinedISO][word] = wordData;
 
         // No need to check if Wiktionary thinks the word is an infinitive 

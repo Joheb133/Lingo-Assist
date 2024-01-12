@@ -13,6 +13,11 @@ const removeHtmlTags = require('../../utils/removeHtmlTags')
 
 module.exports = function generateWordData(response, wordObj, isInfinitive = false) {
 
+    if (!response) {
+        console.error('Error: Word not found')
+        return wordObj
+    }
+
     // The same word can have multiple meanings
     let resWordObj = response[0]; // Take the first meaning
     response.forEach(obj => {
