@@ -10,17 +10,18 @@ const processWord = require('./processWord')
  */
 
 module.exports = function returnWordPromises(words, wordObjs, combinedISO) {
-    return Object.entries(wordObjs).flatMap(([key, value]) => {
+    const promises = []
+    Object.entries(wordObjs).forEach(([key, value]) => {
         const word = key;
         const wordObj = value;
-        const wordPromise = processWord(combinedISO, word, wordObj, words, false);
+        promises.push(() => processWord(promises, combinedISO, word, wordObj, words, false));
 
         // Check if the word is marked as an infinitive by the client & not already fetched and stored in "words"
         if (wordObj.infinitive !== null && !words[combinedISO][wordObj.infinitive]) {
-            const infinitivePromise = processWord(combinedISO, wordObj.infinitive, wordObj, words, true);
-            return [wordPromise, infinitivePromise];
+            words[combinedISO][wordObj.infinitive] = {};
+            promises.push(() => processWord(promises, combinedISO, wordObj.infinitive, wordObj, words, true));
         }
-
-        return [wordPromise];
     });
+
+    return promises;
 }

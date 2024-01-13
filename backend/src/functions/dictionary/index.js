@@ -1,8 +1,10 @@
 const { app } = require('@azure/functions');
 const returnWordPromises = require('./returnWordPromises');
+const chunkPromises = require('./chunkPromises')
 
-const REQUEST_LIMIT = 5;
-const TIME_INTERVAL = 1500; //ms
+const REQUEST_LIMIT = 100;
+const TIME_INTERVAL = 1000; //ms
+const TIME_OUT = 2 * 60 * 1000 // 1 minute
 
 // 100 req/2s
 
@@ -28,12 +30,24 @@ app.http('dictionary', {
 
             const wordPromises = returnWordPromises(words, wordObjs, combinedISO)
 
-            await Promise.all(wordPromises);
+            const chunkResult = await chunkPromises(wordPromises, REQUEST_LIMIT, TIME_INTERVAL, TIME_OUT)
 
-            return {
-                body: JSON.stringify(words),
-                headers: {
-                    'Content-Type': 'application/json'
+            if (chunkResult) {
+                return {
+                    status: 200,
+                    body: JSON.stringify(words),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            } else {
+                return {
+                    status: 206,
+                    body: JSON.stringify(words),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Status-Message': 'Partial response due to timeout'
+                    }
                 }
             }
 

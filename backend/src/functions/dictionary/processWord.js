@@ -11,7 +11,7 @@ const generateWordData = require('./generateWordData')
  * @param {boolean} isInfinitive 
  */
 
-module.exports = async function processWord(combinedISO, word, wordObj, words, isInfinitive = false, recursionCount = 0) {
+module.exports = async function processWord(promises, combinedISO, word, wordObj, words, isInfinitive = false, recursionCount = 0) {
     const learningISO = combinedISO.split('_')[0]
     words[combinedISO][word] = {};
 
@@ -22,7 +22,7 @@ module.exports = async function processWord(combinedISO, word, wordObj, words, i
 
         // No need to check if Wiktionary thinks the word is an infinitive 
         // if the client has that set. This case is already handled in the "handler"
-        if (wordObj.infinitive !== null) return
+        if (wordObj.infinitive !== null) return true
 
         // Look at the defintion/translation by Wiktionary
         const match = wordData.translation.match(/(?:of\s)([a-zA-Z]+)\b/);
@@ -35,9 +35,12 @@ module.exports = async function processWord(combinedISO, word, wordObj, words, i
             wordData.infinitive = foundWord
             words[combinedISO][word] = wordData;
             // Add the extracted word to be searched at the end of all promises
-            await processWord(combinedISO, foundWord, {}, words, true, recursionCount)
+            promises.push(() => processWord(promises, combinedISO, foundWord, {}, words, true, recursionCount))
         }
+
+        return true
     } catch (err) {
         console.error(`Error processing ${isInfinitive ? 'infinitive' : 'word'} "${isInfinitive ? wordObj.infinitive : word}": ${err.message}`);
+        return false;
     }
 }
