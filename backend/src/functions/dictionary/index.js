@@ -1,5 +1,9 @@
 const { app } = require('@azure/functions');
 const processWord = require('./processWord');
+const returnWordPromises = require('./returnWordPromises');
+
+const REQUEST_LIMIT = 5;
+const TIME_INTERVAL = 1500; //ms
 
 app.http('dictionary', {
     methods: ['POST'],
@@ -21,19 +25,7 @@ app.http('dictionary', {
 
             const words = { [combinedISO]: {} } // this var is updated with new data for each word
 
-            const wordPromises = Object.entries(wordObjs).flatMap(([key, value]) => {
-                const word = key;
-                const wordObj = value;
-                const wordPromise = processWord(combinedISO, word, wordObj, words);
-
-                // Check if the word is marked as an infinitive by the client
-                if (wordObj.infinitive !== null && !words[combinedISO][wordObj.infinitive]) {
-                    const infinitivePromise = processWord(combinedISO, wordObj.infinitive, wordObj, words, true);
-                    return [wordPromise, infinitivePromise];
-                }
-
-                return [wordPromise];
-            });
+            const wordPromises = returnWordPromises(words, wordObjs, combinedISO)
 
             await Promise.all(wordPromises);
 

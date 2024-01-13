@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "A website and plugin to assist learning languages with Duolingo.",
   "scripts": {
+    "start": "npx tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

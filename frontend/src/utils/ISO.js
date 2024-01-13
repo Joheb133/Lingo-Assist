@@ -1,7 +1,7 @@
 // Map follows ISO 639-1
 // Wiktionary uses 639-3 but that has 7000+ entries which is a bit much
 
-const ISO_to_words = {
+export const ISO_to_words = {
     "aa": "Afar",
     "ab": "Abkhaz",
     "ae": "Avestan",
