@@ -1,9 +1,10 @@
 const { app } = require('@azure/functions');
-const processWord = require('./processWord');
 const returnWordPromises = require('./returnWordPromises');
 
 const REQUEST_LIMIT = 5;
 const TIME_INTERVAL = 1500; //ms
+
+// 100 req/2s
 
 app.http('dictionary', {
     methods: ['POST'],

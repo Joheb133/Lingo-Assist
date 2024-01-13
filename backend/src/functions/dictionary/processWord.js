@@ -11,9 +11,10 @@ const generateWordData = require('./generateWordData')
  * @param {boolean} isInfinitive 
  */
 
-module.exports = async function processWord(combinedISO, word, wordObj, words, isInfinitive = false) {
+module.exports = async function processWord(combinedISO, word, wordObj, words, isInfinitive = false, recursionCount = 0) {
     const learningISO = combinedISO.split('_')[0]
     words[combinedISO][word] = {};
+
     try {
         const res = await getWiktionary(word);
         const wordData = generateWordData(res[learningISO], wordObj, isInfinitive);
@@ -28,11 +29,13 @@ module.exports = async function processWord(combinedISO, word, wordObj, words, i
         const foundWord = match ? match[1] : null;
 
         // If the word is labeled an infinitive by Wiktionary but not the client
-        if (foundWord) {
+        // This can cause a near infinitie loop depending on Wiktionary
+        if (foundWord && recursionCount < 1) {
+            recursionCount++
             wordData.infinitive = foundWord
             words[combinedISO][word] = wordData;
-            // Search the extracted word
-            await processWord(combinedISO, foundWord, {}, words, true)
+            // Add the extracted word to be searched at the end of all promises
+            await processWord(combinedISO, foundWord, {}, words, true, recursionCount)
         }
     } catch (err) {
         console.error(`Error processing ${isInfinitive ? 'infinitive' : 'word'} "${isInfinitive ? wordObj.infinitive : word}": ${err.message}`);

@@ -16,6 +16,8 @@ module.exports = async function getWiktionary(word) {
         }
     }
 
+    console.log(`Sending request to: ${url}`)
+
     return fetch(url, options)
         .then(res => {
             if (!res.ok) {
