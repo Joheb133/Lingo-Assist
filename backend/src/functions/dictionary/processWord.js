@@ -4,6 +4,7 @@ const generateWordData = require('./generateWordData')
 /**
  * Processes a word by retrieving data from Wiktionary & generating word details.
  * After this processing is done, add the word and it's data to the "word" object
+ * @param {Array<Promise>} promises
  * @param {string} combinedISO learningISO_nativeISO
  * @param {string} word word to lookup on Wiktionary
  * @param {object} wordObj data associated with word
@@ -17,25 +18,23 @@ module.exports = async function processWord(promises, combinedISO, word, wordObj
 
     try {
         const res = await getWiktionary(word);
-        const wordData = generateWordData(res[learningISO], wordObj, isInfinitive);
+        const data = generateWordData(res[learningISO], word, wordObj, isInfinitive);
+        const wikiInfinitive = data.wikiInfinitive;
+        const wordData = data.word;
+
         words[combinedISO][word] = wordData;
 
         // No need to check if Wiktionary thinks the word is an infinitive 
         // if the client has that set. This case is already handled in the "handler"
         if (wordObj.infinitive !== null) return true
 
-        // Look at the defintion/translation by Wiktionary
-        const match = wordData.translation.match(/(?:of\s)([a-zA-Z]+)\b/);
-        const foundWord = match ? match[1] : null;
-
         // If the word is labeled an infinitive by Wiktionary but not the client
-        // This can cause a near infinitie loop depending on Wiktionary
-        if (foundWord && recursionCount < 1) {
+        if (wikiInfinitive && recursionCount < 1) {
             recursionCount++
-            wordData.infinitive = foundWord
+            wordData.infinitive = wikiInfinitive
             words[combinedISO][word] = wordData;
             // Add the extracted word to be searched at the end of all promises
-            promises.push(() => processWord(promises, combinedISO, foundWord, {}, words, true, recursionCount))
+            promises.push(() => processWord(promises, combinedISO, wikiInfinitive, {}, words, true, recursionCount))
         }
 
         return true

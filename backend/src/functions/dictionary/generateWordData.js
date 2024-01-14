@@ -1,4 +1,5 @@
 const removeHtmlTags = require('../../utils/removeHtmlTags')
+const getTextByClass = require('../../utils/getTextByClass')
 
 /**
  * Each word has an object associated with it. That object provides data on the word.
@@ -7,14 +8,15 @@ const removeHtmlTags = require('../../utils/removeHtmlTags')
  * This function shouldn't be used independently as it doesn't return the actual word
  * itself, and it relies on the Wiktionary response as an argument.
  * @param {Array<object>} response 
+ * @param {string} word
  * @param {object} wordObj
  * @return {object}
  */
 
-module.exports = function generateWordData(response, wordObj, isInfinitive = false) {
+module.exports = function generateWordData(response, word, wordObj, isInfinitive = false) {
 
     if (!response) {
-        console.error('Error: Word not found')
+        console.error(`Error: Word not found => ${word}`)
         return wordObj
     }
 
@@ -30,7 +32,10 @@ module.exports = function generateWordData(response, wordObj, isInfinitive = fal
 
     const infinitive = isInfinitive ? null : wordObj.infinitive
     const pos = isInfinitive ? 'Infinitive' : resWordObj.partOfSpeech
-    const translation = removeHtmlTags(resWordObj.definitions[0].definition);
+    let translation = resWordObj.definitions[0].definition;
+
+    const wikiInfinitive = getTextByClass(translation, 'form-of-definition-link')
+    translation = removeHtmlTags(translation)
 
     // Wiktionary provides examples for most but not all words
     let example = {
@@ -43,5 +48,5 @@ module.exports = function generateWordData(response, wordObj, isInfinitive = fal
         example.translation = removeHtmlTags(resWordObj.definitions[0].parsedExamples[0].translation);
     }
 
-    return { infinitive, pos, translation, example }
+    return { word: { infinitive, pos, translation, example }, wikiInfinitive }
 }

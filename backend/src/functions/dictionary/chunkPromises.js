@@ -19,8 +19,8 @@ module.exports = async function chunkPromises(promises, REQUEST_LIMIT, TIME_INTE
     while (promises.length > 0) {
         // Check if it's time to reset promisesThisSecond
         if (Date.now() - timeSinceLastReset >= TIME_INTERVAL) {
-            console.log('Time reset')
-            timeSinceLastReset = Date.now()
+            console.log('Time reset');
+            timeSinceLastReset = Date.now();
             promisesThisSecond = 0;
         }
 
@@ -28,23 +28,24 @@ module.exports = async function chunkPromises(promises, REQUEST_LIMIT, TIME_INTE
         if (promisesThisSecond >= REQUEST_LIMIT) {
             console.log('Request limit reached, halting promises')
             await new Promise(resolve => setTimeout(resolve, TIME_INTERVAL));
-            timeSinceLastReset = Date.now()
+            timeSinceLastReset = Date.now();
             promisesThisSecond = 0;
         }
 
         // Time out this function
         const elapsedTime = Date.now() - startTime
         if (elapsedTime >= TIME_OUT) {
-            console.log('Timeout reached. Exiting loop')
+            console.log('Timeout reached. Exiting loop');
             return false;
         }
 
         let runningPromises = promises.slice(0, REQUEST_LIMIT);
         const results = await Promise.all(runningPromises.map((promise) => promise()));
-        promises = promises.filter((_, index) => !results[index]); // Remove resolved promises from the array
+
+        promises = promises.filter((_, index) => results[index] === undefined); // Remove resolved promises from the array
 
         chunkCounter++;
-        promiseCounter += results.length
+        promiseCounter += results.length;
         promisesThisSecond += runningPromises.length;
     }
 
