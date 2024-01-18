@@ -34,8 +34,12 @@ module.exports = function generateWordData(response, word, wordObj, isInfinitive
     const pos = isInfinitive ? 'Infinitive' : resWordObj.partOfSpeech
     let translation = resWordObj.definitions[0].definition;
 
+    // Check for wiki infinitve class
     const wikiInfinitive = getTextByClass(translation, 'form-of-definition-link')
-    translation = removeHtmlTags(translation)
+
+    // Check defintion error
+    const isDefinitionErr = getTextByClass(translation, 'error').length > 0 ? true : false;
+    translation = isDefinitionErr ? word : removeHtmlTags(translation)
 
     // Wiktionary provides examples for most but not all words
     let example = {
