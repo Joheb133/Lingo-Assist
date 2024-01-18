@@ -27,7 +27,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
                         sendRes(res)
                     })
                     .catch(error => {
-                        console.log("Error storing data", error)
+                        console.error("Error storing data", error)
                         sendRes({ error })
                     })
             })
@@ -49,14 +49,16 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
             const wordsObj = res[combinedISO]
             const untranslatedWords = (() => {
                 const array = Object.entries(wordsObj)
-                    .filter(([key, value]) => value.translation.length === 0);
+                    .filter(([_, value]) => value.translation.length === 0);
                 const object = Object.fromEntries(array)
                 return { [combinedISO]: object }
             })()
 
+            console.log(untranslatedWords)
+
             const url = 'http://localhost:7071/api/dictionary'
             const options = {
-                method: 'GET',
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -72,11 +74,20 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
                     return res.json()
                 })
                 .then(data => {
-                    console.log(data)
+                    const arrOfObj = Object.entries(data[combinedISO]).map(([key, value]) => { return { [key]: value } })
+                    storeData(arrOfObj, combinedISO)
+                        .then(res => sendRes(res))
+                        .catch(err => {
+                            console.error("Error storing translations", err)
+                            sendRes({ error: err })
+                        })
                 })
                 .catch(err => {
-                    console.log(err)
+                    console.error(err)
+                    sendRes({ error: err })
                 })
+
+            return true;
         })
     }
 
@@ -122,6 +133,16 @@ function storeDuolingoData(res) {
             };
         });
 
+        storeData(vocabList, combinedISO)
+            .then(res => resolve(res))
+            .catch(err => reject(err))
+    })
+}
+
+// Store data in local storage
+// , write JSDoc later
+function storeData(words, combinedISO) {
+    return new Promise((res, rej) => {
         // Store data under combined ISO
         chrome.storage.local.get(combinedISO).then((storage) => {
             try {
@@ -129,9 +150,9 @@ function storeDuolingoData(res) {
                 storage[combinedISO] = storage[combinedISO] || {}
                 let wordsAdded = 0;
 
-                vocabList.forEach(element => {
+                words.forEach(element => {
                     const word = Object.keys(element)[0]
-                    if (!storage[combinedISO].hasOwnProperty(word)) {
+                    if (!storage[combinedISO].hasOwnProperty(word) || storage[combinedISO][word].translation === '') {
                         storage[combinedISO][word] = element[word];
                         wordsAdded++;
                     }
@@ -144,12 +165,12 @@ function storeDuolingoData(res) {
                     // Log total data used
                     chrome.storage.local.getBytesInUse([combinedISO], (dataUsed) => {
                         console.log(`${convertBytes(dataUsed)} used`);
-                        resolve(combinedISO)
+                        res(combinedISO)
                     });
                 });
             } catch (error) {
-                console.log(error)
-                reject(error);
+                console.error(error)
+                rej(error);
             }
         });
     })
