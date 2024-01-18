@@ -39,10 +39,8 @@ module.exports = async function chunkPromises(promises, REQUEST_LIMIT, TIME_INTE
             return false;
         }
 
-        let runningPromises = promises.slice(0, REQUEST_LIMIT);
+        let runningPromises = promises.splice(0, REQUEST_LIMIT);
         const results = await Promise.all(runningPromises.map((promise) => promise()));
-
-        promises = promises.filter((_, index) => results[index] === undefined); // Remove resolved promises from the array
 
         chunkCounter++;
         promiseCounter += results.length;
