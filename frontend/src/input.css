@@ -5,6 +5,7 @@
 table {
   border-collapse: collapse;
   margin: 8px 0;
+  width: 66.666667%;
 }
 
 th {
@@ -21,4 +22,12 @@ table,
 th,
 td {
   border: 1px solid black;
+}
+
+.table-container h4 {
+  font-size: 22px;
+}
+
+.table-container div {
+  margin: 20px 0;
 }
