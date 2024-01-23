@@ -8,34 +8,30 @@ const generateWordData = require('./generateWordData')
  * @param {string} combinedISO learningISO_nativeISO
  * @param {string} word word to lookup on Wiktionary
  * @param {object} wordObj data associated with word
+ * @param {number} index incase words are homonyms, they're stored in an array. Index is useful for picking a different definition in generateWordData()
  * @param {object} words object to hold all words
  * @param {boolean} isInfinitive 
  */
 
-module.exports = async function processWord(promises, combinedISO, word, wordObj, words, isInfinitive = false, recursionCount = 0) {
+module.exports = async function processWord(promises, combinedISO, word, wordObj, index, words, isInfinitive = false, recursionCount = 0) {
     const learningISO = combinedISO.split('_')[0]
-    words[combinedISO][word] = {};
+    words[combinedISO][word] = [];
 
     try {
         const res = await getWiktionary(word);
-        const data = generateWordData(res[learningISO], word, wordObj, isInfinitive);
+        const data = generateWordData(res[learningISO], word, wordObj, index, isInfinitive);
         const wikiInfinitive = data.wikiInfinitive;
         const wordData = data.word;
-
-        words[combinedISO][word] = wordData;
-
-        // No need to check if Wiktionary thinks the word is an infinitive 
-        // if the client has that set. This case is already handled in the "handler"
-        if (wordObj.infinitive !== null) return true
 
         // If the word is labeled an infinitive by Wiktionary but not the client
         if (wikiInfinitive && recursionCount < 1) {
             recursionCount++
             wordData.infinitive = wikiInfinitive
-            words[combinedISO][word] = wordData;
             // Add the extracted word to be searched at the end of all promises
-            promises.push(() => processWord(promises, combinedISO, wikiInfinitive, {}, words, true, recursionCount))
+            promises.push(() => processWord(promises, combinedISO, wikiInfinitive, {}, 0, words, true, recursionCount))
         }
+
+        words[combinedISO][word].push(wordData);
 
         return true
     } catch (err) {

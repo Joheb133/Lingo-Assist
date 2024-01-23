@@ -10,10 +10,11 @@ const getTextByClass = require('../../utils/getTextByClass')
  * @param {Array<object>} response 
  * @param {string} word
  * @param {object} wordObj
+ * @param {number} index
  * @return {object}
  */
 
-module.exports = function generateWordData(response, word, wordObj, isInfinitive = false) {
+module.exports = function generateWordData(response, word, wordObj, index, isInfinitive = false) {
 
     if (!response) {
         console.error(`Error: Word not found => ${word}`)
@@ -21,7 +22,7 @@ module.exports = function generateWordData(response, word, wordObj, isInfinitive
     }
 
     // The same word can have multiple meanings
-    let resWordObj = response[0]; // Take the first meaning
+    let resWordObj = response[index]; // Take the first meaning unless it's been taken before
     response.forEach(obj => {
         // If the clients part of speech matches the pos of the response
         // assume this is the word they want
@@ -38,8 +39,12 @@ module.exports = function generateWordData(response, word, wordObj, isInfinitive
     const wikiInfinitive = getTextByClass(translation, 'form-of-definition-link')
 
     // Check defintion error
-    const isDefinitionErr = getTextByClass(translation, 'error').length > 0 ? true : false;
-    translation = isDefinitionErr ? word : removeHtmlTags(translation)
+    if (getTextByClass(translation, 'error').length > 0) {
+        translation = word
+        console.error(`Encountered Wiki error searching ${word}`)
+    } else {
+        translation = removeHtmlTags(translation)
+    }
 
     // Wiktionary provides examples for most but not all words
     let example = {

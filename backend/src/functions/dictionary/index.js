@@ -2,7 +2,7 @@ const { app } = require('@azure/functions');
 const returnWordPromises = require('./returnWordPromises');
 const chunkPromises = require('./chunkPromises')
 
-const REQUEST_LIMIT = 100;
+const REQUEST_LIMIT = 25;
 const TIME_INTERVAL = 1000; //ms
 const TIME_OUT = 2 * 60 * 1000 // 1 minute
 

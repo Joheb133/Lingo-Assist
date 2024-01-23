@@ -46,15 +46,15 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
         chrome.storage.local.get(combinedISO).then((res) => {
             if (Object.entries(res).length === 0) return
 
-            const wordsObj = res[combinedISO]
+            const wordsArrObjs = res[combinedISO]
             const untranslatedWords = (() => {
-                const array = Object.entries(wordsObj)
-                    .filter(([_, value]) => value.translation.length === 0);
-                const object = Object.fromEntries(array)
-                return { [combinedISO]: object }
-            })()
+                const filteredWords = Object.fromEntries(
+                    Object.entries(wordsArrObjs)
+                        .filter(([_, value]) => value.some(data => data.translation.length === 0))
+                );
 
-            console.log(untranslatedWords)
+                return { [combinedISO]: filteredWords };
+            })();
 
             const url = 'http://localhost:7071/api/dictionary'
             const options = {
@@ -151,10 +151,19 @@ function storeData(words, combinedISO) {
                 let wordsAdded = 0;
 
                 words.forEach(element => {
-                    const word = Object.keys(element)[0]
-                    if (!storage[combinedISO].hasOwnProperty(word) || storage[combinedISO][word].translation === '') {
-                        storage[combinedISO][word] = element[word];
+                    const [word, data] = Object.entries(element)[0]
+                    const localWordData = storage[combinedISO][word]
+
+                    if (!localWordData) {
+                        storage[combinedISO][word] = [data]
                         wordsAdded++;
+                    } else {
+                        localWordData.forEach((localData) => {
+                            if (localData.infinitive !== data.infinitive && localData.pos !== data.pos) {
+                                storage[combinedISO][word].push(data)
+                                wordsAdded++;
+                            }
+                        })
                     }
                 });
 
