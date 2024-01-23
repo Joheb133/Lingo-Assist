@@ -50,7 +50,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
             const untranslatedWords = (() => {
                 const filteredWords = Object.fromEntries(
                     Object.entries(wordsArrObjs)
-                        .filter(([_, value]) => value.some(data => data.translation.length === 0))
+                        .filter(([_, values]) => values.filter(value => value.translation = ''))
                 );
 
                 return { [combinedISO]: filteredWords };
