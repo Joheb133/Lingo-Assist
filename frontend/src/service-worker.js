@@ -209,7 +209,7 @@ function storeData(data) {
                     } else { // word DOES exist
                         // need to compare each Duolingo element data with local data
                         data.forEach((element) => {
-                            const hasMatchingId = localWord.some(localElement => localElement.id === element.id);
+                            const hasMatchingId = localWord.some(localElement => localElement['duolingo_id'] === element['duolingo_id']);
 
                             if (!hasMatchingId) {
                                 // If there is no matching id, push the element to local storage
@@ -220,7 +220,6 @@ function storeData(data) {
                     }
                 })
 
-                console.log(Object.keys(localWords).length, localWords)
                 console.log(wordsAdded + " words loaded")
 
                 // Set the updated object to storage
