@@ -47,14 +47,36 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
             if (Object.entries(res).length === 0) return
 
             const wordsArrObjs = res[combinedISO]
-            const untranslatedWords = (() => {
-                const filteredWords = Object.fromEntries(
-                    Object.entries(wordsArrObjs)
-                        .filter(([_, values]) => values.filter(value => value.translation = ''))
-                );
+            // const untranslatedWords = (() => {
+            //     const filteredWords = Object.fromEntries(
+            //         Object.entries(wordsArrObjs)
+            //             .filter(([_, values]) => values.filter(value => value.translation === ''))
+            //     );
+            //     return { [combinedISO]: filteredWords };
+            // })();
+            // const translatedWords = (() => {
+            //     const filteredWords = Object.fromEntries(
+            //         Object.entries(wordsArrObjs)
+            //             .filter(([_, values]) => values.filter(value => value.translation.length > 0))
+            //     );
+            //     return { [combinedISO]: filteredWords };
+            // })();
+            const untranslatedWords = {}
+            const translatedWords = {}
 
-                return { [combinedISO]: filteredWords };
-            })();
+            Object.entries(wordsArrObjs).forEach(([word, dataArr]) => {
+                dataArr.forEach(data => {
+                    if (data.translation === '') {
+                        if (!untranslatedWords[word]) untranslatedWords[word] = []
+
+                        untranslatedWords[word].push(data)
+                    } else {
+                        if (!translatedWords[word]) translatedWords[word] = []
+
+                        translatedWords[word].push(data)
+                    }
+                })
+            })
 
             const url = 'http://localhost:7071/api/dictionary'
             const options = {
@@ -62,7 +84,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(untranslatedWords)
+                body: JSON.stringify({ [combinedISO]: untranslatedWords })
             }
 
             fetch(url, options)
@@ -74,12 +96,14 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
                     return res.json()
                 })
                 .then(data => {
-                    const arrOfObj = Object.entries(data[combinedISO]).map(([key, value]) => { return { [key]: value } })
-                    storeData(arrOfObj, combinedISO)
-                        .then(res => sendRes(res))
-                        .catch(err => {
-                            console.error("Error storing translations", err)
-                            sendRes({ error: err })
+                    chrome.storage.local.set({ [combinedISO]: translatedWords })
+                        .then(() => {
+                            storeData(data)
+                                .then(res => sendRes(res))
+                                .catch(err => {
+                                    console.error("Error storing translations", err)
+                                    sendRes({ error: err })
+                                })
                         })
                 })
                 .catch(err => {
@@ -118,22 +142,30 @@ function storeDuolingoData(res) {
         // Set combinedISO
         chrome.storage.local.set({ 'combinedISO': combinedISO })
 
-        // List of words
-        const vocabList = vocabOverview.map(element => {
+        // Object of words
+        const vocabObj = {}
+        console.log(vocabOverview.length)
+        vocabOverview.forEach(element => {
             // apply logic to each element and return new array
             const word = element.word_string;
             const formattedWord = word.replace(/\s+/g, "_");
 
-            return {
-                [formattedWord]: {
-                    infinitive: element.infinitive,
-                    pos: element.pos,
-                    translation: "",
-                }
-            };
+            const data = {
+                infinitive: element.infinitive,
+                pos: element.pos,
+                translation: "",
+                duolingo_id: element.id
+            }
+
+            if (vocabObj[formattedWord] !== null) { // key exists
+                // push an object (the data)
+                vocabObj[formattedWord] = [data]
+            } else {
+                vocabObj[formattedWord].push(data)
+            }
         });
 
-        storeData(vocabList, combinedISO)
+        storeData({ [combinedISO]: vocabObj })
             .then(res => resolve(res))
             .catch(err => reject(err))
     })
@@ -141,36 +173,59 @@ function storeDuolingoData(res) {
 
 // Store data in local storage
 // , write JSDoc later
-function storeData(words, combinedISO) {
+// data
+/* {
+    "es_en": {
+        "adiós": [
+            {
+                "infinitive": null,
+                "pos": "Interjection",
+                "translation": ""
+            },
+            {
+                "infinitive": null,
+                "pos": "Noun",
+                "translation": ""
+            }
+        ]
+    }
+} */
+function storeData(data) {
     return new Promise((res, rej) => {
         // Store data under combined ISO
+        const [combinedISO, words] = Object.entries(data)[0]
         chrome.storage.local.get(combinedISO).then((storage) => {
             try {
                 // Create new object if no data
-                storage[combinedISO] = storage[combinedISO] || {}
+                const localWords = storage[combinedISO] || {}
                 let wordsAdded = 0;
 
-                words.forEach(element => {
-                    const [word, data] = Object.entries(element)[0]
-                    const localWordData = storage[combinedISO][word]
+                Object.entries(words).forEach(([word, data]) => {
+                    // data itself is an array of objects
+                    // we need to check if this exists in local storage
+                    const localWord = localWords[word]
+                    if (!localWord) { // If word doesn't exist
+                        localWords[word] = [...data] // create key and add data
+                        wordsAdded += data.length
+                    } else { // word DOES exist
+                        // need to compare each Duolingo element data with local data
+                        data.forEach((element) => {
+                            const hasMatchingId = localWord.some(localElement => localElement.id === element.id);
 
-                    if (!localWordData) {
-                        storage[combinedISO][word] = [data]
-                        wordsAdded++;
-                    } else {
-                        localWordData.forEach((localData) => {
-                            if (localData.infinitive !== data.infinitive && localData.pos !== data.pos) {
-                                storage[combinedISO][word].push(data)
-                                wordsAdded++;
+                            if (!hasMatchingId) {
+                                // If there is no matching id, push the element to local storage
+                                localWord.push(element);
+                                wordsAdded += 1
                             }
                         })
                     }
-                });
+                })
 
+                console.log(Object.keys(localWords).length, localWords)
                 console.log(wordsAdded + " words loaded")
 
                 // Set the updated object to storage
-                chrome.storage.local.set({ [combinedISO]: storage[combinedISO] }).then(() => {
+                chrome.storage.local.set({ [combinedISO]: localWords }).then(() => {
                     // Log total data used
                     chrome.storage.local.getBytesInUse([combinedISO], (dataUsed) => {
                         console.log(`${convertBytes(dataUsed)} used`);
