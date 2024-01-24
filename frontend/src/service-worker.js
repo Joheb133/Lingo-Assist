@@ -144,7 +144,6 @@ function storeDuolingoData(res) {
 
         // Object of words
         const vocabObj = {}
-        console.log(vocabOverview.length)
         vocabOverview.forEach(element => {
             // apply logic to each element and return new array
             const word = element.word_string;
@@ -157,7 +156,7 @@ function storeDuolingoData(res) {
                 duolingo_id: element.id
             }
 
-            if (vocabObj[formattedWord] !== null) { // key exists
+            if (vocabObj[formattedWord] === undefined) { // key doesnt exist
                 // push an object (the data)
                 vocabObj[formattedWord] = [data]
             } else {
