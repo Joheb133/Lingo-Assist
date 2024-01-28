@@ -9,18 +9,15 @@ const processWord = require('./processWord')
  * @returns {Array<Promise>} An array of promises for processing words and infinitive forms.
  */
 
-module.exports = function returnWordPromises(words, wordObjs, combinedISO) {
+module.exports = function returnWordPromises(wordRes, wordObjs, combinedISO) {
     const promises = []
-    Object.entries(wordObjs).forEach(([word, wordArrObjs]) => {
-        wordArrObjs.forEach((wordObj, index) => {
-            promises.push(() => processWord(promises, combinedISO, word, wordObj, index, words, false));
+    Object.entries(wordObjs).forEach(([word, wordDataArr]) => {
+        promises.push(() => processWord(promises, combinedISO, word, wordDataArr, wordRes, false));
 
-            // Check if the word is marked as an infinitive by the client & not already fetched and stored in "words"
-            if (wordObj.infinitive !== null && !words[combinedISO][wordObj.infinitive]) {
-                words[combinedISO][wordObj.infinitive] = {};
-                promises.push(() => processWord(promises, combinedISO, wordObj.infinitive, wordObj, index, words, true));
-            }
-        })
+        // // Check if the word is marked as an infinitive by the client & not already fetched and stored in "words"
+        // if (wordObj.infinitive !== null && !wordRes[combinedISO][wordObj.infinitive]) {
+        //     promises.push(() => processWord(promises, combinedISO, wordObj.infinitive, wordObj, index, words, true));
+        // }
     });
 
     return promises;

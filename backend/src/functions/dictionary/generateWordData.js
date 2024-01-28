@@ -9,53 +9,83 @@ const getTextByClass = require('../../utils/getTextByClass')
  * itself, and it relies on the Wiktionary response as an argument.
  * @param {Array<object>} response 
  * @param {string} word
- * @param {object} wordObj
- * @param {number} index
+ * @param {Array<object>} wordDataArr
  * @return {object}
  */
 
-module.exports = function generateWordData(response, word, wordObj, index, isInfinitive = false) {
+module.exports = function generateWordData(response, word, wordDataArr, isInfinitive = false) {
 
     if (!response) {
         console.error(`Error: Word not found => ${word}`)
-        return wordObj
+        return wordDataArr
     }
 
-    // The same word can have multiple meanings
-    let resWordObj = response[index]; // Take the first meaning unless it's been taken before
-    response.forEach(obj => {
-        // If the clients part of speech matches the pos of the response
-        // assume this is the word they want
-        if (wordObj.pos && obj.partOfSpeech.toLowerCase() === wordObj.pos.toLowerCase()) {
-            resWordObj = obj
+    const responseDup = [...response];
+    let resDataArr = []
+    let wikiInfinitives = {}
+
+    for (let i = 0; i < wordDataArr.length; i++) {
+        const wordObj = wordDataArr[i];
+        if (responseDup.length === 0) {
+            resDataArr.push(wordObj)
+            break;
         }
-    })
 
-    const infinitive = isInfinitive ? null : wordObj.infinitive
-    const pos = isInfinitive ? 'Infinitive' : resWordObj.partOfSpeech
-    let translation = resWordObj.definitions[0].definition;
+        let resWordObj = undefined;
+        // The same word can have multiple meanings
+        for (let j = 0; j < responseDup.length; j++) {
+            // If the clients part of speech matches the pos of the response
+            // assume this is the word they want
+            if (wordObj.pos && responseDup[j].partOfSpeech.toLowerCase() === wordObj.pos.toLowerCase()) {
+                resWordObj = responseDup.splice(j, 1)[0]
+                break;
+            }
+        }
 
-    // Check for wiki infinitve class
-    const wikiInfinitive = getTextByClass(translation, 'form-of-definition-link')
+        if (resWordObj === undefined) {
+            resWordObj = responseDup.splice(0, 1)[0]; // Take the first meaning unless it's been taken before
+        }
 
-    // Check defintion error
-    if (getTextByClass(translation, 'error').length > 0) {
-        translation = word
-        console.error(`Encountered Wiki error searching ${word}`)
-    } else {
-        translation = removeHtmlTags(translation)
+        let infinitive = isInfinitive ? null : wordObj.infinitive
+        const pos = isInfinitive ? 'Infinitive' : resWordObj.partOfSpeech
+        let translation = resWordObj.definitions[0].definition;
+
+        // Check for wiki infinitve class
+        const wikiInfinitive = getTextByClass(translation, 'form-of-definition-link')
+        if (wikiInfinitive.length > 0) {
+            infinitive = wikiInfinitive
+            wikiInfinitives[infinitive] = null;
+        }
+
+        // Check defintion error
+        if (getTextByClass(translation, 'error').length > 0) {
+            translation = word
+            console.error(`Encountered Wiki error searching ${word}`)
+        } else {
+            translation = removeHtmlTags(translation)
+        }
+
+        // Wiktionary provides examples for most but not all words
+        let example = {
+            native: null,
+            translation: null
+        };
+
+        if (resWordObj.definitions[0].parsedExamples) {
+            example.native = removeHtmlTags(resWordObj.definitions[0].parsedExamples[0].example);
+            example.translation = removeHtmlTags(resWordObj.definitions[0].parsedExamples[0].translation);
+        }
+
+        const generatedWordObj = {
+            duolingo_id: wordObj.duolingo_id,
+            infinitive,
+            pos,
+            translation,
+            example
+        }
+
+        resDataArr.push(generatedWordObj)
     }
 
-    // Wiktionary provides examples for most but not all words
-    let example = {
-        native: null,
-        translation: null
-    };
-
-    if (resWordObj.definitions[0].parsedExamples) {
-        example.native = removeHtmlTags(resWordObj.definitions[0].parsedExamples[0].example);
-        example.translation = removeHtmlTags(resWordObj.definitions[0].parsedExamples[0].translation);
-    }
-
-    return { word: { infinitive, pos, translation, example }, wikiInfinitive }
+    return { resDataArr, wikiInfinitives: Object.keys(wikiInfinitives) }
 }

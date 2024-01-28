@@ -26,16 +26,16 @@ app.http('dictionary', {
             const requestData = await req.json()
             const [combinedISO, wordObjs] = Object.entries(requestData)[0];
 
-            const words = { [combinedISO]: {} } // this var is updated with new data for each word
+            const wordRes = { [combinedISO]: {} } // this var is updated with new data for each word
 
-            const wordPromises = returnWordPromises(words, wordObjs, combinedISO)
+            const wordPromises = returnWordPromises(wordRes, wordObjs, combinedISO)
 
             const chunkResult = await chunkPromises(wordPromises, REQUEST_LIMIT, TIME_INTERVAL, TIME_OUT)
 
             if (chunkResult) {
                 return {
                     status: 200,
-                    body: JSON.stringify(words),
+                    body: JSON.stringify(wordRes),
                     headers: {
                         'Content-Type': 'application/json'
                     }
@@ -43,7 +43,7 @@ app.http('dictionary', {
             } else {
                 return {
                     status: 206,
-                    body: JSON.stringify(words),
+                    body: JSON.stringify(wordRes),
                     headers: {
                         'Content-Type': 'application/json',
                         'X-Status-Message': 'Partial response due to timeout'
