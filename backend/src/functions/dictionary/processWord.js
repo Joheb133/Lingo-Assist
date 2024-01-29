@@ -23,10 +23,12 @@ module.exports = async function processWord(promises, combinedISO, word, wordDat
 
         // If the word is labeled an infinitive by Wiktionary but not the client
         for (let i = 0; i < wikiInfinitives.length; i++) {
+            const wikiInfinitive = wikiInfinitives[i]
             if (wikiInfinitives[i].length > 0 && recursionCount < 1) {
                 recursionCount++
                 // Add the extracted word to be searched at the end of all promises
-                promises.push(() => processWord(promises, combinedISO, wikiInfinitives[i], {}, words, true, recursionCount))
+                // promises.push(() => processWord(promises, combinedISO, wikiInfinitives[i], {}, words, true, recursionCount))
+                promises[wikiInfinitive] = () => processWord(promises, combinedISO, wikiInfinitive, [{ pos: "Verb" }], words, true, recursionCount)
             }
         }
 

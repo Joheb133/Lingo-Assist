@@ -1,7 +1,7 @@
 /**
  * Process an array of promises concurrently in chunks, 
  * respecting concurrency limits and timeouts.
- * @param {Array<Function>} promises - Array of functions representing promises.
+ * @param {object<Function>} promises - Object of functions containing promises.
  * @param {number} REQUEST_LIMIT - The maximum number of promises to run concurrently.
  * @param {number} TIME_INTERVAL - The time interval (in milliseconds) between consecutive chunks.
  * @param {number} TIME_OUT - The maximum time (in milliseconds) allowed for the entire process.
@@ -15,8 +15,9 @@ module.exports = async function chunkPromises(promises, REQUEST_LIMIT, TIME_INTE
     let promiseCounter = 0;
     let timeSinceLastReset = Date.now();
     let promisesThisSecond = 0;
+    let promisesArr = Object.entries(promises)
 
-    while (promises.length > 0) {
+    while (promisesArr.length > 0) {
         // Check if it's time to reset promisesThisSecond
         if (Date.now() - timeSinceLastReset >= TIME_INTERVAL) {
             console.log('Time reset');
@@ -39,12 +40,17 @@ module.exports = async function chunkPromises(promises, REQUEST_LIMIT, TIME_INTE
             return false;
         }
 
-        let runningPromises = promises.splice(0, REQUEST_LIMIT);
+        let runningPromises = promisesArr.splice(0, REQUEST_LIMIT);
+        promises = Object.fromEntries(promisesArr)
+        runningPromises = runningPromises.map((element) => element[1])
         const results = await Promise.all(runningPromises.map((promise) => promise()));
 
         chunkCounter++;
         promiseCounter += results.length;
         promisesThisSecond += runningPromises.length;
+
+        console.log(promises)
+        promisesArr = Object.entries(promises)
     }
 
     console.log(`Processed ${promiseCounter} words in ${chunkCounter} chunks`)
