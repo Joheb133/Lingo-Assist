@@ -13,6 +13,23 @@ export default function displayLocalVocab(obj) {
     for (const [key, values] of Object.entries(obj)) {
         const valuesPos = {}
         values.forEach((value) => {
+            // If untranslated
+            if (value.translation === '') {
+                // If POS table doesn't exist
+                if (!document.querySelector('#default-table')) {
+                    createDefaultTable()
+                }
+
+                const table = document.querySelector('#default-table')
+                const row = document.createElement('tr')
+                const word = document.createElement('td')
+                word.innerText = convertSnakeCase(key, true)
+                row.append(word)
+                table.append(row)
+
+                return
+            }
+
             // If translated
             valuesPos[value.pos] = valuesPos[value.pos] ? valuesPos[value.pos] + 1 : 1;
 
@@ -55,6 +72,26 @@ export function clearLocalVocab() {
     table.innerHTML = '';
 }
 
+// Table for untranslated words
+function createDefaultTable() {
+    const tableContainer = document.querySelector('.table-container')
+    const tableWrap = document.createElement('div')
+    const tableEl = document.createElement('table')
+    tableEl.id = 'default-table'
+
+    const tHeading1 = document.createElement('th')
+    tHeading1.innerText = 'Word'
+    const tHeadingRow = document.createElement('tr')
+    const heading = document.createElement('h4')
+    heading.innerText = 'Untranslated words'
+    tHeadingRow.append(tHeading1)
+
+    tableEl.append(tHeadingRow)
+    tableWrap.append(heading, tableEl)
+    tableContainer.append(tableWrap)
+}
+
+// Table for any part of speech
 function createTable(pos) {
     const tableContainer = document.querySelector('.table-container')
     const tableWrap = document.createElement('div')
