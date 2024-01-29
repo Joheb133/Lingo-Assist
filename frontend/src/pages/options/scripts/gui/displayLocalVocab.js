@@ -16,11 +16,11 @@ export default function displayLocalVocab(obj) {
             // If untranslated
             if (value.translation === '') {
                 // If POS table doesn't exist
-                if (!document.querySelector('#default-table')) {
+                if (!document.querySelector('#default-wrap table')) {
                     createDefaultTable()
                 }
 
-                const table = document.querySelector('#default-table')
+                const table = document.querySelector('#default-wrap table')
                 const row = document.createElement('tr')
                 const word = document.createElement('td')
                 word.innerText = convertSnakeCase(key, true)
@@ -34,11 +34,11 @@ export default function displayLocalVocab(obj) {
             valuesPos[value.pos] = valuesPos[value.pos] ? valuesPos[value.pos] + 1 : 1;
 
             // If POS table doesn't exist
-            if (!document.querySelector(`#${value.pos.toLowerCase()}-table`)) {
+            if (!document.querySelector(`#${value.pos.toLowerCase()}-wrap table`)) {
                 createTable(value.pos.toLowerCase())
             }
 
-            const table = document.querySelector(`#${value.pos.toLowerCase()}-table`)
+            const table = document.querySelector(`#${value.pos.toLowerCase()}-wrap table`)
 
             if (valuesPos[value.pos] > 1) {
                 const transUl = table.rows[table.rows.length - 1].querySelector('ul')
@@ -77,7 +77,7 @@ function createDefaultTable() {
     const tableContainer = document.querySelector('.table-container')
     const tableWrap = document.createElement('div')
     const tableEl = document.createElement('table')
-    tableEl.id = 'default-table'
+    tableWrap.id = 'default-wrap'
 
     const tHeading1 = document.createElement('th')
     tHeading1.innerText = 'Word'
@@ -88,7 +88,7 @@ function createDefaultTable() {
 
     tableEl.append(tHeadingRow)
     tableWrap.append(heading, tableEl)
-    tableContainer.append(tableWrap)
+    tableContainer.prepend(tableWrap)
 }
 
 // Table for any part of speech
@@ -96,7 +96,7 @@ function createTable(pos) {
     const tableContainer = document.querySelector('.table-container')
     const tableWrap = document.createElement('div')
     const tableEl = document.createElement('table')
-    tableEl.id = `${pos.toLowerCase()}-table`
+    tableWrap.id = `${pos.toLowerCase()}-wrap`
 
     const tHeading1 = document.createElement('th')
     const tHeading2 = document.createElement('th')

@@ -47,20 +47,6 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
             if (Object.entries(res).length === 0) return
 
             const wordsArrObjs = res[combinedISO]
-            // const untranslatedWords = (() => {
-            //     const filteredWords = Object.fromEntries(
-            //         Object.entries(wordsArrObjs)
-            //             .filter(([_, values]) => values.filter(value => value.translation === ''))
-            //     );
-            //     return { [combinedISO]: filteredWords };
-            // })();
-            // const translatedWords = (() => {
-            //     const filteredWords = Object.fromEntries(
-            //         Object.entries(wordsArrObjs)
-            //             .filter(([_, values]) => values.filter(value => value.translation.length > 0))
-            //     );
-            //     return { [combinedISO]: filteredWords };
-            // })();
             const untranslatedWords = {}
             const translatedWords = {}
 
