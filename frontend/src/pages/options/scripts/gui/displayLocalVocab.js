@@ -10,23 +10,42 @@ export default function displayLocalVocab(obj) {
     clearLocalVocab()
 
     // Populate table body with vocab
-    for (const [key, value] of Object.entries(obj)) {
-        if (!document.querySelector(`#${value.pos.toLowerCase()}-table`)) {
-            createTable(value.pos.toLowerCase())
-        }
+    for (const [key, values] of Object.entries(obj)) {
+        const valuesPos = {}
+        values.forEach((value) => {
+            // If translated
+            valuesPos[value.pos] = valuesPos[value.pos] ? valuesPos[value.pos] + 1 : 1;
 
-        const table = document.querySelector(`#${value.pos.toLowerCase()}-table`)
-        const row = document.createElement("tr")
+            // If POS table doesn't exist
+            if (!document.querySelector(`#${value.pos.toLowerCase()}-table`)) {
+                createTable(value.pos.toLowerCase())
+            }
 
-        const word = document.createElement("td")
-        word.innerText = convertSnakeCase(key, true)
+            const table = document.querySelector(`#${value.pos.toLowerCase()}-table`)
 
-        const translation = document.createElement("td")
-        translation.innerText = convertSnakeCase(value.translation, true)
+            if (valuesPos[value.pos] > 1) {
+                const transUl = table.rows[table.rows.length - 1].querySelector('ul')
+                const transLi = document.createElement("li")
+                transLi.innerText = convertSnakeCase(value.translation, true)
+                transUl.append(transLi)
+            } else {
+                const row = document.createElement("tr")
 
-        row.append(word, translation)
+                const word = document.createElement("td")
+                word.innerText = convertSnakeCase(key, true)
 
-        table.append(row)
+                const translation = document.createElement("td")
+                const transUl = document.createElement("ul")
+                const transLi = document.createElement("li")
+                transLi.innerText = convertSnakeCase(value.translation, true)
+                transUl.append(transLi)
+                translation.append(transUl)
+
+                row.append(word, translation)
+
+                table.append(row)
+            }
+        })
     }
 }
 

@@ -214,13 +214,14 @@ function storeData(data) {
                             if (!hasMatchingId) {
                                 // If there is no matching id, push the element to local storage
                                 localWord.push(element);
-                                wordsAdded += 1
+                                wordsAdded += 1;
                             }
                         })
                     }
                 })
 
                 console.log(wordsAdded + " words loaded")
+                console.log(localWords)
 
                 // Set the updated object to storage
                 chrome.storage.local.set({ [combinedISO]: localWords }).then(() => {
