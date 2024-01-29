@@ -15,9 +15,8 @@ module.exports = async function chunkPromises(promises, REQUEST_LIMIT, TIME_INTE
     let promiseCounter = 0;
     let timeSinceLastReset = Date.now();
     let promisesThisSecond = 0;
-    let promisesArr = Object.entries(promises)
 
-    while (promisesArr.length > 0) {
+    while (Object.keys(promises).length > 0) {
         // Check if it's time to reset promisesThisSecond
         if (Date.now() - timeSinceLastReset >= TIME_INTERVAL) {
             console.log('Time reset');
@@ -40,18 +39,22 @@ module.exports = async function chunkPromises(promises, REQUEST_LIMIT, TIME_INTE
             return false;
         }
 
-        let runningPromises = promisesArr.splice(0, REQUEST_LIMIT);
-        promises = Object.fromEntries(promisesArr)
-        runningPromises = runningPromises.map((element) => element[1])
+        const runningKeys = Object.keys(promises).slice(0, REQUEST_LIMIT);
+        const runningPromises = runningKeys.map(key => promises[key]);
+        deleteKeysFromObject(promises, runningKeys);
+
         const results = await Promise.all(runningPromises.map((promise) => promise()));
 
         chunkCounter++;
         promiseCounter += results.length;
         promisesThisSecond += runningPromises.length;
-
-        promisesArr = Object.entries(promises)
     }
 
     console.log(`Processed ${promiseCounter} words in ${chunkCounter} chunks`)
     return true;
+}
+
+// Helper function to delete keys from an object
+function deleteKeysFromObject(obj, keys) {
+    keys.forEach(key => delete obj[key]);
 }
