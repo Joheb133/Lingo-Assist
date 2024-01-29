@@ -17,7 +17,7 @@ export default function displayLocalVocab(obj) {
             if (value.translation === '') {
                 // If POS table doesn't exist
                 if (!document.querySelector('#default-wrap table')) {
-                    createDefaultTable()
+                    createTable()
                 }
 
                 const table = document.querySelector('#default-wrap table')
@@ -72,42 +72,33 @@ export function clearLocalVocab() {
     table.innerHTML = '';
 }
 
-// Table for untranslated words
-function createDefaultTable() {
-    const tableContainer = document.querySelector('.table-container')
-    const tableWrap = document.createElement('div')
-    const tableEl = document.createElement('table')
-    tableWrap.id = 'default-wrap'
-
-    const tHeading1 = document.createElement('th')
-    tHeading1.innerText = 'Word'
-    const tHeadingRow = document.createElement('tr')
-    const heading = document.createElement('h4')
-    heading.innerText = 'Untranslated words'
-    tHeadingRow.append(tHeading1)
-
-    tableEl.append(tHeadingRow)
-    tableWrap.append(heading, tableEl)
-    tableContainer.prepend(tableWrap)
-}
-
-// Table for any part of speech
 function createTable(pos) {
-    const tableContainer = document.querySelector('.table-container')
-    const tableWrap = document.createElement('div')
-    const tableEl = document.createElement('table')
-    tableWrap.id = `${pos.toLowerCase()}-wrap`
+    const tableContainer = document.querySelector('.table-container');
+    const tableWrap = document.createElement('div');
+    const tableEl = document.createElement('table');
 
-    const tHeading1 = document.createElement('th')
-    const tHeading2 = document.createElement('th')
-    tHeading1.innerText = 'Word'
-    tHeading2.innerText = 'Translation'
-    const tHeadingRow = document.createElement('tr')
-    const heading = document.createElement('h4')
-    heading.innerText = pos.charAt(0).toUpperCase() + pos.slice(1);
-    tHeadingRow.append(tHeading1, tHeading2)
+    const tHeading1 = document.createElement('th');
+    tHeading1.innerText = 'Word';
 
-    tableEl.append(tHeadingRow)
-    tableWrap.append(heading, tableEl)
-    tableContainer.append(tableWrap)
+    const tHeadingRow = document.createElement('tr');
+    const heading = document.createElement('h4');
+
+    // Add Translation header only if pos is provided
+    if (pos) {
+        const tHeading2 = document.createElement('th');
+        tHeading2.innerText = 'Translation';
+        tableWrap.id = `${pos.toLowerCase()}-wrap`
+        heading.innerText = pos.charAt(0).toUpperCase() + pos.slice(1)
+        tHeadingRow.append(tHeading1, tHeading2);
+    } else {
+        tableWrap.id = 'default-wrap'
+        heading.innerText = 'Untranslated Words'
+        tHeadingRow.append(tHeading1)
+    }
+
+    tableEl.append(tHeadingRow);
+    tableWrap.append(heading, tableEl);
+
+    // Use prepend for default table, append for part of speech tables
+    pos ? tableContainer.append(tableWrap) : tableContainer.prepend(tableWrap);
 }
