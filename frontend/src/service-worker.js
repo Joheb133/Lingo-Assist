@@ -207,6 +207,7 @@ function storeData(data) {
                 })
 
                 console.log(wordsAdded + " words loaded")
+                console.log(localWords)
 
                 // Set the updated object to storage
                 chrome.storage.local.set({ [combinedISO]: localWords }).then(() => {

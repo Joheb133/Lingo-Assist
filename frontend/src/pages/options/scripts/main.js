@@ -20,7 +20,6 @@ const translateBtn = document.querySelector('.translate-btn');
 translateBtn.addEventListener('click', async function () {
     const combinedISO = localStorage.getItem('combinedISO')
     const reqTrans = await requestTranslations(combinedISO)
-    console.log(reqTrans)
     if (!reqTrans) {
         return
     }
