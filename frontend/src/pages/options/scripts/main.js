@@ -17,9 +17,15 @@ clearBtn.addEventListener('click', function () {
 })
 
 const translateBtn = document.querySelector('.translate-btn');
-translateBtn.addEventListener('click', function () {
+translateBtn.addEventListener('click', async function () {
     const combinedISO = localStorage.getItem('combinedISO')
-    requestTranslations(combinedISO)
+    const reqTrans = await requestTranslations(combinedISO)
+    console.log(reqTrans)
+    if (!reqTrans) {
+        return
+    }
+    const vocab = await getLocalVocab(combinedISO)
+    displayLocalVocab(vocab)
 });
 
 

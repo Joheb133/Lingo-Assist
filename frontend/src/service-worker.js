@@ -96,9 +96,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
                     console.error(err)
                     sendRes({ error: err })
                 })
-
-            return true;
         })
+
+        return true;
     }
 
     if (message.type === 'getLocalVocab') {
@@ -207,7 +207,6 @@ function storeData(data) {
                 })
 
                 console.log(wordsAdded + " words loaded")
-                console.log(localWords)
 
                 // Set the updated object to storage
                 chrome.storage.local.set({ [combinedISO]: localWords }).then(() => {

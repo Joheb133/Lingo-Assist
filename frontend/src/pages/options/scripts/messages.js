@@ -45,7 +45,8 @@ export async function requestTranslations(combinedISO) {
         if (res.error) {
             throw res.error
         }
-        return res;
+
+        return true;
     } catch (error) {
         console.error('Error translating', error)
         return false
