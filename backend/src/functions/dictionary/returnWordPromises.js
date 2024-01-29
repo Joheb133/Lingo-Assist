@@ -17,7 +17,7 @@ module.exports = function returnWordPromises(wordRes, wordObjs, combinedISO) {
         // Check if the word is marked as an infinitive by the client & not already fetched and stored in "words"
         wordDataArr.forEach((wordObj) => {
             if (wordObj.infinitive !== null && promises[wordObj.infinitive] === undefined) {
-                promises[word.infinitive] = () => processWord(promises, combinedISO, wordObj.infinitive, [wordObj], wordRes, true)
+                promises[wordObj.infinitive] = () => processWord(promises, combinedISO, wordObj.infinitive, [wordObj], wordRes, true)
             }
         })
     });

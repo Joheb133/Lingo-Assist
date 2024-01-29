@@ -49,7 +49,6 @@ module.exports = async function chunkPromises(promises, REQUEST_LIMIT, TIME_INTE
         promiseCounter += results.length;
         promisesThisSecond += runningPromises.length;
 
-        console.log(promises)
         promisesArr = Object.entries(promises)
     }
 

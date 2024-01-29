@@ -52,7 +52,7 @@ module.exports = function generateWordData(response, word, wordDataArr, isInfini
 
         // Check for wiki infinitve class
         const wikiInfinitive = getTextByClass(translation, 'form-of-definition-link')
-        if (wikiInfinitive.length > 0) {
+        if (wikiInfinitive.length > 0 && wordObj.infinitive === null) {
             infinitive = wikiInfinitive
             wikiInfinitives[infinitive] = null;
         }
