@@ -52,7 +52,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
 
             Object.entries(wordsArrObjs).forEach(([word, dataArr]) => {
                 dataArr.forEach(data => {
-                    if (data.translation === '' && data.duplicate !== true) {
+                    if (data.translation === '') {
                         if (!untranslatedWords[word]) untranslatedWords[word] = []
 
                         untranslatedWords[word].push(data)
