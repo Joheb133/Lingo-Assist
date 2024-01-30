@@ -52,7 +52,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
 
             Object.entries(wordsArrObjs).forEach(([word, dataArr]) => {
                 dataArr.forEach(data => {
-                    if (data.translation === '') {
+                    if (data.translation === '' && data.duplicate !== true) {
                         if (!untranslatedWords[word]) untranslatedWords[word] = []
 
                         untranslatedWords[word].push(data)
@@ -195,8 +195,15 @@ function storeData(data) {
                     } else { // word DOES exist
                         // need to compare each Duolingo element data with local data
                         data.forEach((element) => {
-                            const hasMatchingId = localWord.some(localElement => localElement['duolingo_id'] === element['duolingo_id']);
+                            // Mark a word as a duplicate
+                            const isDuplicate = localWord.some(localElement => localElement.translation.length > 0 && localElement.translation === element.translation)
+                            if (isDuplicate) {
+                                element.duplicate = true;
+                                element.translation = '';
+                            }
 
+                            // Make sure NOT to add the same word based on duolingo id
+                            const hasMatchingId = localWord.some(localElement => localElement['duolingo_id'] === element['duolingo_id']);
                             if (!hasMatchingId) {
                                 // If there is no matching id, push the element to local storage
                                 localWord.push(element);

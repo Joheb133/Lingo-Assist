@@ -20,13 +20,14 @@ module.exports = function generateWordData(response, word, wordDataArr, isInfini
         return wordDataArr
     }
 
-    const responseDup = [...response];
+    let responseDup = [...response];
     let resDataArr = []
     let wikiInfinitives = {}
 
     for (let i = 0; i < wordDataArr.length; i++) {
         const wordObj = wordDataArr[i];
         if (responseDup.length === 0) {
+            wordObj.duplicate = true;
             resDataArr.push(wordObj)
             break;
         }
