@@ -44,7 +44,11 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
     if (message.type === 'requestTranslations') {
         const combinedISO = message.ISO
         chrome.storage.local.get(combinedISO).then((res) => {
-            if (Object.entries(res).length === 0) return
+            if (Object.entries(res).length === 0) {
+                console.error('No words in local storage')
+                sendRes({ error: 'No words in local storage' })
+                return
+            }
 
             const wordsArrObjs = res[combinedISO]
             const untranslatedWords = {}
@@ -52,7 +56,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
 
             Object.entries(wordsArrObjs).forEach(([word, dataArr]) => {
                 dataArr.forEach(data => {
-                    if (data.translation === '') {
+                    if (data.translation === '' && data.duplicate !== true) {
                         if (!untranslatedWords[word]) untranslatedWords[word] = []
 
                         untranslatedWords[word].push(data)
@@ -63,6 +67,12 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
                     }
                 })
             })
+
+            if (Object.keys(untranslatedWords).length === 0) {
+                console.error("No words to translate")
+                sendRes({ error: 'No words to translate' })
+                return;
+            }
 
             const url = 'http://localhost:7071/api/dictionary'
             const options = {
