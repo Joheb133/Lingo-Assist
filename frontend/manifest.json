@@ -4,7 +4,7 @@
   "description": "Learn your duolingo word tree",
   "permissions": ["storage", "activeTab", "tabs"],
   "background": {
-    "service_worker": "src/service-worker.js",
+    "service_worker": "src/serviceWorker.js",
     "type": "module"
   },
   "content_scripts": [
