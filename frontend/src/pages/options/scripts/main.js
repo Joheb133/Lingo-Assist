@@ -1,7 +1,7 @@
 import displayLanguages from "./gui/displayLanguages.js";
 import displayLocalVocab, { clearLocalVocab } from "./gui/displayLocalVocab.js";
 import displayLoginStatus, { login } from "./gui/displayLoginStatus.js";
-import { getLocalVocab, syncDuolingo, requestTranslations } from "./messages.js";
+import { getLocalVocab, syncDuolingo, requestTranslations } from "../../../messages.js";
 
 const duolingoSyncBtn = document.querySelector('.duolingo-sync-btn');
 duolingoSyncBtn.addEventListener('click', function () {

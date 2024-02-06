@@ -153,10 +153,10 @@ function storeDuolingoData(res) {
 
             if (vocabObj[formattedWord] === undefined) { // key doesnt exist
                 // push an object (the data)
-                vocabObj[formattedWord] = [data]
-            } else {
-                vocabObj[formattedWord].push(data)
+                vocabObj[formattedWord] = []
             }
+            vocabObj[formattedWord].push(data)
+
         });
 
         storeData({ [combinedISO]: vocabObj })

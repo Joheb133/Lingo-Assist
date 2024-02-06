@@ -9,4 +9,14 @@ document.addEventListener("DOMContentLoaded", () => {
         // Use the chrome.tabs API to open a new tab with the site page URL
         chrome.tabs.create({ url: sitePageUrl });
     });
+
+    // Add a click event listener to the button
+    const gameBtn = document.querySelector('.game-btn');
+    gameBtn.addEventListener('click', function () {
+        // Define the URL of your extension site page
+        const sitePageUrl = chrome.runtime.getURL('src/pages/game/index.html');
+
+        // Use the chrome.tabs API to open a new tab with the site page URL
+        chrome.tabs.create({ url: sitePageUrl });
+    });
 });
