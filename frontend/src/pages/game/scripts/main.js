@@ -11,7 +11,13 @@ async function init() {
         return
     }
 
-    const vocabArr = Object.entries(vocab)
+    // Temporarily remove verbs
+    const vocabArr = Object.entries(vocab).map(([word, dataArr]) => [
+        word,
+        dataArr.filter((dataEl) => dataEl.pos !== 'Verb')
+    ]).filter(([_, dataArr]) => dataArr.length > 0)
+
+    console.log(vocabArr)
 
     const wordWrapEl = document.querySelector('.word-wrap')
     wordWrapEl.innerHTML = `<span>${vocabArr[0][0]}</span>`
