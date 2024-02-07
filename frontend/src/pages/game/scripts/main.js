@@ -1,10 +1,12 @@
 import { getLocalVocab } from "../../../messages.js";
 
-let wordIndex = 0;
 
 async function init() {
     const combinedISO = localStorage.getItem('combinedISO')
     const vocab = await getLocalVocab(combinedISO)
+    let wordCount = 0;
+    let rightCount = 0;
+    let wrongCount = 0;
 
     if (!vocab) {
         console.error(`Error loading vocab on ${combinedISO}`)
@@ -17,8 +19,6 @@ async function init() {
         dataArr.filter((dataEl) => dataEl.pos !== 'Verb')
     ]).filter(([_, dataArr]) => dataArr.length > 0)
 
-    console.log(vocabArr)
-
     const wordWrapEl = document.querySelector('.word-wrap')
     wordWrapEl.innerHTML = `<span>${vocabArr[0][0]}</span>`
     console.log(vocabArr[0][1][0].translation)
@@ -28,6 +28,17 @@ async function init() {
 
     const restartBtn = document.querySelector('.restart-btn')
     restartBtn.addEventListener('click', restartFunc)
+
+    // Counters
+    const wordCounterEl = document.querySelector('#word-counter')
+    const rightCounterEl = document.querySelector('#right-counter')
+    const wrongCounterEl = document.querySelector('#wrong-counter')
+
+    vocabArr.forEach(([_, dataArr]) => {
+        wordCount += dataArr.length
+    })
+
+    wordCounterEl.innerText = wordCount
 
     function inputFunc(e) {
         if (e.code !== 'Enter') return
@@ -44,11 +55,17 @@ async function init() {
             } else {
                 vocabArr.shift()
             }
-            console.log(true, inputEl.value.toLowerCase(), firstWordData.translation.toLowerCase(), vocabArr)
+            wordCount--;
+            wordCounterEl.innerText = wordCount;
+            rightCount++;
+            rightCounterEl.innerHTML = rightCount;
+            console.log(true, inputEl.value.toLowerCase(), firstWordData.translation.toLowerCase())
         } else {
             // Move first word to end of array
             vocabArr.push(vocabArr.shift());
-            console.log(false, inputEl.value.toLowerCase(), firstWordData.translation.toLowerCase(), vocabArr)
+            wrongCount++;
+            wrongCounterEl.innerText = wrongCount;
+            console.log(false, inputEl.value.toLowerCase(), firstWordData.translation.toLowerCase())
         }
 
         if (vocabArr.length === 0) {
