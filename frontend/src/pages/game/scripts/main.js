@@ -1,4 +1,5 @@
 import { getLocalVocab } from "../../../messages.js";
+import convertSnakeCase from "../../../utils/convertSnakeCase.js"
 
 
 async function init() {
@@ -20,7 +21,7 @@ async function init() {
     ]).filter(([_, dataArr]) => dataArr.length > 0)
 
     const wordWrapEl = document.querySelector('.word-wrap')
-    wordWrapEl.innerHTML = `<span>${vocabArr[0][0]}</span>`
+    wordWrapEl.innerHTML = `<span>${convertSnakeCase(vocabArr[0][0], true)}</span>`
     console.log(vocabArr[0][1][0].translation)
 
     const inputEl = document.querySelector('.game-wrap input')
@@ -73,7 +74,7 @@ async function init() {
             inputEl.removeEventListener('keydown', inputFunc)
         } else {
             inputEl.value = '';
-            wordWrapEl.innerHTML = `<span>${vocabArr[0][0]}</span>`
+            wordWrapEl.innerHTML = `<span>${convertSnakeCase(vocabArr[0][0], true)}</span>`
             console.log(vocabArr[0][1][0].translation)
         }
     }
