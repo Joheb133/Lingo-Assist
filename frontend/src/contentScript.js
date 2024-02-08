@@ -123,21 +123,28 @@ targetElements.forEach(element => intersectionObserver.observe(element));
 function replaceWordsInElement(element, wordMap) {
     for (const childNode of element.childNodes) {
         if (childNode.nodeType === Node.TEXT_NODE) {
-            // If it's a text node, manipulate the text content
             const originalText = childNode.textContent;
 
             // Replace specific words based on the wordMap
-            const newText = originalText.replace(/\b(\w+)\b/g, (match, word) => {
-                if (wordMap[word.toLowerCase()]) {
-                    return wordMap[word.toLowerCase()][0]
-                } else {
-                    return match
+            const newText = originalText.replace(/\b(\w+)\b/g, (word) => {
+                const replacement = wordMap[word.toLowerCase()];
+                if (replacement) {
+                    // Create a span element for the replaced word
+                    const span = document.createElement('span');
+                    span.textContent = replacement[0];
+                    span.classList.add('lingo-assist-span'); // Add your styling class
+
+                    return span.outerHTML;
                 }
+                return word;
             });
 
+            // Create a temporary element to hold the HTML structure
+            const tempElement = document.createElement('template');
+            tempElement.innerHTML = newText;
 
-            // Update the text content of the text node
-            childNode.textContent = newText;
+            // Replace the text node with the modified HTML structure
+            element.replaceChild(tempElement.content, childNode);
         } else if (childNode.nodeType === Node.ELEMENT_NODE && childNode.tagName.toLowerCase() !== 'a') {
             // Recursively handle child elements
             replaceWordsInElement(childNode, wordMap);

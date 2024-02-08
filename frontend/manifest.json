@@ -16,6 +16,7 @@
         "https://chat.openai.com/*"
       ],
       "runAt": "document_end",
+      "css": ["src/contentStyle.css"],
       "js": ["src/contentScript.js"]
     }
   ],
