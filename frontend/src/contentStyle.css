@@ -1,3 +1,26 @@
 .lingo-assist-span {
+  position: relative;
   background-color: rgba(255, 0, 0, 0.5);
+}
+
+.lingo-assist-tooltip {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -32px);
+  display: none;
+  box-sizing: border-box;
+  padding: 4px 28px;
+  border-radius: 8px;
+  background-color: rgb(34, 34, 34);
+  color: white;
+  z-index: 100;
+}
+
+.lingo-assist-container:hover .lingo-assist-tooltip {
+  display: block;
+}
+
+.lingo-assist-container {
+  display: inline-block;
 }

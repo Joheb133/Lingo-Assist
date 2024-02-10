@@ -120,6 +120,9 @@ const intersectionObserver = new IntersectionObserver(intersectionCallback, inte
 const targetElements = document.querySelectorAll('p');
 targetElements.forEach(element => intersectionObserver.observe(element));
 
+// Exlcuded elements
+const excludedTags = ['a', 'span']
+
 function replaceWordsInElement(element, wordMap) {
     for (const childNode of element.childNodes) {
         if (childNode.nodeType === Node.TEXT_NODE) {
@@ -129,12 +132,24 @@ function replaceWordsInElement(element, wordMap) {
             const newText = originalText.replace(/\b(\w+)\b/g, (word) => {
                 const replacement = wordMap[word.toLowerCase()];
                 if (replacement) {
-                    // Create a span element for the replaced word
-                    const span = document.createElement('span');
-                    span.textContent = replacement[0];
-                    span.classList.add('lingo-assist-span'); // Add your styling class
+                    // Div container for elements
+                    const container = document.createElement('div');
+                    container.classList.add('lingo-assist-container');
 
-                    return span.outerHTML;
+                    // Create a span element for the replaced word
+                    const translationSpan = document.createElement('span');
+                    translationSpan.textContent = replacement[0];
+                    translationSpan.classList.add('lingo-assist-span');
+
+                    // Create tooltip
+                    const tooltipSpan = document.createElement('span');
+                    tooltipSpan.textContent = word;
+                    tooltipSpan.classList.add('lingo-assist-tooltip');
+                    translationSpan.append(tooltipSpan)
+
+                    container.append(translationSpan);
+
+                    return container.outerHTML;
                 }
                 return word;
             });
@@ -145,7 +160,7 @@ function replaceWordsInElement(element, wordMap) {
 
             // Replace the text node with the modified HTML structure
             element.replaceChild(tempElement.content, childNode);
-        } else if (childNode.nodeType === Node.ELEMENT_NODE && childNode.tagName.toLowerCase() !== 'a') {
+        } else if (childNode.nodeType === Node.ELEMENT_NODE && !excludedTags.includes(childNode.tagName.toLowerCase())) {
             // Recursively handle child elements
             replaceWordsInElement(childNode, wordMap);
         }
