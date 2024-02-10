@@ -1,5 +1,3 @@
-console.log("content script activated...must destroy");
-
 /**
  * @param {string} combinedISO - learningISO_nativeISO used as key to access storage
  * @return {Promise<Object|Error>} - {word: translation}
@@ -16,9 +14,6 @@ async function getLocalVocab(combinedISO) {
         return false
     }
 }
-
-// send a message
-// also make sure to NOT include words with no translation in the map
 
 // Function to reverse the structure
 function reverseStructure(wordsObj) {
@@ -43,6 +38,7 @@ function reverseStructure(wordsObj) {
 
 function returnTranslationMap() {
     const combinedISO = localStorage.getItem('combinedISO');
+    console.log(combinedISO)
     //await getLocalVocab(combinedISO)
     const localData = {
         "adiós": [
@@ -94,37 +90,17 @@ function returnTranslationMap() {
     return reverseStructure(localData)
 }
 
-const translationMap = returnTranslationMap();
-console.log(translationMap)
-
 // Callback function when the observed element enters or exits the viewport
-function intersectionCallback(entries) {
+function intersectionCallback(entries, wordMap, excludedTags) {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             // Element is currently in the viewport
-            replaceWordsInElement(entry.target, translationMap);
+            replaceWordsInElement(entry.target, wordMap, excludedTags);
         }
     });
 };
 
-// Options for the Intersection Observer
-const intersectionOptions = {
-    root: null,
-    rootMargin: '0px',
-    threshold: 0.5, // Trigger when at least 50% of the element is visible
-};
-
-// Create an Intersection Observer
-const intersectionObserver = new IntersectionObserver(intersectionCallback, intersectionOptions);
-
-// Find and observe target elements (e.g., all paragraphs)
-const targetElements = document.querySelectorAll('p');
-targetElements.forEach(element => intersectionObserver.observe(element));
-
-// Exlcuded elements
-const excludedTags = ['a', 'span']
-
-function replaceWordsInElement(element, wordMap) {
+function replaceWordsInElement(element, wordMap, excludedTags) {
     const wordCounter = {};
     for (const childNode of element.childNodes) {
         if (childNode.nodeType === Node.TEXT_NODE) {
@@ -143,6 +119,7 @@ function replaceWordsInElement(element, wordMap) {
                     const translationSpan = document.createElement('span');
                     translationSpan.classList.add('lingo-assist-span');
 
+                    // Use different translations
                     wordCounter[lowerWord] !== undefined ? wordCounter[lowerWord]++ : wordCounter[lowerWord] = 0;
                     const index = wordCounter[lowerWord] % replacement.length;
                     translationSpan.textContent = replacement[index];
@@ -151,7 +128,7 @@ function replaceWordsInElement(element, wordMap) {
                     const tooltipSpan = document.createElement('span');
                     tooltipSpan.textContent = word;
                     tooltipSpan.classList.add('lingo-assist-tooltip');
-                    translationSpan.append(tooltipSpan)
+                    translationSpan.append(tooltipSpan);
 
                     container.append(translationSpan);
 
@@ -168,7 +145,38 @@ function replaceWordsInElement(element, wordMap) {
             element.replaceChild(tempElement.content, childNode);
         } else if (childNode.nodeType === Node.ELEMENT_NODE && !excludedTags.includes(childNode.tagName.toLowerCase())) {
             // Recursively handle child elements
-            replaceWordsInElement(childNode, wordMap);
+            replaceWordsInElement(childNode, wordMap, excludedTags);
         }
     }
 };
+
+function main() {
+    const applyContentScript = localStorage.getItem('applyContentScript')
+    console.log(applyContentScript)
+    if (applyContentScript === 'false') {
+        return
+    }
+
+    console.log("content script activated");
+
+    const wordMap = returnTranslationMap();
+
+    // Options for the Intersection Observer
+    const intersectionOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.5, // Trigger when at least 50% of the element is visible
+    };
+
+    // Exlcuded elements
+    const excludedTags = ['a', 'span']
+
+    // Create an Intersection Observer
+    const intersectionObserver = new IntersectionObserver((entries) => intersectionCallback(entries, wordMap, excludedTags), intersectionOptions);
+
+    // Find and observe target elements (e.g., all paragraphs)
+    const targetElements = document.querySelectorAll('p');
+    targetElements.forEach(element => intersectionObserver.observe(element));
+}
+
+main()
