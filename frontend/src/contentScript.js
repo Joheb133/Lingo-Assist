@@ -95,6 +95,7 @@ function returnTranslationMap() {
 }
 
 const translationMap = returnTranslationMap();
+console.log(translationMap)
 
 // Callback function when the observed element enters or exits the viewport
 function intersectionCallback(entries) {
@@ -124,13 +125,15 @@ targetElements.forEach(element => intersectionObserver.observe(element));
 const excludedTags = ['a', 'span']
 
 function replaceWordsInElement(element, wordMap) {
+    const wordCounter = {};
     for (const childNode of element.childNodes) {
         if (childNode.nodeType === Node.TEXT_NODE) {
             const originalText = childNode.textContent;
 
             // Replace specific words based on the wordMap
             const newText = originalText.replace(/\b(\w+)\b/g, (word) => {
-                const replacement = wordMap[word.toLowerCase()];
+                const lowerWord = word.toLowerCase()
+                const replacement = wordMap[lowerWord];
                 if (replacement) {
                     // Div container for elements
                     const container = document.createElement('div');
@@ -138,8 +141,11 @@ function replaceWordsInElement(element, wordMap) {
 
                     // Create a span element for the replaced word
                     const translationSpan = document.createElement('span');
-                    translationSpan.textContent = replacement[0];
                     translationSpan.classList.add('lingo-assist-span');
+
+                    wordCounter[lowerWord] !== undefined ? wordCounter[lowerWord]++ : wordCounter[lowerWord] = 0;
+                    const index = wordCounter[lowerWord] % replacement.length;
+                    translationSpan.textContent = replacement[index];
 
                     // Create tooltip
                     const tooltipSpan = document.createElement('span');
