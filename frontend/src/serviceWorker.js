@@ -110,13 +110,13 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
         return true;
     }
 
-    if (message.type === 'getLocalVocab') {
-        const combinedISO = message.ISO;
-        chrome.storage.local.get(combinedISO).then((res) => {
+    if (message.type === 'getData') {
+        const key = message.key;
+        chrome.storage.local.get(key).then((res) => {
             if (Object.entries(res).length === 0) { // No data
-                sendRes({ error: `No data exists on ${combinedISO}` })
+                sendRes(null)
             } else {
-                sendRes(res[combinedISO])
+                sendRes(res[key])
             }
         })
         return true

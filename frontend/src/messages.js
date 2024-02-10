@@ -17,20 +17,20 @@ export async function syncDuolingo() {
     }
 }
 
-
 /**
- * @param {string} combinedISO - learningISO_nativeISO used as key to access storage
- * @return {Promise<Object|Error>} - {word: translation}
+ * @param {string} key - key we want to access
+ * @return {Promise<Object|Error>} - 
 */
-export async function getLocalVocab(combinedISO) {
+export async function getData(key) {
     try {
-        const res = await chrome.runtime.sendMessage({ type: 'getLocalVocab', ISO: combinedISO });
-        if (res.error) {
-            throw res.error;
+        const res = await chrome.runtime.sendMessage({ type: 'getData', key });
+        if (res === null) {
+            console.error(`No data found on ${key}.`);
+            return null
         }
         return res;
     } catch (error) {
-        console.error(`Error returning vocab on ${combinedISO}.`, error);
+        console.error(`Error returning vocab on ${key}.`, error);
         return false
     }
 }

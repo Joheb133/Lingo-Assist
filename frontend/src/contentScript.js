@@ -1,16 +1,17 @@
 /**
- * @param {string} combinedISO - learningISO_nativeISO used as key to access storage
- * @return {Promise<Object|Error>} - {word: translation}
+ * @param {string} key - key we want to access
+ * @return {Promise<Object|Error>} - 
 */
-async function getLocalVocab(combinedISO) {
+async function getData(key) {
     try {
-        const res = await chrome.runtime.sendMessage({ type: 'getLocalVocab', ISO: combinedISO });
-        if (res.error) {
-            throw res.error;
+        const res = await chrome.runtime.sendMessage({ type: 'getData', key });
+        if (res === null) {
+            console.error(`No data found on ${key}.`);
+            return null
         }
         return res;
     } catch (error) {
-        console.error(`Error returning vocab on ${combinedISO}.`, error);
+        console.error(`Error returning vocab on ${key}.`, error);
         return false
     }
 }
@@ -36,9 +37,9 @@ function reverseStructure(wordsObj) {
     return reversedData;
 }
 
-function returnTranslationMap() {
-    const combinedISO = localStorage.getItem('combinedISO');
-    console.log(combinedISO)
+async function returnTranslationMap() {
+    // const combinedISO = await getData('combinedISO');
+    // console.log(combinedISO)
     //await getLocalVocab(combinedISO)
     const localData = {
         "adiós": [
@@ -150,8 +151,8 @@ function replaceWordsInElement(element, wordMap, excludedTags) {
     }
 };
 
-function main() {
-    const applyContentScript = localStorage.getItem('applyContentScript')
+async function main() {
+    const applyContentScript = await getData('applyContentScript')
     console.log(applyContentScript)
     if (applyContentScript === 'false') {
         return
@@ -159,7 +160,7 @@ function main() {
 
     console.log("content script activated");
 
-    const wordMap = returnTranslationMap();
+    const wordMap = await returnTranslationMap();
 
     // Options for the Intersection Observer
     const intersectionOptions = {

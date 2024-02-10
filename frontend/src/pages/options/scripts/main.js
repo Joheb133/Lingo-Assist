@@ -1,7 +1,7 @@
 import displayLanguages from "./gui/displayLanguages.js";
 import displayLocalVocab, { clearLocalVocab } from "./gui/displayLocalVocab.js";
 import displayLoginStatus, { login } from "./gui/displayLoginStatus.js";
-import { getLocalVocab, syncDuolingo, requestTranslations } from "../../../messages.js";
+import { getData, syncDuolingo, requestTranslations } from "../../../messages.js";
 
 const duolingoSyncBtn = document.querySelector('.duolingo-sync-btn');
 duolingoSyncBtn.addEventListener('click', function () {
@@ -18,12 +18,12 @@ clearBtn.addEventListener('click', function () {
 
 const translateBtn = document.querySelector('.translate-btn');
 translateBtn.addEventListener('click', async function () {
-    const combinedISO = localStorage.getItem('combinedISO')
+    const combinedISO = await getData('combinedISO')
     const reqTrans = await requestTranslations(combinedISO)
     if (!reqTrans) {
         return
     }
-    const vocab = await getLocalVocab(combinedISO)
+    const vocab = await getData(combinedISO)
     displayLocalVocab(vocab)
 });
 
@@ -38,8 +38,8 @@ async function initDuolingoSync() {
 
     // syncDuolingo changes localStorage so await here is important
     const syncStatus = await syncDuolingo()
-    const combinedISO = localStorage.getItem('combinedISO')
-    const vocab = await getLocalVocab(combinedISO)
+    const combinedISO = await getData('combinedISO')
+    const vocab = await getData(combinedISO)
 
     displayLoginStatus(syncStatus ? login.SUCCESS : login.FAIL)
 

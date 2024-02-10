@@ -1,10 +1,10 @@
-import { getLocalVocab } from "../../../messages.js";
+import { getData } from "../../../messages.js";
 import convertSnakeCase from "../../../utils/convertSnakeCase.js"
 
 
 async function init() {
-    const combinedISO = localStorage.getItem('combinedISO')
-    const vocab = await getLocalVocab(combinedISO)
+    const combinedISO = await getData('combinedISO')
+    const vocab = await getData(combinedISO)
     let wordCount = 0;
     let rightCount = 0;
     let wrongCount = 0;

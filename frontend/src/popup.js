@@ -1,4 +1,6 @@
-document.addEventListener("DOMContentLoaded", () => {
+import { getData } from "./messages.js";
+
+document.addEventListener("DOMContentLoaded", async function () {
 
     // Add a click event listener to the button
     const optionsBtn = document.querySelector('.options-btn');
@@ -22,21 +24,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Toggle slider button
     const toggleSliderBtn = document.querySelector('.switch input');
-    const applyContentScript = localStorage.getItem('applyContentScript')
-    if (localStorage.getItem('applyContentScript') === null) {
-        localStorage.setItem('applyContentScript', 'true')
+    const applyContentScript = await getData('applyContentScript')
+    if (applyContentScript === null) {
+        console.log('applyContentScript is', null)
+        chrome.storage.local.set(({ applyContentScript: 'true' }))
+        applyContentScript = 'true';
     }
     applyContentScript === 'true' ? toggleSliderBtn.checked = true : toggleSliderBtn.checked = false;
 
-    toggleSliderBtn.addEventListener('change', function () {
-        const applyContentScript = localStorage.getItem('applyContentScript')
-        console.log(toggleSliderBtn.checked, applyContentScript)
+    toggleSliderBtn.addEventListener('change', async function () {
+        const applyContentScript = await getData('applyContentScript')
         if (toggleSliderBtn.checked && applyContentScript === 'false') {
             console.log('Set to on')
-            localStorage.setItem('applyContentScript', 'true')
+            chrome.storage.local.set(({ applyContentScript: 'true' }))
         } else if (!toggleSliderBtn.checked && applyContentScript === 'true') {
             console.log('Set to off')
-            localStorage.setItem('applyContentScript', 'false')
+            chrome.storage.local.set(({ applyContentScript: 'false' }))
         }
     })
 });
