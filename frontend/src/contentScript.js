@@ -92,16 +92,16 @@ async function returnTranslationMap() {
 }
 
 // Callback function when the observed element enters or exits the viewport
-function intersectionCallback(entries, wordMap, excludedTags, observer) {
+function intersectionCallback(entries, wordMap, excludedTags) {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             // Element is currently in the viewport
-            replaceWordsInElement(entry.target, wordMap, excludedTags, observer);
+            replaceWordsInElement(entry.target, wordMap, excludedTags);
         }
     });
 };
 
-function replaceWordsInElement(element, wordMap, excludedTags, observer) {
+function replaceWordsInElement(element, wordMap, excludedTags) {
     const wordCounter = {};
     for (const childNode of element.childNodes) {
         if (childNode.nodeType === Node.TEXT_NODE) {
@@ -139,9 +139,6 @@ function replaceWordsInElement(element, wordMap, excludedTags, observer) {
 
                     container.append(translationSpan);
 
-                    // Remove intersection observer
-                    observer.unobserve(element)
-
                     return container.outerHTML;
                 }
                 return word;
@@ -155,7 +152,7 @@ function replaceWordsInElement(element, wordMap, excludedTags, observer) {
             element.replaceChild(tempElement.content, childNode);
         } else if (childNode.nodeType === Node.ELEMENT_NODE && !excludedTags.includes(childNode.tagName.toLowerCase())) {
             // Recursively handle child elements
-            replaceWordsInElement(childNode, wordMap, excludedTags, observer);
+            replaceWordsInElement(childNode, wordMap, excludedTags);
         }
     }
 };
@@ -182,7 +179,7 @@ async function main() {
     const excludedTags = ['a', 'span']
 
     // Create an Intersection Observer
-    const intersectionObserver = new IntersectionObserver((entries) => intersectionCallback(entries, wordMap, excludedTags, intersectionObserver), intersectionOptions);
+    const intersectionObserver = new IntersectionObserver((entries) => intersectionCallback(entries, wordMap, excludedTags), intersectionOptions);
 
     // Find and observe target elements (e.g., all paragraphs)
     const targetElements = document.querySelectorAll('p');
