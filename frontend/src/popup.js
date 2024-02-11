@@ -52,10 +52,23 @@ document.addEventListener("DOMContentLoaded", async function () {
     const currentDomain = await getCurrentTabDomain();
     currentDomainSpan.innerText = currentDomain;
 
-    ignoreCurrentDomainBtn.addEventListener('click', () => {
+    if (ignoredDomainArr.includes(currentDomain)) {
+        ignoreCurrentDomainBtn.innerText = 'Unignore domain'
+    } else {
+        ignoreCurrentDomainBtn.innerText = 'Ignore domain'
+    }
+
+    ignoreCurrentDomainBtn.addEventListener('click', async () => {
         if (!ignoredDomainArr.includes(currentDomain)) {
+            const ignoredDomainArr = await getData('ignoredDomains')
             ignoredDomainArr.push(currentDomain)
             chrome.storage.local.set(({ ignoredDomains: ignoredDomainArr }))
+            ignoreCurrentDomainBtn.innerText = 'Unignore domain'
+        } else {
+            const ignoredDomainArr = await getData('ignoredDomains')
+            const newArr = ignoredDomainArr.filter((element) => element !== currentDomain)
+            chrome.storage.local.set(({ ignoredDomains: newArr }))
+            ignoreCurrentDomainBtn.innerText = 'Ignore domain'
         }
     })
 });
