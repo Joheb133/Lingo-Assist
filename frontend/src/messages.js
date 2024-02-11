@@ -52,3 +52,15 @@ export async function requestTranslations(combinedISO) {
         return false
     }
 }
+
+/**
+ * @return {Promise<string>}
+ */
+export async function getCurrentTabDomain() {
+    try {
+        const res = await chrome.runtime.sendMessage({ type: 'getCurrentTabDomain' })
+        return res
+    } catch (error) {
+        console.error(`Error getting current tab`, error);
+    }
+}

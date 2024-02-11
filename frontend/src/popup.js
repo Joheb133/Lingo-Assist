@@ -1,4 +1,4 @@
-import { getData } from "./messages.js";
+import { getData, getCurrentTabDomain } from "./messages.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
 
@@ -40,6 +40,22 @@ document.addEventListener("DOMContentLoaded", async function () {
         } else if (!toggleSliderBtn.checked && applyContentScript === 'true') {
             console.log('Set to off')
             chrome.storage.local.set(({ applyContentScript: 'false' }))
+        }
+    })
+
+    // Current domain
+    const currentDomainContainer = document.querySelector('.current-domain-container')
+    const currentDomainSpan = currentDomainContainer.querySelector('span')
+    const ignoreCurrentDomainBtn = currentDomainContainer.querySelector('button')
+
+    const ignoredDomainArr = await getData('ignoredDomains')
+    const currentDomain = await getCurrentTabDomain();
+    currentDomainSpan.innerText = currentDomain;
+
+    ignoreCurrentDomainBtn.addEventListener('click', () => {
+        if (!ignoredDomainArr.includes(currentDomain)) {
+            ignoredDomainArr.push(currentDomain)
+            chrome.storage.local.set(({ ignoredDomains: ignoredDomainArr }))
         }
     })
 });
