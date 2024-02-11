@@ -92,16 +92,16 @@ async function returnTranslationMap() {
 }
 
 // Callback function when the observed element enters or exits the viewport
-function intersectionCallback(entries, wordMap, excludedTags) {
+function intersectionCallback(entries, wordMap, excludedTags, observer) {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             // Element is currently in the viewport
-            replaceWordsInElement(entry.target, wordMap, excludedTags);
+            replaceWordsInElement(entry.target, wordMap, excludedTags, observer);
         }
     });
 };
 
-function replaceWordsInElement(element, wordMap, excludedTags) {
+function replaceWordsInElement(element, wordMap, excludedTags, observer) {
     const wordCounter = {};
     for (const childNode of element.childNodes) {
         if (childNode.nodeType === Node.TEXT_NODE) {
@@ -152,9 +152,12 @@ function replaceWordsInElement(element, wordMap, excludedTags) {
             element.replaceChild(tempElement.content, childNode);
         } else if (childNode.nodeType === Node.ELEMENT_NODE && !excludedTags.includes(childNode.tagName.toLowerCase())) {
             // Recursively handle child elements
-            replaceWordsInElement(childNode, wordMap, excludedTags);
+            replaceWordsInElement(childNode, wordMap, excludedTags, observer);
         }
     }
+
+    // Remove intersection observer
+    observer.unobserve(element)
 };
 
 async function main() {
@@ -179,7 +182,7 @@ async function main() {
     const excludedTags = ['a', 'span']
 
     // Create an Intersection Observer
-    const intersectionObserver = new IntersectionObserver((entries) => intersectionCallback(entries, wordMap, excludedTags), intersectionOptions);
+    const intersectionObserver = new IntersectionObserver((entries) => intersectionCallback(entries, wordMap, excludedTags, intersectionObserver), intersectionOptions);
 
     // Find and observe target elements (e.g., all paragraphs)
     const targetElements = document.querySelectorAll('p');
