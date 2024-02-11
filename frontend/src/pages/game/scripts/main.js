@@ -21,8 +21,8 @@ async function init() {
     ]).filter(([_, dataArr]) => dataArr.length > 0)
 
     const wordWrapEl = document.querySelector('.word-wrap')
-    wordWrapEl.innerHTML = `<span>${convertSnakeCase(vocabArr[0][0], true)}</span>`
-    console.log(vocabArr[0][1][0].translation)
+    const wordWrapInnerHtml = `<span>${convertSnakeCase(vocabArr[0][0], true)}</span><span class="opacity-50 font-light text-sm">Part of Speech: <span class="opacity-100 font-normal">${vocabArr[0][1][0].pos}</span></span>`
+    wordWrapEl.innerHTML = wordWrapInnerHtml
 
     const inputEl = document.querySelector('.game-wrap input')
     inputEl.addEventListener('keydown', inputFunc)
@@ -60,13 +60,11 @@ async function init() {
             wordCounterEl.innerText = wordCount;
             rightCount++;
             rightCounterEl.innerHTML = rightCount;
-            console.log(true, inputEl.value.toLowerCase(), firstWordData.translation.toLowerCase())
         } else {
             // Move first word to end of array
             vocabArr.push(vocabArr.shift());
             wrongCount++;
             wrongCounterEl.innerText = wrongCount;
-            console.log(false, inputEl.value.toLowerCase(), firstWordData.translation.toLowerCase())
         }
 
         if (vocabArr.length === 0) {
@@ -74,7 +72,7 @@ async function init() {
             inputEl.removeEventListener('keydown', inputFunc)
         } else {
             inputEl.value = '';
-            wordWrapEl.innerHTML = `<span>${convertSnakeCase(vocabArr[0][0], true)}</span>`
+            wordWrapEl.innerHTML = wordWrapInnerHtml
             console.log(vocabArr[0][1][0].translation)
         }
     }
