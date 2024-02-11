@@ -11,12 +11,6 @@
     {
       "id": "word-injection-script",
       "matches": ["https://*/*", "http://*/*"],
-      "exclude_matches": [
-        "https://youtube.com/*",
-        "https://open.spotify.com/*",
-        "https://chat.openai.com/*",
-        "https://gemini.google.com/*"
-      ],
       "runAt": "document_end",
       "css": ["src/contentStyle.css"],
       "js": ["src/contentScript.js"]

@@ -16,6 +16,15 @@ async function getData(key) {
     }
 }
 
+async function getCurrentTabDomain() {
+    try {
+        const res = await chrome.runtime.sendMessage({ type: 'getCurrentTabDomain' })
+        return res
+    } catch (error) {
+        console.error(`Error getting current tab`, error);
+    }
+}
+
 // Function to reverse the structure
 function reverseStructure(wordsObj) {
     const reversedData = {};
@@ -161,8 +170,10 @@ function replaceWordsInElement(element, wordMap, excludedTags, observer) {
 };
 
 async function main() {
+    const currentDomain = await getCurrentTabDomain()
+    const ignoredDomains = await getData('ignoredDomains');
     const applyContentScript = await getData('applyContentScript')
-    if (applyContentScript === 'false') {
+    if (applyContentScript === 'false' || ignoredDomains.includes(currentDomain)) {
         return
     }
 

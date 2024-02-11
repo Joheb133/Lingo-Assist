@@ -121,6 +121,14 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
         })
         return true
     }
+
+    if (message.type === 'getCurrentTabDomain') {
+        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+            const currentURL = new URL(tabs[0].url).hostname;
+            sendRes(currentURL)
+        });
+        return true
+    }
 });
 
 
