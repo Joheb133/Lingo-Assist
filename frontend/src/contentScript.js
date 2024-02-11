@@ -162,7 +162,6 @@ function replaceWordsInElement(element, wordMap, excludedTags, observer) {
 
 async function main() {
     const applyContentScript = await getData('applyContentScript')
-    console.log(applyContentScript)
     if (applyContentScript === 'false') {
         return
     }

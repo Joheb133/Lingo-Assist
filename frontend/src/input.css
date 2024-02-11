@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+button {
+  background-color: #eee; /* A light gray background */
+  border: 1px solid #ccc; /* Subtle border */
+  padding: 8px 16px; /* Some comfortable padding */
+  text-decoration: none; /* Remove underline (if treated as link) */
+  cursor: pointer; /* Indicate it's clickable */
+}
+
 table {
   border-collapse: collapse;
   margin: 8px 0;
