@@ -112,6 +112,12 @@ function replaceWordsInElement(element, wordMap, excludedTags) {
                 const lowerWord = word.toLowerCase()
                 const replacement = wordMap[lowerWord];
                 if (replacement) {
+                    // Decide whether to replace word or not
+                    const randomNum = Math.floor(Math.random() * 2); // 50/50
+                    if (randomNum === 0) { // Outcome = 0 || 1
+                        return word;
+                    }
+
                     // Div container for elements
                     const container = document.createElement('div');
                     container.classList.add('lingo-assist-container');
