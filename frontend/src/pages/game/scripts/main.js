@@ -1,7 +1,6 @@
 import { getData } from "../../../messages.js";
 import convertSnakeCase from "../../../utils/convertSnakeCase.js"
 
-
 async function init() {
     const combinedISO = await getData('combinedISO')
     const vocab = await getData(combinedISO)
@@ -21,14 +20,25 @@ async function init() {
     ]).filter(([_, dataArr]) => dataArr.length > 0)
 
     const wordWrapEl = document.querySelector('.word-wrap')
-    const wordWrapInnerHtml = `<span>${convertSnakeCase(vocabArr[0][0], true)}</span><span class="opacity-50 font-light text-sm">Part of Speech: <span class="opacity-100 font-normal">${vocabArr[0][1][0].pos}</span></span>`
-    wordWrapEl.innerHTML = wordWrapInnerHtml
+    const wordEl = wordWrapEl.querySelector('#word')
+    wordEl.innerText = convertSnakeCase(vocabArr[0][0], true)
+    const wordPosEl = wordWrapEl.querySelector('#pos')
+    wordPosEl.innerText = vocabArr[0][1][0].pos
+    console.log(vocabArr[0][1][0].translation)
 
     const inputEl = document.querySelector('.game-wrap input')
     inputEl.addEventListener('keydown', inputFunc)
 
     const restartBtn = document.querySelector('.restart-btn')
     restartBtn.addEventListener('click', restartFunc)
+
+    const hintBtn = document.createElement('button')
+    hintBtn.innerText = 'Hint'
+    hintBtn.className = 'text-black px-4 py-0'
+    hintBtn.classList.toggle('hidden', vocabArr[0][1][0].example.native === null);
+    wordWrapEl.append(hintBtn)
+
+    hintBtn.addEventListener('click', hintFunc)
 
     // Counters
     const wordCounterEl = document.querySelector('#word-counter')
@@ -72,8 +82,9 @@ async function init() {
             inputEl.removeEventListener('keydown', inputFunc)
         } else {
             inputEl.value = '';
-            wordWrapEl.innerHTML = wordWrapInnerHtml
-            console.log(vocabArr[0][1][0].translation)
+            wordEl.innerText = convertSnakeCase(vocabArr[0][0], true)
+            wordPosEl.innerText = vocabArr[0][1][0].pos
+            hintBtn.classList.toggle('hidden', vocabArr[0][1][0].example.native === null);
         }
     }
 
@@ -81,8 +92,15 @@ async function init() {
         // Remove listeners
         console.log('...Restarting game')
         inputEl.removeEventListener('keydown', inputFunc)
+        hintBtn.removeEventListener('click', hintFunc)
         restartBtn.removeEventListener('click', restartFunc)
         init()
+    }
+
+    // Add GUI later, cba rn
+    function hintFunc() {
+        if (vocabArr[0][1][0].example === null) return
+        console.log(vocabArr[0][1][0].example.native)
     }
 }
 
