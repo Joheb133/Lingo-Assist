@@ -65,8 +65,7 @@ module.exports = function generateWordData(response, word, wordDataArr, isInfini
             translation = word
             console.error(`Encountered Wiki error searching ${word}`)
         } else {
-            translation = removeHtmlTags(translation)
-            translation = translation.replace(/\s*\([^)]*\)/g, '') // regex to remove parenthesis & the parenthetical phrase
+            translation = sanitizeTranslation(translation)
         }
 
         // Wiktionary provides examples for most but not all words
@@ -92,4 +91,13 @@ module.exports = function generateWordData(response, word, wordDataArr, isInfini
     }
 
     return { resDataArr, wikiInfinitives: Object.keys(wikiInfinitives) }
+}
+
+function sanitizeTranslation(text) {
+    if (text.length === 0) return []
+    text = removeHtmlTags(text);
+    text = text.replace(/\s*\([^)]*\)/g, ''); // regex to remove parenthesis & the parenthetical phrase
+    text = text.split(/[,;]/g).flat(); // separate translations by commas and/or semicolon
+    text = text.map(element => element.trim()).filter(element => element); // trim translations & remove empty strings
+    return text;
 }
