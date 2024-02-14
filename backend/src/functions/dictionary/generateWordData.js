@@ -66,6 +66,7 @@ module.exports = function generateWordData(response, word, wordDataArr, isInfini
             console.error(`Encountered Wiki error searching ${word}`)
         } else {
             translation = removeHtmlTags(translation)
+            translation = translation.replace(/\s*\([^)]*\)/g, '') // regex to remove parenthesis & the parenthetical phrase
         }
 
         // Wiktionary provides examples for most but not all words
