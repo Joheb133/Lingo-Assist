@@ -24,7 +24,7 @@ async function init() {
     wordEl.innerText = convertSnakeCase(vocabArr[0][0], true)
     const wordPosEl = wordWrapEl.querySelector('#pos')
     wordPosEl.innerText = vocabArr[0][1][0].pos
-    console.log(vocabArr[0][1][0].translation)
+    console.log(vocabArr[0][1][0].translation[0])
 
     const inputEl = document.querySelector('.game-wrap input')
     inputEl.addEventListener('keydown', inputFunc)
@@ -59,7 +59,7 @@ async function init() {
 
         // Compare word on screen with translation(s)
 
-        if (inputEl.value.toLowerCase() === firstWordData.translation.toLowerCase()) { // User input right
+        if (firstWordData.translation.includes(inputEl.value.toLowerCase())) { // User input right
             // Remove that word data from vocabArr
             if (vocabArr[0][1].length >= 2) {
                 vocabArr[0][1].shift()

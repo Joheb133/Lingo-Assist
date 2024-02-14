@@ -96,6 +96,7 @@ module.exports = function generateWordData(response, word, wordDataArr, isInfini
 function sanitizeTranslation(text) {
     if (text.length === 0) return []
     text = removeHtmlTags(text);
+    text = text.toLowerCase();
     text = text.replace(/\s*\([^)]*\)/g, ''); // regex to remove parenthesis & the parenthetical phrase
     text = text.split(/[,;]/g).flat(); // separate translations by commas and/or semicolon
     text = text.map(element => {
