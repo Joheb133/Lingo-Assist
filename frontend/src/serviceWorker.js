@@ -55,7 +55,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
 
             Object.entries(wordsArrObjs).forEach(([word, dataArr]) => {
                 dataArr.forEach(data => {
-                    if (data.translation === '' && data.duplicate !== true) {
+                    if (data.translation.length === 0 && data.duplicate !== true) {
                         if (!untranslatedWords[word]) untranslatedWords[word] = []
 
                         untranslatedWords[word].push(data)
@@ -155,7 +155,7 @@ function storeDuolingoData(res) {
             const data = {
                 infinitive: element.infinitive,
                 pos: element.pos,
-                translation: "",
+                translation: [],
                 duolingo_id: element.id
             }
 
@@ -213,10 +213,14 @@ function storeData(data) {
                         // need to compare each Duolingo element data with local data
                         data.forEach((element) => {
                             // Mark a word as a duplicate
-                            const isDuplicate = localWord.some(localElement => localElement.translation.length > 0 && localElement.translation === element.translation)
+                            // Note the backend marks words as duplicates. This is only used when duolingo adds a "new word" but the user already has the word saved (this obviously means the backend can't mark the word as a duplicate)
+                            const isDuplicate = localWord.some(localElement =>
+                                localElement.translation.some(localTranslation =>
+                                    element.translation.includes(localTranslation)
+                                ));
                             if (isDuplicate) {
                                 element.duplicate = true;
-                                element.translation = '';
+                                element.translation = [];
                             }
 
                             // Make sure NOT to add the same word based on duolingo id

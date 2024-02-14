@@ -10,11 +10,11 @@ export default function displayLocalVocab(obj) {
     clearLocalVocab()
 
     // Populate table body with vocab
-    for (const [key, values] of Object.entries(obj)) {
-        const valuesPos = {}
-        values.forEach((value) => {
+    for (const [word, wordDataArr] of Object.entries(obj)) {
+        const wordDataPos = {}
+        wordDataArr.forEach((value) => {
             // If untranslated
-            if (value.translation === '') {
+            if (value.translation.length === 0) {
                 // If POS table doesn't exist
                 if (!document.querySelector('#default-wrap table')) {
                     createTable()
@@ -22,16 +22,16 @@ export default function displayLocalVocab(obj) {
 
                 const table = document.querySelector('#default-wrap table')
                 const row = document.createElement('tr')
-                const word = document.createElement('td')
-                word.innerText = convertSnakeCase(key, true)
-                row.append(word)
+                const wordEl = document.createElement('td')
+                wordEl.innerText = convertSnakeCase(word, true)
+                row.append(wordEl)
                 table.append(row)
 
                 return
             }
 
             // If translated
-            valuesPos[value.pos] = valuesPos[value.pos] ? valuesPos[value.pos] + 1 : 1;
+            wordDataPos[value.pos] = wordDataPos[value.pos] ? wordDataPos[value.pos] + 1 : 1;
 
             // If POS table doesn't exist
             if (!document.querySelector(`#${value.pos.toLowerCase()}-wrap table`)) {
@@ -40,25 +40,29 @@ export default function displayLocalVocab(obj) {
 
             const table = document.querySelector(`#${value.pos.toLowerCase()}-wrap table`)
 
-            if (valuesPos[value.pos] > 1) {
+            if (wordDataPos[value.pos] > 1) {
                 const transUl = table.rows[table.rows.length - 1].querySelector('ul')
-                const transLi = document.createElement("li")
-                transLi.innerText = convertSnakeCase(value.translation, true)
-                transUl.append(transLi)
+                value.translation.forEach((translationEl) => {
+                    const transLi = document.createElement("li")
+                    transLi.innerText = convertSnakeCase(translationEl, true)
+                    transUl.append(transLi)
+                })
             } else {
                 const row = document.createElement("tr")
 
-                const word = document.createElement("td")
-                word.innerText = convertSnakeCase(key, true)
+                const wordEl = document.createElement("td")
+                wordEl.innerText = convertSnakeCase(word, true)
 
                 const translation = document.createElement("td")
                 const transUl = document.createElement("ul")
-                const transLi = document.createElement("li")
-                transLi.innerText = convertSnakeCase(value.translation, true)
-                transUl.append(transLi)
+                value.translation.forEach((translationEl) => {
+                    const transLi = document.createElement("li")
+                    transLi.innerText = convertSnakeCase(translationEl, true)
+                    transUl.append(transLi)
+                })
                 translation.append(transUl)
 
-                row.append(word, translation)
+                row.append(wordEl, translation)
 
                 table.append(row)
             }

@@ -177,7 +177,7 @@ async function main() {
         return
     }
 
-    console.log("content script activated");
+    console.log("Lingo Assist content script activated");
 
     const wordMap = await returnTranslationMap();
 
