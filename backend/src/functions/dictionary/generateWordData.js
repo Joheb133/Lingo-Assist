@@ -99,7 +99,7 @@ function sanitizeTranslation(text) {
     text = text.replace(/\s*\([^)]*\)/g, ''); // regex to remove parenthesis & the parenthetical phrase
     text = text.split(/[,;]/g).flat(); // separate translations by commas and/or semicolon
     text = text.map(element => {
-        let moddedEl = element.replace(/[^a-zA-Z0-9\s]/g, '') // regex to remove special chars
+        let moddedEl = element.replace(/[.?!]/g, ''); // regex to remove special chars
         moddedEl = moddedEl.trim() // remove white space
         return moddedEl
     }).filter(element => element); // trim translations & remove empty strings
