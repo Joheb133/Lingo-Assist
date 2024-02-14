@@ -25,6 +25,20 @@ async function getCurrentTabDomain() {
     }
 }
 
+/**
+ * Snake snake_case to Latin script
+ * @param {string} string 
+ * @param {boolean} capitalizeFirstChar 
+ * @returns {string}
+ */
+function convertSnakeCase(string, capitalizeFirstChar = false) {
+    // replace underscore with space
+    let formattedText = string.replace(/_/g, ' ')
+    formattedText = capitalizeFirstChar ? formattedText.charAt(0).toUpperCase() + formattedText.slice(1) : formattedText;
+
+    return formattedText
+}
+
 // Function to reverse the structure
 function reverseStructure(wordsObj) {
     const reversedData = {};
@@ -34,11 +48,14 @@ function reverseStructure(wordsObj) {
             // Ignore verbs and infinitives for now
             if (dataEl.pos !== 'Verb' && dataEl.pos !== 'Infinitive') {
                 // If the key doesn't exist, add it to the object above
-                if (!reversedData.hasOwnProperty(dataEl.translation)) {
-                    reversedData[dataEl.translation] = [];
-                }
+                for (const translationEl of dataEl.translation) {
+                    if (!reversedData.hasOwnProperty(translationEl)) {
+                        reversedData[`${translationEl.toLowerCase()}`] = [];
+                    }
 
-                reversedData[dataEl.translation].push(word);
+                    let newWord = convertSnakeCase(word)
+                    reversedData[`${translationEl.toLowerCase()}`].push(newWord)
+                }
             }
         }
     }
@@ -47,50 +64,8 @@ function reverseStructure(wordsObj) {
 }
 
 async function returnTranslationMap() {
-    // const combinedISO = await getData('combinedISO');
-    // console.log(combinedISO)
-    //await getLocalVocab(combinedISO)
-    const localData = {
-        "adiós": [
-            {
-                "infinitive": null,
-                "pos": "Interjection",
-                "translation": "the"
-            },
-            {
-                "infinitive": null,
-                "pos": "Noun",
-                "translation": "can"
-            },
-            {
-                "infinitive": null,
-                "pos": "Verb",
-                "translation": "fly"
-            }
-        ],
-        "bebe": [
-            {
-                "infinitive": null,
-                "pos": "Infinitive",
-                "translation": "run"
-            },
-            {
-                "infinitive": null,
-                "pos": "Verb",
-                "translation": "talk"
-            },
-            {
-                "infinitive": null,
-                "pos": "Noun",
-                "translation": "to"
-            },
-            {
-                "infinitive": null,
-                "pos": "Noun",
-                "translation": "the"
-            }
-        ]
-    }
+    const combinedISO = await getData('combinedISO');
+    const localData = await getData(combinedISO)
 
     if (!localData) {
         console.error(`Error loading data on ISO = ${combinedISO}`)
@@ -171,7 +146,8 @@ function replaceWordsInElement(element, wordMap, excludedTags, observer) {
 
 async function main() {
     const currentDomain = await getCurrentTabDomain()
-    const ignoredDomains = await getData('ignoredDomains');
+    const tempIgnoredDomains = await getData('ignoredDomains')
+    const ignoredDomains = tempIgnoredDomains === null ? [] : tempIgnoredDomains;
     const applyContentScript = await getData('applyContentScript')
     if (applyContentScript === 'false' || ignoredDomains.includes(currentDomain)) {
         return
@@ -180,6 +156,7 @@ async function main() {
     console.log("Lingo Assist content script activated");
 
     const wordMap = await returnTranslationMap();
+    console.log(wordMap)
 
     // Options for the Intersection Observer
     const intersectionOptions = {
