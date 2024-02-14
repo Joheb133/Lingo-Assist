@@ -156,7 +156,6 @@ async function main() {
     console.log("Lingo Assist content script activated");
 
     const wordMap = await returnTranslationMap();
-    console.log(wordMap)
 
     // Options for the Intersection Observer
     const intersectionOptions = {

@@ -48,7 +48,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     const currentDomainSpan = currentDomainContainer.querySelector('span')
     const ignoreCurrentDomainBtn = currentDomainContainer.querySelector('button')
 
-    const ignoredDomainArr = await getData('ignoredDomains')
+    const tempIgnoredDomains = await getData('ignoredDomains')
+    const ignoredDomainArr = tempIgnoredDomains === null ? [] : tempIgnoredDomains;
     const currentDomain = await getCurrentTabDomain();
     currentDomainSpan.innerText = currentDomain;
 
