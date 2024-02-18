@@ -4,22 +4,49 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="/dist/output.css" />
   <script src="scripts/main.js" defer type="module"></script>
   <title>Lingo Assist home page</title>
 </head>
 
-<body>
+<body class="w-[800px] mx-auto font-sans">
+  <section>
+    <h1 class=" text-3xl my-3">Lingo Assist Dashboard</h1>
+    <ol class="dashboard">
+      <li>
+        <div class="mb-1"><b>Log into <a href="https://duolingo.com" target="_blank">duolingo.com</a></b></div>
+        <p>Make sure to log in to Doulingo and select the right course. Lingo Assist will use the words you’ve learned
+          in that specific course. </p>
+      </li>
+      <li>
+        <button class="duolingo-sync-btn mb-1">
+          Sync Duolingo
+        </button>
+        <p>Every time you refresh this page and are logged in, you words automatically update. To do this manually,
+          press the button above.</p>
+      </li>
+      <li>
+        <button class="translate-btn mb-1">
+          Translate Vocab
+        </button>
+        <p>Click the translation button to translate your Duolingo vocabulary. Note that Lingo Assist currently only
+          supports translations to English. </p>
+      </li>
+      <li>
+        <button class="clear-btn mb-1">
+          Clear local storage
+        </button>
+        <p>
+          Remove the words and translations of the current course from your machine.
+        </p>
+      </li>
+    </ol>
+  </section>
   <section class="m-4">
-    <button class="duolingo-sync-btn box-border p-1 bg-red-400 rounded-sm hover:bg-red-500">
-      Sync Duolingo
-    </button>
-    <button class="clear-btn box-border p-1 bg-blue-400 rounded-sm hover:bg-blue-500">
-      Clear local storage
-    </button>
-    <button class="translate-btn box-border p-1 bg-green-400 rounded-sm hover:bg-green-500">
-      Translate Vocab
-    </button>
     <div class="signed-in-wrap">
       <object type="image/svg+xml" data="../../assets/check.svg" id="check-svg" class="hidden w-6">
         Your browser does not support SVGs.
