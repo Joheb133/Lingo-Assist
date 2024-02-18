@@ -2,12 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
+.options-btn {
+  transition: transform 0.3s ease; /* For a smooth transition */
+  transform-origin: 50% 50%; /* Center point */
+}
+
+.options-btn:hover {
+  cursor: pointer;
+  transform: rotate(-90deg);
+}
+
 button {
-  background-color: #eee; /* A light gray background */
-  border: 1px solid #ccc; /* Subtle border */
-  padding: 8px 16px; /* Some comfortable padding */
-  text-decoration: none; /* Remove underline (if treated as link) */
-  cursor: pointer; /* Indicate it's clickable */
+  background-color: #36abff;
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+button:hover {
+  background-color: #228cd8;
+}
+
+.domain-btn {
+  background-color: rgb(128, 128, 128);
+  color: black;
+}
+
+.domain-btn:hover {
+  background-color: rgb(92, 92, 92);
 }
 
 table {
@@ -47,7 +71,7 @@ td {
   position: relative;
   display: inline-block;
   width: 40px;
-  height: 20px;
+  height: 16px;
 }
 
 /* Hide default HTML checkbox */
@@ -65,25 +89,22 @@ td {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  background-color: #f1f1f1;
   -webkit-transition: 0.4s;
   transition: 0.4s;
+  border: 1px solid #b6b6b6;
 }
 
 .slider:before {
   position: absolute;
   content: "";
-  width: 16px;
-  height: 16px;
-  left: 4px;
-  bottom: 2px;
-  background-color: white;
+  width: 12px;
+  height: 12px;
+  left: 2px;
+  bottom: 1px;
+  background-color: #b6b6b6;
   -webkit-transition: 0.4s;
   transition: 0.4s;
-}
-
-input:checked + .slider {
-  background-color: #2196f3;
 }
 
 input:focus + .slider {
@@ -91,9 +112,9 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(16px);
-  -ms-transform: translateX(16px);
-  transform: translateX(16px);
+  -webkit-transform: translateX(22px);
+  -ms-transform: translateX(22px);
+  transform: translateX(22px);
 }
 
 /* Rounded sliders */
