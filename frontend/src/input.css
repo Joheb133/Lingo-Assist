@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+.ignore-domain-container textarea {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
 .dashboard {
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -56,6 +63,7 @@ button {
   text-decoration: none;
   cursor: pointer;
   border-radius: 3px;
+  font-size: 14px;
 }
 
 button:hover {

@@ -15,7 +15,7 @@
 
 <body class="w-[800px] mx-auto font-sans">
   <section>
-    <h1 class=" text-3xl my-3">Lingo Assist Dashboard</h1>
+    <h1 class="text-3xl my-3">Lingo Assist Dashboard</h1>
     <ol class="dashboard">
       <li>
         <div class="mb-1"><b>Log into <a href="https://duolingo.com" target="_blank">duolingo.com</a></b></div>
@@ -64,11 +64,18 @@
       <span id="fail-el" class="text-red-700"></span>
     </div>
     <div class="table-container"></div>
+  </section>
+  <section class="w-[440px]">
     <div class="ignore-domain-container">
-      <textarea placeholder="Example: youtube.com" rows="4"
-        class="max-w-xl border-neutral-600 border-x-[1px] border-y-[1px] rounded-md p-4"></textarea>
+      <h1 class="text-2xl my-3">Ignored Domains</h1>
+      <ul class="text-sm list-disc list-inside mb-3">
+        <li>Pages on these domains won't be translated.</li>
+        <li>Write each domain on a new line.</li>
+        <li>Don't include <em>http:// or https://</em> in front of the domain name.</li>
+      </ul>
+      <textarea placeholder="Example: youtube.com" rows="4"></textarea><br>
       <button id="submit-btn">Submit</button>
-      <button id="reset-btn">Reset</button>
+      <button id=" reset-btn">Reset</button>
     </div>
   </section>
 </body>
