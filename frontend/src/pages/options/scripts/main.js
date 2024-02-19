@@ -57,7 +57,7 @@ async function ignoredDomains() {
 ignoredDomains()
 
 async function initDuolingoSync() {
-    const failEl = document.querySelector('.duolingo-msg-el').querySelector('#fail-el')
+    const failEl = document.querySelector('.dashboard #fail-el')
     failEl.innerText = ''
 
     const baseFailMsg = 'Failed to login Duolingo, please login to sync vocab. '

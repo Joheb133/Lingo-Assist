@@ -11,25 +11,24 @@ export const login = {
 }
 
 export default function displayLoginStatus(state) {
-    const loadingSVG = document.querySelector("#loading-svg");
-    const failSVG = document.querySelector("#cross-svg");
-    const successSVG = document.querySelector("#check-svg");
+    const duolingoStatusEl = document.querySelector('.dashboard #loggin');
 
-    // Hide all SVGs by default
-    loadingSVG.classList.add("hidden");
-    failSVG.classList.add("hidden");
-    successSVG.classList.add("hidden");
-
-    // Toggle visibility based on the state
+    // Change element style based on status
     switch (state) {
         case login.LOADING:
-            loadingSVG.classList.remove("hidden");
+            duolingoStatusEl.classList.add('bg-amber-300')
+            duolingoStatusEl.classList.remove('bg-green-300', 'bg-red-300')
+            duolingoStatusEl.innerText = 'Loading'
             break;
         case login.SUCCESS:
-            successSVG.classList.remove("hidden");
+            duolingoStatusEl.classList.add('bg-green-300')
+            duolingoStatusEl.classList.remove('bg-amber-300', 'bg-red-300')
+            duolingoStatusEl.innerText = 'Logged In'
             break;
         case login.FAIL:
-            failSVG.classList.remove("hidden");
+            duolingoStatusEl.classList.add('bg-red-300')
+            duolingoStatusEl.classList.remove('bg-amber-300', 'bg-green-300')
+            duolingoStatusEl.innerText = 'Not Logged In'
             break;
         default:
             console.error('Invalid display state:', state);

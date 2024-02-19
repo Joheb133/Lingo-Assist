@@ -18,9 +18,13 @@
     <h1 class="text-3xl my-3">Lingo Assist Dashboard</h1>
     <ol class="dashboard">
       <li>
-        <div class="mb-1"><b>Log into <a href="https://duolingo.com" target="_blank">duolingo.com</a></b></div>
+        <div class="mb-1">
+          <b>Log into <a href="https://duolingo.com" target="_blank">duolingo.com</a></b>
+          <span id="loggin" class="ml-4 px-3 rounded-full font-semibold"></span>
+        </div>
         <p>Make sure to log in to Doulingo and select the right course. Lingo Assist will use the words you’ve learned
           in that specific course. </p>
+        <span id="fail-el" class="text-red-700"></span>
       </li>
       <li>
         <button class="duolingo-sync-btn mb-1">
@@ -47,21 +51,9 @@
     </ol>
   </section>
   <section class="m-4">
-    <div class="signed-in-wrap">
-      <object type="image/svg+xml" data="../../assets/check.svg" id="check-svg" class="hidden w-6">
-        Your browser does not support SVGs.
-      </object>
-      <object type="image/svg+xml" data="../../assets/cross.svg" id="cross-svg" class="hidden w-6">
-        Your browser does not support SVGs.
-      </object>
-      <object type="image/svg+xml" data="../../assets/loading-twotone-loop.svg" id="loading-svg" class="hidden w-6">
-        Your browser does not support SVGs.
-      </object>
-    </div>
     <div class="text-base duolingo-msg-el">
       <span>You're currently learning: <span id="learning-language" class="font-bold"></span></span><br>
       <span>Your native language is: <span id="native-language" class="font-bold"></span></span><br>
-      <span id="fail-el" class="text-red-700"></span>
     </div>
     <div class="table-container"></div>
   </section>
