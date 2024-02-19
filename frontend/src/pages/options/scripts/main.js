@@ -1,7 +1,7 @@
-import displayLanguages from "./gui/displayLanguages.js";
-import displayLocalVocab, { clearLocalVocab } from "./gui/displayLocalVocab.js";
+import displayVocab, { clearVocab } from "./gui/displayVocab.js";
 import displayLoginStatus, { login } from "./gui/displayLoginStatus.js";
 import { getData, syncDuolingo, requestTranslations } from "../../../messages.js";
+import { ISO_to_words } from "../../../utils/ISO.js"
 
 const duolingoSyncBtn = document.querySelector('.duolingo-sync-btn');
 duolingoSyncBtn.addEventListener('click', function () {
@@ -13,7 +13,7 @@ duolingoSyncBtn.addEventListener('click', function () {
 const clearBtn = document.querySelector('.clear-btn');
 clearBtn.addEventListener('click', function () {
     chrome.storage.local.clear(() => console.log('Local storage cleared'))
-    clearLocalVocab()
+    clearVocab()
 })
 
 const translateBtn = document.querySelector('.translate-btn');
@@ -24,8 +24,13 @@ translateBtn.addEventListener('click', async function () {
         return
     }
     const vocab = await getData(combinedISO)
-    displayLocalVocab(vocab)
+    displayVocab(vocab)
 });
+
+const gameBtn = document.querySelector('.game-btn')
+gameBtn.addEventListener('click', function () {
+    window.location.href = '../game/index.html'
+})
 
 async function ignoredDomains() {
     const ignoredDomainArr = await getData('ignoredDomains')
@@ -57,7 +62,7 @@ async function ignoredDomains() {
 ignoredDomains()
 
 async function initDuolingoSync() {
-    const failEl = document.querySelector('.dashboard #fail-el')
+    const failEl = document.querySelector('.dashboard-container #fail-el')
     failEl.innerText = ''
 
     const baseFailMsg = 'Failed to login Duolingo, please login to sync vocab. '
@@ -71,16 +76,25 @@ async function initDuolingoSync() {
 
     displayLoginStatus(syncStatus ? login.SUCCESS : login.FAIL)
 
+    // Display duolingo language
     if (combinedISO) {
-        displayLanguages(combinedISO)
+        const learningEl = document.querySelector('.duolingo-msg-el #learning-language')
+        const learningISO = combinedISO.split('_')[0]
+        learningEl.innerText = ISO_to_words[learningISO]
     }
 
-    if (!vocab || Object.keys(vocab).length === 0) {
+    const vocabKeys = !vocab ? [] : Object.keys(vocab)
+
+    if (vocabKeys.length === 0) {
         failEl.innerText = `${syncStatus ? '' : baseFailMsg} ${combinedISO === null ? 'No course code cached' : 'No vocab in storage'}`
         return
     }
 
-    displayLocalVocab(vocab)
+    // Display words learned
+    const wordsLearnedEl = document.querySelector('.duolingo-msg-el #words-learned')
+    wordsLearnedEl.innerText = vocabKeys.length;
+
+    displayVocab(vocab)
     failEl.innerText = !syncStatus ? baseFailMsg + 'Using cached code course instead' : ''
 }
 

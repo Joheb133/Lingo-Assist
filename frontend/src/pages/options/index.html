@@ -10,13 +10,13 @@
     rel="stylesheet">
   <link rel="stylesheet" href="/dist/output.css" />
   <script src="scripts/main.js" defer type="module"></script>
-  <title>Lingo Assist home page</title>
+  <title>Lingo Assist Options</title>
 </head>
 
-<body class="w-[800px] mx-auto font-sans">
-  <section>
-    <h1 class="text-3xl my-3">Lingo Assist Dashboard</h1>
-    <ol class="dashboard">
+<body class="w-[900px] mx-auto font-sans my-3">
+  <section class="dashboard-container">
+    <h1 class="text-3xl mb-3">Lingo Assist Dashboard</h1>
+    <ol>
       <li>
         <div class="mb-1">
           <b>Log into <a href="https://duolingo.com" target="_blank">duolingo.com</a></b>
@@ -35,7 +35,7 @@
       </li>
       <li>
         <button class="translate-btn mb-1">
-          Translate Vocab
+          Translate vocab
         </button>
         <p>Click the translation button to translate your Duolingo vocabulary. Note that Lingo Assist currently only
           supports translations to English. </p>
@@ -50,25 +50,53 @@
       </li>
     </ol>
   </section>
-  <section class="m-4">
+  <section class="vocabulary-container">
+    <h1 class="text-3xl my-3">Vocabulary</h1>
     <div class="text-base duolingo-msg-el">
-      <span>You're currently learning: <span id="learning-language" class="font-bold"></span></span><br>
-      <span>Your native language is: <span id="native-language" class="font-bold"></span></span><br>
+      <span>Current Duolingo Course: <span id="learning-language" class="font-bold"></span></span><br>
+      <span>Words learned: <span id="words-learned" class="font-bold"></span></span>
     </div>
-    <div class="table-container"></div>
+    <button>Show words <object data="../../assets/ph_arrow-down.svg" type="image/svg+xml"
+        class="inline -mt-[2px]"></object></button>
+    <button class="ml-2 game-btn">Practice with our game</button>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Word</th>
+            <th>Translation</th>
+            <th>Part of Speech</th>
+            <th>Infinitive</th>
+            <th>Example</th>
+          </tr>
+        </thead>
+        <!-- <tr>
+          <td>Adiós</td>
+          <td>
+            <ul>
+              <li><span>Goodbye my friend, goodbye my lover, what the hell are doing here</span></li>
+              <li><span>Farewell</span></li>
+            </ul>
+          </td>
+          <td>Interjection</td>
+          <td></td>
+          <td>
+            Adiós amigo, buenos noches
+          </td>
+        </tr> -->
+      </table>
+    </div>
   </section>
-  <section class="w-[440px]">
-    <div class="ignore-domain-container">
-      <h1 class="text-2xl my-3">Ignored Domains</h1>
-      <ul class="text-sm list-disc list-inside mb-3">
-        <li>Pages on these domains won't be translated.</li>
-        <li>Write each domain on a new line.</li>
-        <li>Don't include <em>http:// or https://</em> in front of the domain name.</li>
-      </ul>
-      <textarea placeholder="Example: youtube.com" rows="4"></textarea><br>
-      <button id="submit-btn">Submit</button>
-      <button id=" reset-btn">Reset</button>
-    </div>
+  <section class="ignore-domain-container w-[440px]">
+    <h1 class="text-2xl my-3">Ignored Domains</h1>
+    <ul class="text-sm list-disc list-inside mb-3">
+      <li>Pages on these domains won't be translated.</li>
+      <li>Write each domain on a new line.</li>
+      <li>Don't include <em>http:// or https://</em> in front of the domain name.</li>
+    </ul>
+    <textarea placeholder="Example: youtube.com" rows="4"></textarea><br>
+    <button id="submit-btn">Submit</button>
+    <button id="reset-btn" class="ml-2">Reset</button>
   </section>
 </body>
 

@@ -7,9 +7,10 @@
   padding: 16px;
   border: 1px solid #ddd;
   border-radius: 8px;
+  margin-bottom: 8px;
 }
 
-.dashboard {
+.dashboard-container ol {
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 20px 40px;
@@ -17,14 +18,14 @@
   font-size: 14px;
 }
 
-.dashboard li {
+.dashboard-container li {
   border-bottom: 1px solid #ddd;
   padding: 15px 0;
   margin-bottom: 10px;
   list-style-type: decimal;
 }
 
-.dashboard li:last-child {
+.dashboard-container li:last-child {
   border-bottom: none;
 }
 
@@ -79,35 +80,43 @@ button:hover {
   background-color: rgb(92, 92, 92);
 }
 
-table {
-  border-collapse: collapse;
-  margin: 8px 0;
-  width: 66.666667%;
+.table-container {
+  margin-top: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
 }
 
-th {
-  font-size: 20px;
-  font-weight: 500;
+.table-container table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 14px;
+}
+
+.table-container th,
+.table-container td {
+  padding: 15px;
+  border-bottom: 1px solid #ddd;
   text-align: left;
 }
 
-td {
-  font-size: 16px;
-  width: 50%;
+.table-container tr:last-child td {
+  border-bottom: none;
 }
 
-table,
-th,
-td {
-  border: 1px solid black;
+.table-container li {
+  display: inline-block;
+  background-color: #e9e9e9;
+  border-radius: 4px;
+  padding: 0 8px;
 }
 
-.table-container h4 {
-  font-size: 22px;
-}
-
-.table-container div {
-  margin: 20px 0;
+.table-container li span {
+  max-width: 80px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 /* W3Schools-- */

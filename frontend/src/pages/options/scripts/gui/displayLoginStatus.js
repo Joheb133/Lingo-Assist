@@ -11,7 +11,7 @@ export const login = {
 }
 
 export default function displayLoginStatus(state) {
-    const duolingoStatusEl = document.querySelector('.dashboard #loggin');
+    const duolingoStatusEl = document.querySelector('.dashboard-container #loggin');
 
     // Change element style based on status
     switch (state) {
