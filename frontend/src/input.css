@@ -84,6 +84,9 @@ button:hover {
   margin-top: 20px;
   border: 1px solid #ddd;
   border-radius: 8px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
 }
 
 .table-container table {

@@ -32,6 +32,17 @@ gameBtn.addEventListener('click', function () {
     window.location.href = '../game/index.html'
 })
 
+// Hide/Show vocab table
+const tableBtn = document.querySelector('.table-btn')
+const tableContainer = document.querySelector('.table-container')
+tableBtn.addEventListener('click', function () {
+    if (tableContainer.style.maxHeight) {
+        tableContainer.style.maxHeight = null;
+    } else {
+        tableContainer.style.maxHeight = `${tableContainer.scrollHeight}px`;
+    }
+})
+
 async function ignoredDomains() {
     const ignoredDomainArr = await getData('ignoredDomains')
 
