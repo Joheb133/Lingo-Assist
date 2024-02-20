@@ -147,9 +147,9 @@ button:hover {
   right: 0;
   bottom: 0;
   background-color: #f1f1f1;
-  -webkit-transition: 0.4s;
   transition: 0.4s;
   border: 1px solid #b6b6b6;
+  border-radius: 18px;
 }
 
 .slider:before {
@@ -160,8 +160,8 @@ button:hover {
   left: 2px;
   bottom: 1px;
   background-color: #b6b6b6;
-  -webkit-transition: 0.4s;
   transition: 0.4s;
+  border-radius: 50%;
 }
 
 input:focus + .slider {
@@ -172,15 +172,6 @@ input:checked + .slider:before {
   -webkit-transform: translateX(22px);
   -ms-transform: translateX(22px);
   transform: translateX(22px);
-}
-
-/* Rounded sliders */
-.slider.round {
-  border-radius: 18px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
 }
 
 /* --W3Schools */
