@@ -4,26 +4,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="/dist/output.css" />
     <script src="scripts/main.js" defer type="module"></script>
     <title>Game</title>
 </head>
 
-<body>
-    <div class="counter-wrap absolute top-0 left-0 text-4xl m-3">
+<body class="font-sans">
+    <!-- <div class="counter-wrap absolute top-0 left-0 text-4xl m-3">
         <span id="word-counter" class="m-3">0</span>
         <span id="right-counter" class="m-3 text-green-500">0</span>
         <span id="wrong-counter" class="m-3 text-red-500">0</span>
-    </div>
+    </div> -->
     <div class="game-wrap flex h-screen justify-center items-center flex-col gap-7">
-        <div
-            class="word-wrap text-lg bg-neutral-800 rounded-md min-w-52 h-60 text-white font-semibold flex items-center justify-center flex-col">
+        <div class="word-wrap text-6xl font-semibold flex items-center justify-center flex-col">
             <span id="word"></span>
-            <span class="opacity-50 font-light text-sm">Part of Speech: <span id="pos"
-                    class="opacity-100 font-normal"></span></span>
+            <span class="opacity-50 font-medium text-base">Part of Speech: <span id="pos"
+                    class="opacity-100"></span></span>
         </div>
-        <input type="text" class="h-6 border-2 border-black">
-        <button class="restart-btn border-2 border-red-500">Restart Game</button>
+        <div class="input-wrapper">
+            <button class="hint-btn">
+                <object data="../../assets/tabler_bulb.svg" type="image/svg+xml"></object>
+            </button>
+            <input type="text" class="h-6">
+        </div>
+        <button class="restart-btn">Restart Game</button>
     </div>
 </body>
 
