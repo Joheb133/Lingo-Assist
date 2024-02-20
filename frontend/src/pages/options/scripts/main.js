@@ -16,20 +16,41 @@ clearBtn.addEventListener('click', function () {
     clearVocab()
 })
 
+// Handle translation button
 const translateBtn = document.querySelector('.translate-btn');
 translateBtn.addEventListener('click', async function () {
+    // Start loading
+    translateBtn.disabled = true;
+    const translateFailEl = document.querySelector('#translate-fail-el')
+    translateFailEl.innerText = '';
+    const loading = document.querySelector('#translate-loading')
+    loading.classList.toggle('hidden')
     const combinedISO = await getData('combinedISO')
     const reqTrans = await requestTranslations(combinedISO)
-    if (!reqTrans) {
+
+    // Done loading
+    loading.classList.toggle('hidden')
+    if (reqTrans !== true) { // Some error/nothing to translate
+        translateFailEl.innerText = `${reqTrans}`
+        translateBtn.disabled = false;
         return
     }
+
+    // Nothing wrong, update table
     const vocab = await getData(combinedISO)
     displayVocab(vocab)
+
+    // Display words learned
+    const vocabKeys = !vocab ? [] : Object.keys(vocab)
+    const wordsLearnedEl = document.querySelector('.duolingo-msg-el #words-learned')
+    wordsLearnedEl.innerText = vocabKeys.length;
+
+    translateBtn.disabled = false;
 });
 
 const gameBtn = document.querySelector('.game-btn')
 gameBtn.addEventListener('click', function () {
-    window.location.href = '../game/index.html'
+    window.open('../game/index.html', '_blank');
 })
 
 // Hide/Show vocab table
@@ -73,7 +94,7 @@ async function ignoredDomains() {
 ignoredDomains()
 
 async function initDuolingoSync() {
-    const failEl = document.querySelector('.dashboard-container #fail-el')
+    const failEl = document.querySelector('.dashboard-container #login-fail-el')
     failEl.innerText = ''
 
     const baseFailMsg = 'Failed to login Duolingo, please login to sync vocab. '

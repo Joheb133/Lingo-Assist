@@ -49,7 +49,7 @@ export async function requestTranslations(combinedISO) {
         return true;
     } catch (error) {
         console.error('Error translating', error)
-        return false
+        return error
     }
 }
 

@@ -11,14 +11,14 @@ export const login = {
 }
 
 export default function displayLoginStatus(state) {
-    const duolingoStatusEl = document.querySelector('.dashboard-container #loggin');
+    const duolingoStatusEl = document.querySelector('.dashboard-container #login');
 
     // Change element style based on status
     switch (state) {
         case login.LOADING:
             duolingoStatusEl.classList.add('bg-amber-300')
             duolingoStatusEl.classList.remove('bg-green-300', 'bg-red-300')
-            duolingoStatusEl.innerText = 'Loading'
+            duolingoStatusEl.innerText = 'Loading...'
             break;
         case login.SUCCESS:
             duolingoStatusEl.classList.add('bg-green-300')

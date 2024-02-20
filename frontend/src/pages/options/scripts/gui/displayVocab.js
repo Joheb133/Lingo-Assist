@@ -7,7 +7,7 @@ export default function displayVocab(vocab) {
     for (const [word, wordDataArr] of Object.entries(vocab)) {
         for (const wordDataEl of wordDataArr) {
             // Ensure word isn't a duplicate
-            if (wordDataEl.duplicate) return
+            if (wordDataEl?.duplicate === true) continue
 
             const row = document.createElement('tr')
 
@@ -19,7 +19,7 @@ export default function displayVocab(vocab) {
             const translationTd = document.createElement('td');
             const translationUl = document.createElement('ul');
 
-            for (const translation of wordDataEl.translation) {
+            for (const translation of wordDataEl.translation.splice(0, 2)) {
                 const translationLi = document.createElement('li');
                 const translationSpan = document.createElement('span')
                 translationSpan.innerText = convertSnakeCase(translation, true)

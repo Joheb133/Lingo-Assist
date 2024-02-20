@@ -13,18 +13,18 @@
   <title>Lingo Assist Options</title>
 </head>
 
-<body class="w-[900px] mx-auto font-sans my-3">
+<body class="w-[1000px] mx-auto font-sans my-3">
   <section class="dashboard-container">
     <h1 class="text-3xl mb-3">Lingo Assist Dashboard</h1>
     <ol>
       <li>
         <div class="mb-1">
           <b>Log into <a href="https://duolingo.com" target="_blank">duolingo.com</a></b>
-          <span id="loggin" class="ml-4 px-3 rounded-full font-semibold"></span>
+          <span id="login" class="ml-4 px-3 rounded-full font-semibold"></span>
         </div>
         <p>Make sure to log in to Doulingo and select the right course. Lingo Assist will use the words you’ve learned
           in that specific course. </p>
-        <span id="fail-el" class="text-red-700"></span>
+        <span id="login-fail-el" class="text-red-700"></span>
       </li>
       <li>
         <button class="duolingo-sync-btn mb-1">
@@ -37,8 +37,12 @@
         <button class="translate-btn mb-1">
           Translate vocab
         </button>
+        <span id="translate-loading" class="ml-4 px-3 rounded-full font-semibold bg-amber-300 hidden">
+          Translating...
+        </span>
         <p>Click the translation button to translate your Duolingo vocabulary. Note that Lingo Assist currently only
           supports translations to English. </p>
+        <span id="translate-fail-el" class="text-red-700"></span>
       </li>
       <li>
         <button class="clear-btn mb-1">
