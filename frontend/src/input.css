@@ -2,6 +2,45 @@
 @tailwind components;
 @tailwind utilities;
 
+.popup .translations-wrap li {
+  display: inline-block;
+  background-color: #e9e9e9;
+  border-radius: 4px;
+  padding: 0 8px;
+  margin: 2px;
+  font-size: 16px;
+}
+
+.popup .translations-wrap li span {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.word-data-container {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.word-data-container div {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #d2d2d2;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.word-data-container .title {
+  font-size: 22px;
+  font-weight: 400;
+}
+
+.word-data-container input {
+  font-size: 16px;
+}
+
 .popup-window {
   display: none;
 }

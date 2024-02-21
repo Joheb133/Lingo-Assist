@@ -120,7 +120,12 @@ async function initDuolingoSync() {
     if (combinedISO) {
         const learningEl = document.querySelector('.duolingo-msg-el #learning-language')
         const learningISO = combinedISO.split('_')[0]
-        learningEl.innerText = ISO_to_words[learningISO]
+        const learningLanuage = ISO_to_words[learningISO]
+        learningEl.innerText = learningLanuage
+
+        // Set language for popup
+        const nativeInputEl = document.querySelector('.popup #learning-language-input')
+        nativeInputEl.placeholder = learningLanuage
     }
 
     const vocabKeys = !vocab ? [] : Object.keys(vocab)

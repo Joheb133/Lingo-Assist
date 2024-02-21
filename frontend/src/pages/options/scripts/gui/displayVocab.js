@@ -1,11 +1,18 @@
 import convertSnakeCase from '../../../../utils/convertSnakeCase.js'
 
+// Fill in the vocabulary table with word data
 export default function displayVocab(vocab) {
     clearVocab();
     const table = document.querySelector('.table-container table')
     const tbody = document.createElement('tbody')
+
+    const rowWordDataArr = []; // An array that stores wordDataEl's used to create a table row
+
     for (const [word, wordDataArr] of Object.entries(vocab)) {
+        let i = -1; // store wordDataEl index -> ensure's right wordDataEl is replaced later
         for (const wordDataEl of wordDataArr) {
+            i++;
+
             // Ensure word isn't a duplicate
             if (wordDataEl?.duplicate === true) continue
 
@@ -19,7 +26,7 @@ export default function displayVocab(vocab) {
             const translationTd = document.createElement('td');
             const translationUl = document.createElement('ul');
 
-            for (const translation of wordDataEl.translation.splice(0, 2)) {
+            for (const translation of wordDataEl.translation.slice(0, 2)) {
                 const translationLi = document.createElement('li');
                 const translationSpan = document.createElement('span')
                 translationSpan.innerText = convertSnakeCase(translation, true)
@@ -46,11 +53,15 @@ export default function displayVocab(vocab) {
             // Append elements
             row.append(wordTd, translationTd, posTd, infinitiveTd, exampleTd)
             tbody.append(row)
+
+            // Add row data to arr
+            const wordObj = { word, wordDataEl, wordDataElIndex: i }
+            rowWordDataArr.push(wordObj)
         }
     }
     table.append(tbody)
 
-    tbody.addEventListener('click', (event) => { editRow(event, vocab) })
+    tbody.addEventListener('click', (event) => { editRow(event, rowWordDataArr) })
 }
 
 export function clearVocab() {
@@ -64,17 +75,58 @@ export function clearVocab() {
 }
 
 const popupWindow = document.querySelector('.popup-window');
-popupWindow.addEventListener('click', () => popupWindow.style.display = 'none')
+popupWindow.addEventListener('click', (event) => {
+    if (event.target === popupWindow || event.target.closest('.esc-btn')) {
+        popupWindow.style.display = 'none'
 
-function editRow(event, vocab) {
+        // Enable scrolling
+        document.body.classList.toggle('overflow-hidden')
+    }
+})
+
+function editRow(event, rowWordDataArr) {
     const clickedRow = event.target.closest('tr')
 
     if (clickedRow) {
-        const wordTdInnerText = clickedRow.firstChild.textContent.toLowerCase();
-        const wordDataArr = vocab[wordTdInnerText];
+        const rowDataEl = rowWordDataArr[clickedRow.rowIndex - 1] // Data associated with this row
+        const word = rowDataEl.word
+        const wordDataEl = rowDataEl.wordDataEl
+        const wordDataElIndex = rowWordDataArr.wordDataElIndex
 
         // Show popup
         const popupWindow = document.querySelector('.popup-window');
-        popupWindow.style.display = 'flex'
+        popupWindow.style.display = 'flex';
+
+        // Prevent scrolling
+        document.body.classList.toggle('overflow-hidden');
+
+        /* Fill popup with data */
+        const popup = document.querySelector('.popup')
+
+        const heading = popup.querySelector('header #title') // Heading
+        heading.innerText = convertSnakeCase(word, true);
+
+        // Translations
+        const transUl = popup.querySelector('.translations-wrap ul')
+        transUl.innerHTML = '' // Reset ul
+        for (const translation of wordDataEl.translation) {
+            const span = document.createElement('span')
+            const li = document.createElement('li')
+            span.innerText = translation
+            li.append(span)
+            transUl.append(li)
+        }
+
+        const posInputEl = popup.querySelector('.pos-wrap input') // Part of Speech
+        posInputEl.value = wordDataEl.pos ?? ''
+
+        const infinitiveInputEl = popup.querySelector('.infinitive-wrap input') // Infinitive
+        infinitiveInputEl.value = wordDataEl.infinitive !== null ? convertSnakeCase(wordDataEl.infinitive, true) : ''
+
+        // Examples
+        const learningLanguageInputEl = popup.querySelector('#learning-language-input')
+        const englishInputEl = popup.querySelector('#english-input')
+        learningLanguageInputEl.value = wordDataEl.example?.native ?? ''
+        englishInputEl.value = wordDataEl.example?.translation ?? ''
     }
 }
