@@ -36,7 +36,7 @@ export default function displayVocab(vocab) {
             // Infinitive
             const infinitiveTd = document.createElement('td')
             const infinitive = wordDataEl.infinitive
-            infinitiveTd.innerText = infinitive !== null ? infinitive : '';
+            infinitiveTd.innerText = infinitive !== null ? convertSnakeCase(infinitive, true) : '';
 
             // Example
             const exampleTd = document.createElement('td');
@@ -49,6 +49,8 @@ export default function displayVocab(vocab) {
         }
     }
     table.append(tbody)
+
+    tbody.addEventListener('click', (event) => { editRow(event, vocab) })
 }
 
 export function clearVocab() {
@@ -56,6 +58,23 @@ export function clearVocab() {
     const table = document.querySelector(".table-container table");
     const tbody = table.querySelector("tbody");
     if (tbody) {
+        tbody.removeEventListener('click', editRow)
         table.removeChild(tbody)
+    }
+}
+
+const popupWindow = document.querySelector('.popup-window');
+popupWindow.addEventListener('click', () => popupWindow.style.display = 'none')
+
+function editRow(event, vocab) {
+    const clickedRow = event.target.closest('tr')
+
+    if (clickedRow) {
+        const wordTdInnerText = clickedRow.firstChild.textContent.toLowerCase();
+        const wordDataArr = vocab[wordTdInnerText];
+
+        // Show popup
+        const popupWindow = document.querySelector('.popup-window');
+        popupWindow.style.display = 'flex'
     }
 }

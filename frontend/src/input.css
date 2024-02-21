@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.popup-window {
+  display: none;
+}
+
 .input-wrapper {
   width: 300px;
   display: flex;
