@@ -2,139 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
-.popup .translations-wrap li {
-  display: inline-block;
-  background-color: #e9e9e9;
-  border-radius: 4px;
-  padding: 0 8px;
-  margin: 2px;
-  font-size: 16px;
-}
-
-.popup .translations-wrap li span {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  display: inline-block;
-  vertical-align: middle;
-}
-
-.word-data-container {
-  max-height: 600px;
-  overflow-y: auto;
-}
-
-.word-data-container div {
-  display: flex;
-  flex-direction: column;
-  border-bottom: 1px solid #d2d2d2;
-  gap: 8px;
-  padding: 8px 0;
-}
-
-.word-data-container .title {
-  font-size: 22px;
-  font-weight: 400;
-}
-
-.word-data-container input {
-  font-size: 16px;
-}
-
-.popup-window {
-  display: none;
-}
-
-.input-wrapper {
-  width: 300px;
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  border: 1px solid #cecece;
-  border-radius: 9999px;
-  padding: 6px 6px;
-}
-
-.input-wrapper input {
-  font-size: 16px;
-  width: 220px;
-  border-left: 1px solid #cecece;
-  padding-left: 4px;
-}
-
-.input-wrapper input:focus {
-  outline: none;
-}
-
-.hint-btn {
-  height: 32px;
-  width: 32px;
-  background-color: #cecece;
-  border-radius: 50%;
-  padding: 0;
-}
-
-.hint-btn:hover {
-  cursor: pointer;
-  background-color: red;
-}
-
-.hint-btn object {
-  width: 32px;
-  height: 32px;
-}
-
-.ignore-domain-container textarea {
-  width: 100%;
-  padding: 16px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  margin-bottom: 8px;
-}
-
-.dashboard-container ol {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 20px 40px;
-  margin-bottom: 20px;
-  font-size: 14px;
-}
-
-.dashboard-container li {
-  border-bottom: 1px solid #ddd;
-  padding: 15px 0;
-  margin-bottom: 10px;
-  list-style-type: decimal;
-}
-
-.dashboard-container li:last-child {
-  border-bottom: none;
-}
-
-.options-btn {
-  transition: transform 0.3s ease;
-  transform-origin: 50% 50%;
-}
-
-.options-btn:hover {
-  cursor: pointer;
-  transform: rotate(-90deg);
-}
-
-/* Unvisited links */
 a {
   color: blue;
   text-decoration: underline;
   cursor: pointer;
 }
 
-/* Hovered links */
 a:hover {
   text-decoration: underline;
   color: darkblue;
 }
 
-/* Active links (being clicked) */
 a:active {
   color: red;
 }
@@ -153,13 +31,25 @@ button:hover {
   background-color: #228cd8;
 }
 
-.domain-btn {
-  background-color: rgb(128, 128, 128);
-  color: black;
+/* Options page */
+
+.dashboard-container ol {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px 40px;
+  margin-bottom: 20px;
+  font-size: 14px;
 }
 
-.domain-btn:hover {
-  background-color: rgb(92, 92, 92);
+.dashboard-container li {
+  border-bottom: 1px solid #ddd;
+  padding: 15px 0;
+  margin-bottom: 10px;
+  list-style-type: decimal;
+}
+
+.dashboard-container li:last-child {
+  border-bottom: none;
 }
 
 .table-container {
@@ -209,6 +99,117 @@ button:hover {
 .table-container tbody tr:hover {
   background-color: #e4e4e4;
   cursor: pointer;
+}
+
+.popup .translations-wrap li {
+  display: inline-block;
+  background-color: #e9e9e9;
+  border-radius: 4px;
+  padding: 0 8px;
+  margin: 2px;
+  font-size: 16px;
+}
+
+.popup .translations-wrap li span {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.word-data-container {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.word-data-container div {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #d2d2d2;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.word-data-container .title {
+  font-size: 22px;
+  font-weight: 400;
+}
+
+.word-data-container input {
+  font-size: 16px;
+}
+
+.popup-window {
+  display: none;
+}
+
+.ignore-domain-container textarea {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.domain-btn {
+  background-color: rgb(128, 128, 128);
+  color: black;
+}
+
+.domain-btn:hover {
+  background-color: rgb(92, 92, 92);
+}
+
+/* Game */
+.input-wrapper {
+  width: 300px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  border: 1px solid #cecece;
+  border-radius: 9999px;
+  padding: 6px 6px;
+}
+
+.input-wrapper input {
+  font-size: 16px;
+  width: 220px;
+  border-left: 1px solid #cecece;
+  padding-left: 4px;
+}
+
+.input-wrapper input:focus {
+  outline: none;
+}
+
+.hint-btn {
+  height: 32px;
+  width: 32px;
+  background-color: #cecece;
+  border-radius: 50%;
+  padding: 0;
+}
+
+.hint-btn:hover {
+  cursor: pointer;
+  background-color: red;
+}
+
+.hint-btn object {
+  width: 32px;
+  height: 32px;
+}
+
+/* Popup */
+.options-btn {
+  transition: transform 0.3s ease;
+  transform-origin: 50% 50%;
+}
+
+.options-btn:hover {
+  cursor: pointer;
+  transform: rotate(-90deg);
 }
 
 /* W3Schools-- */
