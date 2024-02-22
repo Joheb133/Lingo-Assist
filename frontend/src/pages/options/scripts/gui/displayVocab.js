@@ -143,7 +143,7 @@ function editRowClicked(event, rowWordDataArr, vocab) {
 
         // Save changes made in popup
         const saveBtn = document.querySelector('.popup button')
-        saveBtn.addEventListener('click', () => handleDataSave(wordDataEl, vocab))
+        saveBtn.addEventListener('click', () => handleDataSave(clickedRow, wordDataEl, vocab))
     }
 }
 
@@ -203,10 +203,10 @@ function handleTransEvents(event) {
 }
 
 
-async function handleDataSave(wordDataEl, vocab) {
-    // const saveBtn = document.querySelector('.popup button')
-    // saveBtn.disbaled = true;
+async function handleDataSave(row, wordDataEl, vocab) {
     const popup = document.querySelector('.popup')
+    const saveBtn = popup.querySelector('.save-btn')
+    saveBtn.disabled = true;
 
     /* Get data in different elements */
 
@@ -257,5 +257,40 @@ async function handleDataSave(wordDataEl, vocab) {
     vocab[word][wordDataElIndex] = newWordDataEl
     chrome.storage.local.set({ [combinedISO]: vocab })
 
-    // saveBtn.disbaled = false;
+    updateRow(row, newWordDataEl)
+
+    // Update wordDataEl
+    wordDataEl.translations = translations;
+    wordDataEl.pos = pos;
+    wordDataEl.infinitive = infinitive;
+    wordDataEl.example.native = llExample;
+    wordDataEl.example.translation = englishExample;
+
+    saveBtn.disabled = false;
+}
+
+// Update the row with the new edits
+function updateRow(row, newWordDataEl) {
+    const transTd = row.cells[1]
+    const posTd = row.cells[2]
+    const infinitiveTd = row.cells[3]
+    const exampleTd = row.cells[4]
+
+    // Update translations
+    const transUl = transTd.querySelector('ul')
+    transUl.innerHTML = ''
+    for (const translation of newWordDataEl.translations.slice(0, 2)) {
+        const li = document.createElement('li')
+        li.innerText = translation;
+        transUl.append(li)
+    }
+
+    // Update other stuff
+    posTd.innerText = newWordDataEl.pos
+
+    const infinitive = newWordDataEl.infinitive
+    infinitiveTd.innerText = infinitive !== null ? convertSnakeCase(infinitive, true) : '';
+
+    const exampleNative = newWordDataEl.example?.native ?? null;
+    exampleTd.innerText = exampleNative !== null ? exampleNative : '';
 }
