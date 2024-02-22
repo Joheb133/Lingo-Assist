@@ -4,25 +4,16 @@ import { getData, syncDuolingo, requestTranslations } from "../../../messages.js
 import { ISO_to_words } from "../../../utils/ISO.js"
 
 const duolingoSyncBtn = document.querySelector('.duolingo-sync-btn');
-duolingoSyncBtn.addEventListener('click', function () {
-    initDuolingoSync()
+duolingoSyncBtn.addEventListener('click', async function () {
+    duolingoSyncBtn.disabled = true;
+    await initDuolingoSync()
+
+    // Update table GUI
+    const tableContainer = document.querySelector('.table-container')
+    tableContainer.style.maxHeight = `${tableContainer.scrollHeight}px`;
+
+    duolingoSyncBtn.disabled = false;
 });
-
-
-// Clear words from local storage
-const clearBtn = document.querySelector('.clear-btn');
-clearBtn.addEventListener('click', async function () {
-    const combinedISO = await getData('combinedISO')
-    if (combinedISO === false) {
-        return
-    }
-    chrome.storage.local.set({ [combinedISO]: {} })
-    clearVocab()
-
-    // Display words learned
-    const wordsLearnedEl = document.querySelector('.duolingo-msg-el #words-learned')
-    wordsLearnedEl.innerText = '';
-})
 
 // Handle translation button
 const translateBtn = document.querySelector('.translate-btn');
@@ -56,9 +47,19 @@ translateBtn.addEventListener('click', async function () {
     translateBtn.disabled = false;
 });
 
-const gameBtn = document.querySelector('.game-btn')
-gameBtn.addEventListener('click', function () {
-    window.open('../game/index.html', '_blank');
+// Clear words from local storage
+const clearBtn = document.querySelector('.clear-btn');
+clearBtn.addEventListener('click', async function () {
+    const combinedISO = await getData('combinedISO')
+    if (combinedISO === false) {
+        return
+    }
+    chrome.storage.local.set({ [combinedISO]: {} })
+    clearVocab()
+
+    // Display words learned
+    const wordsLearnedEl = document.querySelector('.duolingo-msg-el #words-learned')
+    wordsLearnedEl.innerText = '';
 })
 
 // Hide/Show vocab table
@@ -70,6 +71,12 @@ tableBtn.addEventListener('click', function () {
     } else {
         tableContainer.style.maxHeight = `${tableContainer.scrollHeight}px`;
     }
+})
+
+// Game redirect
+const gameBtn = document.querySelector('.game-btn')
+gameBtn.addEventListener('click', function () {
+    window.open('../game/index.html', '_blank');
 })
 
 async function ignoredDomains() {
