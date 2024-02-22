@@ -108,16 +108,14 @@ function editRowClicked(event, rowWordDataArr) {
 
         // Translations
         const transUl = popup.querySelector('.translations-wrap ul')
+        const addTransWrap = transUl.querySelector('.add-trans-wrap')
         transUl.innerHTML = '' // Reset ul
         for (const translation of wordDataEl.translation) {
-            const li = document.createElement('li')
-            const spanEl = document.createElement('span')
-            spanEl.innerText = translation
-            spanEl.role = 'textbox'
-            spanEl.contentEditable = true;
-            li.append(spanEl)
+            const li = returnNewTransItem(translation)
             transUl.append(li)
         }
+        transUl.append(addTransWrap)
+        transUl.addEventListener('click', handleTransEvents)
 
         const posInputEl = popup.querySelector('.pos-wrap input') // Part of Speech
         posInputEl.value = wordDataEl.pos ?? ''
@@ -131,4 +129,42 @@ function editRowClicked(event, rowWordDataArr) {
         learningLanguageInputEl.value = wordDataEl.example?.native ?? ''
         englishInputEl.value = wordDataEl.example?.translation ?? ''
     }
+
+    function returnNewTransItem(translation) {
+        const li = document.createElement('li')
+        const spanEl = document.createElement('span')
+        spanEl.innerText = translation
+        spanEl.role = 'textbox'
+        spanEl.contentEditable = true;
+        li.append(spanEl)
+        return li;
+    }
+
+    function handleTransEvents(event) {
+        const clickedLi = event.target.closest('li')
+
+        if (clickedLi) {
+            let li = clickedLi;
+            if (clickedLi.classList.contains('add-trans-wrap')) { // Add new translation
+                const transUl = document.querySelector('.popup .translations-wrap ul')
+                const newLi = returnNewTransItem('')
+                transUl.insertBefore(newLi, clickedLi)
+                li = newLi
+            }
+
+            // Move cursor to the end
+            const spanEl = li.querySelector('span')
+            spanEl.focus();
+            const selection = window.getSelection();
+            const range = document.createRange();
+            range.selectNodeContents(spanEl);
+            range.collapse(false); // Collapse to the end
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+    }
+
+    // Add new translation button
+
+    // Remove empty span
 }

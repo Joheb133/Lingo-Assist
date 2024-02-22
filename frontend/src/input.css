@@ -138,14 +138,22 @@ button:hover {
   padding: 0 8px;
   margin: 2px;
   font-size: 16px;
+  min-width: 24px;
+  min-height: 24px;
+  vertical-align: bottom;
 }
 
 .popup .translations-wrap li:hover {
+  background-color: #cccccc;
   cursor: pointer;
 }
 
 .popup .translations-wrap li span {
   outline: none;
+}
+
+.popup .translations-wrap .add-trans-wrap {
+  padding: 4px;
 }
 
 .ignore-domain-container textarea {
