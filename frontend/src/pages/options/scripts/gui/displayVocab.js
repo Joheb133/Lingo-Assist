@@ -61,7 +61,7 @@ export default function displayVocab(vocab) {
     }
     table.append(tbody)
 
-    tbody.addEventListener('click', (event) => { editRow(event, rowWordDataArr) })
+    tbody.addEventListener('click', (event) => { editRowClicked(event, rowWordDataArr) })
 }
 
 export function clearVocab() {
@@ -69,7 +69,7 @@ export function clearVocab() {
     const table = document.querySelector(".table-container table");
     const tbody = table.querySelector("tbody");
     if (tbody) {
-        tbody.removeEventListener('click', editRow)
+        tbody.removeEventListener('click', editRowClicked)
         table.removeChild(tbody)
     }
 }
@@ -84,7 +84,7 @@ popupWindow.addEventListener('click', (event) => {
     }
 })
 
-function editRow(event, rowWordDataArr) {
+function editRowClicked(event, rowWordDataArr) {
     const clickedRow = event.target.closest('tr')
 
     if (clickedRow) {
@@ -110,10 +110,12 @@ function editRow(event, rowWordDataArr) {
         const transUl = popup.querySelector('.translations-wrap ul')
         transUl.innerHTML = '' // Reset ul
         for (const translation of wordDataEl.translation) {
-            const span = document.createElement('span')
             const li = document.createElement('li')
-            span.innerText = translation
-            li.append(span)
+            const spanEl = document.createElement('span')
+            spanEl.innerText = translation
+            spanEl.role = 'textbox'
+            spanEl.contentEditable = true;
+            li.append(spanEl)
             transUl.append(li)
         }
 
