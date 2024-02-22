@@ -81,7 +81,7 @@ export function clearVocab() {
 /* Popup GUI and functionality */
 
 const popupWindow = document.querySelector('.popup-window');
-popupWindow.addEventListener('click', (event) => {
+popupWindow.addEventListener('mousedown', (event) => {
     if (event.target === popupWindow || event.target.closest('.esc-btn')) {
         popupWindow.style.display = 'none'
 

@@ -6,13 +6,7 @@ import { ISO_to_words } from "../../../utils/ISO.js"
 const duolingoSyncBtn = document.querySelector('.duolingo-sync-btn');
 duolingoSyncBtn.addEventListener('click', async function () {
     duolingoSyncBtn.disabled = true;
-    await initDuolingoSync()
-
-    // Update table GUI
-    const tableContainer = document.querySelector('.table-container')
-    tableContainer.style.maxHeight = `${tableContainer.scrollHeight}px`;
-
-    duolingoSyncBtn.disabled = false;
+    initDuolingoSync()
 });
 
 // Handle translation button
@@ -67,7 +61,7 @@ const tableBtn = document.querySelector('.table-btn')
 const tableContainer = document.querySelector('.table-container')
 tableBtn.addEventListener('click', function () {
     if (tableContainer.style.maxHeight) {
-        tableContainer.style.maxHeight = null;
+        tableContainer.style.maxHeight = '';
     } else {
         tableContainer.style.maxHeight = `${tableContainer.scrollHeight}px`;
     }
@@ -109,6 +103,7 @@ async function ignoredDomains() {
 ignoredDomains()
 
 async function initDuolingoSync() {
+    duolingoSyncBtn.disabled = true;
     const failEl = document.querySelector('.dashboard-container #login-fail-el')
     failEl.innerText = ''
 
@@ -148,6 +143,13 @@ async function initDuolingoSync() {
 
     displayVocab(vocab)
     failEl.innerText = !syncStatus ? baseFailMsg + 'Using cached code course instead' : ''
+
+    const tableContainer = document.querySelector('.table-container')
+    if (tableContainer.style.maxHeight !== '') { // User decided to show table
+        tableContainer.style.maxHeight = `${tableContainer.scrollHeight}px`;
+    }
+
+    duolingoSyncBtn.disabled = false;
 }
 
 initDuolingoSync()
