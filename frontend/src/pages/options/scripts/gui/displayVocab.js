@@ -1,3 +1,4 @@
+import { getData } from '../../../../messages.js';
 import convertSnakeCase from '../../../../utils/convertSnakeCase.js'
 
 // Fill in the vocabulary table on main page with word data
@@ -54,15 +55,17 @@ export default function displayVocab(vocab) {
             row.append(wordTd, translationTd, posTd, infinitiveTd, exampleTd)
             tbody.append(row)
 
+            wordDataEl.index = i;
+            wordDataEl.word = word;
+
             // Add row data to arr
-            const wordObj = { word, wordDataEl, wordDataElIndex: i }
-            rowWordDataArr.push(wordObj)
+            rowWordDataArr.push(wordDataEl)
         }
     }
     table.append(tbody)
 
     // Responsable for enabling popup
-    tbody.addEventListener('click', (event) => { editRowClicked(event, rowWordDataArr) })
+    tbody.addEventListener('click', (event) => { editRowClicked(event, rowWordDataArr, vocab) })
 }
 
 export function clearVocab() {
@@ -76,6 +79,9 @@ export function clearVocab() {
 
     const transUl = document.querySelector('.popup .translations-wrap ul')
     transUl.removeEventListener('click', handleTransEvents)
+
+    const saveBtn = document.querySelector('.popup button')
+    saveBtn.removeEventListener('click', handleDataSave)
 }
 
 /* Popup GUI and functionality */
@@ -91,14 +97,13 @@ popupWindow.addEventListener('mousedown', (event) => {
 })
 
 // Show the popup with the clicked rows data
-function editRowClicked(event, rowWordDataArr) {
+function editRowClicked(event, rowWordDataArr, vocab) {
     const clickedRow = event.target.closest('tr')
 
     if (clickedRow) {
-        const rowDataEl = rowWordDataArr[clickedRow.rowIndex - 1] // Data associated with this row
-        const word = rowDataEl.word
-        const wordDataEl = rowDataEl.wordDataEl
-        const wordDataElIndex = rowWordDataArr.wordDataElIndex
+        const wordDataEl = rowWordDataArr[clickedRow.rowIndex - 1] // Data associated with this row
+        const word = wordDataEl.word
+
 
         // Show popup
         const popupWindow = document.querySelector('.popup-window');
@@ -135,6 +140,10 @@ function editRowClicked(event, rowWordDataArr) {
         const englishInputEl = popup.querySelector('#english-input')
         learningLanguageInputEl.value = wordDataEl.example?.native ?? ''
         englishInputEl.value = wordDataEl.example?.translation ?? ''
+
+        // Save changes made in popup
+        const saveBtn = document.querySelector('.popup button')
+        saveBtn.addEventListener('click', () => handleDataSave(wordDataEl, vocab))
     }
 }
 
@@ -191,4 +200,62 @@ function handleTransEvents(event) {
             spanEl.removeEventListener('blur', handleLiBlur);
         }
     }
+}
+
+
+async function handleDataSave(wordDataEl, vocab) {
+    // const saveBtn = document.querySelector('.popup button')
+    // saveBtn.disbaled = true;
+    const popup = document.querySelector('.popup')
+
+    /* Get data in different elements */
+
+    // Translations
+    const translationsUl = popup.querySelector('.translations-wrap ul')
+    const translations = []
+    for (const translationLi of translationsUl.querySelectorAll('li:not(.add-trans-wrap)')) {
+        const translation = translationLi.textContent;
+        translations.push(translation)
+    }
+
+    // Part of Speech
+    const posInputEl = popup.querySelector('.pos-wrap input')
+    const pos = posInputEl.value === '' ? null : posInputEl.value;
+
+    // Infinitive
+    const infinitiveInputEl = popup.querySelector('.infinitive-wrap input')
+    const infinitive = infinitiveInputEl === '' ? null : infinitiveInputEl.value
+
+    // Examples // plans to change to text area
+    const llInputEl = popup.querySelector('#learning-language-input')
+    const englishInputEl = popup.querySelector('#english-input')
+
+    const llExample = llInputEl.value === '' ? null : llInputEl.value;
+    const englishExample = englishInputEl.value === '' ? null : englishInputEl;
+
+    // Create new wordDataEl
+    const newWordDataEl = {
+        translations,
+        pos,
+        infinitive,
+        example: {
+            native: llExample,
+            translation: englishExample
+        }
+    }
+
+    // Check if wordDataEl.duolingo_id exists
+    if (wordDataEl.duolingo_id) {
+        newWordDataEl.duolingo_id = wordDataEl.duolingo_id;
+    }
+
+    const wordDataElIndex = wordDataEl.index;
+    const word = wordDataEl.word;
+
+    /* Save wordDataEl into local storage */
+    const combinedISO = await getData('combinedISO')
+    vocab[word][wordDataElIndex] = newWordDataEl
+    chrome.storage.local.set({ [combinedISO]: vocab })
+
+    // saveBtn.disbaled = false;
 }
