@@ -50,6 +50,7 @@ module.exports = function generateWordData(response, word, wordDataArr, isInfini
         let infinitive = isInfinitive ? null : wordObj.infinitive
         const pos = isInfinitive ? 'Infinitive' : resWordObj.partOfSpeech
         let translation = resWordObj.definitions[0].definition;
+        let translations;
 
         // Check for wiki infinitve class
         const wikiInfinitive = getTextByClass(translation, 'form-of-definition-link')
@@ -62,10 +63,10 @@ module.exports = function generateWordData(response, word, wordDataArr, isInfini
 
         // Check defintion error
         if (getTextByClass(translation, 'error').length > 0) {
-            translation = word
+            translations = [word]
             console.error(`Encountered Wiki error searching ${word}`)
         } else {
-            translation = sanitizeTranslation(translation)
+            translations = sanitizeTranslation(translation)
         }
 
         // Wiktionary provides examples for most but not all words
@@ -83,7 +84,7 @@ module.exports = function generateWordData(response, word, wordDataArr, isInfini
             duolingo_id: wordObj.duolingo_id,
             infinitive,
             pos,
-            translation,
+            translations,
             example
         }
 

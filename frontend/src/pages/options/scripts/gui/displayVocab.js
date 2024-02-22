@@ -26,7 +26,7 @@ export default function displayVocab(vocab) {
             const translationTd = document.createElement('td');
             const translationUl = document.createElement('ul');
 
-            for (const translation of wordDataEl.translation.slice(0, 2)) {
+            for (const translation of wordDataEl.translations.slice(0, 2)) {
                 const translationLi = document.createElement('li');
                 const translationSpan = document.createElement('span')
                 translationSpan.innerText = convertSnakeCase(translation, true)
@@ -117,7 +117,7 @@ function editRowClicked(event, rowWordDataArr) {
         const transUl = popup.querySelector('.translations-wrap ul')
         const addTransWrap = transUl.querySelector('.add-trans-wrap')
         transUl.innerHTML = '' // Reset ul
-        for (const translation of wordDataEl.translation) {
+        for (const translation of wordDataEl.translations) {
             const li = returnNewTransItem(translation)
             transUl.append(li)
         }

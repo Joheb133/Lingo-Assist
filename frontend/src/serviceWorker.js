@@ -55,7 +55,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
 
             Object.entries(wordsArrObjs).forEach(([word, dataArr]) => {
                 dataArr.forEach(data => {
-                    if (data.translation.length === 0 && data.duplicate !== true) {
+                    if (data.translations.length === 0 && data.duplicate !== true) {
                         if (!untranslatedWords[word]) untranslatedWords[word] = []
 
                         untranslatedWords[word].push(data)
@@ -155,7 +155,7 @@ function storeDuolingoData(res) {
             const data = {
                 infinitive: element.infinitive,
                 pos: element.pos,
-                translation: [],
+                translations: [],
                 duolingo_id: element.id
             }
 
@@ -215,12 +215,12 @@ function storeData(data) {
                             // Mark a word as a duplicate
                             // Note the backend marks words as duplicates. This is only used when duolingo adds a "new word" but the user already has the word saved (this obviously means the backend can't mark the word as a duplicate)
                             const isDuplicate = localWord.some(localElement =>
-                                localElement.translation.some(localTranslation =>
-                                    element.translation.includes(localTranslation)
+                                localElement.translations.some(localTranslations =>
+                                    element.translations.includes(localTranslations)
                                 ));
                             if (isDuplicate) {
                                 element.duplicate = true;
-                                element.translation = [];
+                                element.translations = [];
                             }
 
                             // Make sure NOT to add the same word based on duolingo id
