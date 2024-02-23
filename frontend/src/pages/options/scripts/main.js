@@ -2,6 +2,7 @@ import displayVocab, { clearVocab } from "./gui/displayVocab.js";
 import displayLoginStatus, { login } from "./gui/displayLoginStatus.js";
 import { getData, syncDuolingo, requestTranslations } from "../../../messages.js";
 import { ISO_to_words } from "../../../utils/ISO.js"
+import displayWordsLearned from "./gui/displayWordsLearned.js";
 
 const duolingoSyncBtn = document.querySelector('.duolingo-sync-btn');
 duolingoSyncBtn.addEventListener('click', async function () {
@@ -34,9 +35,7 @@ translateBtn.addEventListener('click', async function () {
     displayVocab(vocab)
 
     // Display words learned
-    const vocabKeys = !vocab ? [] : Object.keys(vocab)
-    const wordsLearnedEl = document.querySelector('.duolingo-msg-el #words-learned')
-    wordsLearnedEl.innerText = vocabKeys.length;
+    displayWordsLearned(vocab)
 
     translateBtn.disabled = false;
 });
@@ -138,8 +137,7 @@ async function initDuolingoSync() {
     }
 
     // Display words learned
-    const wordsLearnedEl = document.querySelector('.duolingo-msg-el #words-learned')
-    wordsLearnedEl.innerText = vocabKeys.length;
+    displayWordsLearned(vocab)
 
     displayVocab(vocab)
     failEl.innerText = !syncStatus ? baseFailMsg + 'Using cached code course instead' : ''
