@@ -30,8 +30,8 @@ export default async function duolingoSync() {
         learningEl.innerText = learningLanuage
 
         // Set language for popup
-        const nativeInputEl = document.querySelector('.popup #learning-language-input')
-        nativeInputEl.placeholder = learningLanuage
+        const nativeTA = document.querySelector('.popup #learning-language-ta')
+        nativeTA.placeholder = learningLanuage
     }
 
     const vocabKeys = !vocab ? [] : Object.keys(vocab)

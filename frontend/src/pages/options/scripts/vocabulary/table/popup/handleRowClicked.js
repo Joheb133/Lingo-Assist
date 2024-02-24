@@ -1,6 +1,6 @@
 import convertSnakeCase from '../../../../../../utils/convertSnakeCase.js'
 import handleDataSave from './handleDataSave.js'
-import handleTransEvents from './handleTranslationEvents.js'
+import handleTransEvents from './handleTranslationElEvents.js'
 import returnNewLi from './returnNewLi.js'
 
 // Show the popup with the clicked rows data
@@ -42,10 +42,10 @@ export default function editRowClicked(event, rowWordDataArr, vocab, combinedISO
         infinitiveInputEl.value = wordDataEl.infinitive !== null ? convertSnakeCase(wordDataEl.infinitive, true) : ''
 
         // Examples
-        const learningLanguageInputEl = popup.querySelector('#learning-language-input')
-        const englishInputEl = popup.querySelector('#english-input')
-        learningLanguageInputEl.value = wordDataEl.example?.native ?? ''
-        englishInputEl.value = wordDataEl.example?.translation ?? ''
+        const learningLanguageTA = popup.querySelector('#learning-language-ta')
+        const englishTA = popup.querySelector('#english-ta')
+        learningLanguageTA.value = wordDataEl.example?.native ?? ''
+        englishTA.value = wordDataEl.example?.translation ?? ''
 
         // Save changes made in popup
         const saveBtn = document.querySelector('.popup button')

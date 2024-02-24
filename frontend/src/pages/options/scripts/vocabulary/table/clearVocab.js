@@ -1,5 +1,5 @@
 import editRowClicked from "./popup/handleRowClicked.js";
-import handleTransEvents from "./popup/handleTranslationEvents.js";
+import handleTransEvents from "./popup/handleTranslationElEvents.js";
 import handleDataSave from "./popup/handleDataSave.js";
 
 // Clear the table and handle resource cleanup
