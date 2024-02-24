@@ -2,7 +2,7 @@ import updateRow from './updateRow.js'
 
 // Save user edits to local storage
 export default async function handleDataSave(row, wordDataEl, vocab, combinedISO) {
-    const popup = document.querySelector('.popup')
+    const popup = document.querySelector('.settings-popup')
     const saveBtn = popup.querySelector('.save-btn')
     saveBtn.disabled = true;
     saveBtn.innerText = 'Saving...'

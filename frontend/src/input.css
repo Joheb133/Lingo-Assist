@@ -146,7 +146,7 @@ button:hover {
   transition: box-shadow 200ms;
 }
 
-.popup .translations-wrap li {
+.options-popup .translations-wrap li {
   display: inline-block;
   background-color: #e9e9e9;
   border-radius: 4px;
@@ -158,16 +158,16 @@ button:hover {
   vertical-align: bottom;
 }
 
-.popup .translations-wrap li:hover {
+.options-popup .translations-wrap li:hover {
   background-color: #cccccc;
   cursor: pointer;
 }
 
-.popup .translations-wrap li span {
+.options-popup .translations-wrap li span {
   outline: none;
 }
 
-.popup .translations-wrap .add-trans-wrap {
+.options-popup .translations-wrap .add-trans-wrap {
   padding: 4px;
 }
 
@@ -226,6 +226,16 @@ button:hover {
 .hint-btn object {
   width: 32px;
   height: 32px;
+}
+
+.game-popup .checkbox-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.game-popup .checkbox-wrapper span {
+  font-size: 16px;
+  margin-left: 8px;
 }
 
 /* Popup */

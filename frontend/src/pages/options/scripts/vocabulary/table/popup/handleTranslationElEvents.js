@@ -7,7 +7,7 @@ export default function handleTransEvents(event) {
     if (clickedLi) {
         let li = clickedLi;
         if (clickedLi.classList.contains('add-trans-wrap')) { // Add new translation
-            const transUl = document.querySelector('.popup .translations-wrap ul')
+            const transUl = document.querySelector('.settings-popup .translations-wrap ul')
             const newLi = returnNewLi('')
             transUl.insertBefore(newLi, clickedLi)
             li = newLi

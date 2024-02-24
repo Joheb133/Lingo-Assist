@@ -12,9 +12,9 @@ export default function clearVocab() {
         table.removeChild(tbody)
     }
 
-    const transUl = document.querySelector('.popup .translations-wrap ul')
+    const transUl = document.querySelector('.options-popup .translations-wrap ul')
     transUl.removeEventListener('click', handleTransEvents)
 
-    const saveBtn = document.querySelector('.popup button')
+    const saveBtn = document.querySelector('.options-popup button')
     saveBtn.removeEventListener('click', handleDataSave)
 }

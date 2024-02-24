@@ -19,7 +19,7 @@ export default function editRowClicked(event, rowWordDataArr, vocab, combinedISO
         document.body.classList.toggle('overflow-hidden');
 
         /* Fill popup with data */
-        const popup = document.querySelector('.popup')
+        const popup = document.querySelector('.settings-popup')
 
         const heading = popup.querySelector('header #title') // Heading
         heading.innerText = convertSnakeCase(word, true);
@@ -48,7 +48,7 @@ export default function editRowClicked(event, rowWordDataArr, vocab, combinedISO
         englishTA.value = wordDataEl.example?.translation ?? ''
 
         // Save changes made in popup
-        const saveBtn = document.querySelector('.popup button')
+        const saveBtn = document.querySelector('.settings-popup button')
         saveBtn.addEventListener('click', () => handleDataSave(clickedRow, wordDataEl, vocab, combinedISO))
     }
 }

@@ -1,5 +1,6 @@
 import { getData } from "../../../messages.js";
 import convertSnakeCase from "../../../utils/convertSnakeCase.js"
+import settingsInit from "./settings/index.js";
 
 async function init() {
     const combinedISO = await getData('combinedISO')
@@ -16,11 +17,18 @@ async function init() {
     // Temporarily remove verbs
     const vocabArr = Object.entries(vocab).map(([word, dataArr]) => [
         word,
-        dataArr.filter((dataEl) => dataEl.pos !== 'Verb')
+        dataArr.filter((dataEl) => dataEl.pos !== 'Verb' && dataEl.translations.length !== 0)
     ]).filter(([_, dataArr]) => dataArr.length > 0)
+
 
     const wordWrapEl = document.querySelector('.word-wrap')
     const wordEl = wordWrapEl.querySelector('#word')
+
+    if (vocabArr.length === 0) {
+        wordEl.innerText = 'Vocab is empty'
+        return
+    }
+
     wordEl.innerText = convertSnakeCase(vocabArr[0][0], true)
     const wordPosEl = wordWrapEl.querySelector('#pos')
     wordPosEl.innerText = vocabArr[0][1][0].pos
@@ -105,3 +113,5 @@ async function init() {
 }
 
 init()
+
+settingsInit();
