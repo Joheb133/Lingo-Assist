@@ -31,6 +31,12 @@ export default function handleTranslation() {
         // Display words learned
         displayWordsLearned(vocab)
 
+        // Update table height if it's not hidden
+        const tableContainer = document.querySelector('.table-container')
+        if (tableContainer.style.maxHeight) {
+            tableContainer.style.maxHeight = `${tableContainer.scrollHeight}px`
+        }
+
         translateBtn.disabled = false;
     });
 }

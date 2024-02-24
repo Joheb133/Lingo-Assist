@@ -16,7 +16,7 @@ export default function displayVocab(vocab, combinedISO) {
             i++;
 
             // Ensure word isn't a duplicate
-            if (wordDataEl?.duplicate === true) continue
+            if (wordDataEl.duplicate) continue;
 
             const row = document.createElement('tr')
 
