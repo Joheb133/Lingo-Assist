@@ -48,12 +48,30 @@ export default function displayVocab(vocab, combinedISO) {
             infinitiveTd.innerText = infinitive !== null ? convertSnakeCase(infinitive, true) : '';
 
             // Example
-            const exampleTd = document.createElement('td');
-            const exampleNative = wordDataEl.example?.native ?? null;
-            exampleTd.innerText = exampleNative !== null ? exampleNative : '';
+            // const exampleTd = document.createElement('td');
+            // const exampleNative = wordDataEl.example?.native ?? null;
+            // exampleTd.innerText = exampleNative !== null ? exampleNative : '';
+
+            // Strength
+            const strengthTd = document.createElement('td')
+            strengthTd.innerText = Number(wordDataEl.strength.toFixed(2))
+
+            // Last practiced
+            const lastPracticedTd = document.createElement('td')
+            const lastPracticedMs = wordDataEl['last_practiced_ms']
+            if (lastPracticedMs) {
+                const date = new Date(lastPracticedMs)
+                const year = date.getFullYear();
+                const month = date.toLocaleString('en-US', { month: 'short' });
+                const day = date.getDate()
+
+                lastPracticedTd.innerText = `${day} ${month} ${year}`
+            } else {
+                lastPracticedTd.innerText = ''
+            }
 
             // Append elements
-            row.append(wordTd, translationTd, posTd, infinitiveTd, exampleTd)
+            row.append(wordTd, translationTd, posTd, infinitiveTd, strengthTd, lastPracticedTd)
             tbody.append(row)
 
             wordDataEl.index = i;
