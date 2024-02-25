@@ -156,11 +156,11 @@ button:hover {
   min-width: 24px;
   min-height: 24px;
   vertical-align: bottom;
+  cursor: pointer;
 }
 
 .options-popup .translations-wrap li:hover {
   background-color: #cccccc;
-  cursor: pointer;
 }
 
 .options-popup .translations-wrap li span {
@@ -210,24 +210,6 @@ button:hover {
   outline: none;
 }
 
-.hint-btn {
-  height: 32px;
-  width: 32px;
-  background-color: #cecece;
-  border-radius: 50%;
-  padding: 0;
-}
-
-.hint-btn:hover {
-  cursor: pointer;
-  background-color: red;
-}
-
-.hint-btn object {
-  width: 32px;
-  height: 32px;
-}
-
 .game-popup .checkbox-wrapper {
   display: flex;
   align-items: center;
@@ -238,14 +220,23 @@ button:hover {
   margin-left: 8px;
 }
 
+.example-exists {
+  background-color: rgb(252 211 77);
+  cursor: pointer;
+}
+
+.example-exists:hover {
+  filter: brightness(90%);
+}
+
 /* Popup */
 .options-btn {
   transition: transform 0.3s ease;
   transform-origin: 50% 50%;
+  cursor: pointer;
 }
 
 .options-btn:hover {
-  cursor: pointer;
   transform: rotate(-90deg);
 }
 

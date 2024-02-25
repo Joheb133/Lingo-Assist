@@ -26,11 +26,13 @@ export default function startGame(combinedISO, vocabEntries) {
     const restartBtn = document.querySelector('.restart-btn')
     restartBtn.addEventListener('click', restartFunc)
 
-    const hintBtn = document.createElement('button')
-    hintBtn.innerText = 'Hint'
-    hintBtn.className = 'text-black px-4 py-0'
-    hintBtn.classList.toggle('hidden', gameArr[0][1][0].example.native === null);
-    wordWrapEl.append(hintBtn)
+    // Hints
+    const hintBtn = document.querySelector('.hint-btn')
+    const hintEl = wordWrapEl.querySelector('#hint-el')
+    const example = gameArr[0][1][0].example.native
+    const doesExampleExist = example !== null
+    hintBtn.classList.toggle('example-exists', doesExampleExist);
+    hintBtn.classList.toggle('bg-neutral-300', !doesExampleExist)
 
     hintBtn.addEventListener('click', hintFunc)
 
@@ -62,7 +64,11 @@ export default function startGame(combinedISO, vocabEntries) {
             inputEl.value = '';
             wordEl.innerText = convertSnakeCase(gameArr[0][0], true)
             wordPosEl.innerText = gameArr[0][1][0].pos
-            hintBtn.classList.toggle('hidden', gameArr[0][1][0].example.native === null);
+
+            const doesExampleExist = gameArr[0][1][0].example.native !== null
+            hintBtn.classList.toggle('example-exists', doesExampleExist);
+            hintBtn.classList.toggle('bg-neutral-300', !doesExampleExist)
+            hintEl.innerText = ''
         }
     }
 
@@ -77,7 +83,9 @@ export default function startGame(combinedISO, vocabEntries) {
 
     // Add GUI later, cba rn
     function hintFunc() {
-        if (gameArr[0][1][0].example === null) return
-        console.log(gameArr[0][1][0].example.native)
+        const example = gameArr[0][1][0].example.native
+        if (example === null) return
+
+        hintEl.innerText = example !== null ? example : '';
     }
 }
