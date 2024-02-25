@@ -41,7 +41,9 @@
     </div>
     <div class="popup-window fixed bg-[#000000a3] w-full h-full z-10 justify-center left-0 top-0">
         <div class="game-popup bg-white w-[726px] max-h-[820px] mt-8 mb-12 rounded-lg p-14">
-            <header class="flex">
+            <header class="flex justify-between items-center">
+                <p class="settings-title text-2xl hidden">Select the words you want to be tested on</p>
+                <p class="endgame-title text-2xl hidden">These are the words you got wrong</p>
                 <svg class="esc-btn hover:cursor-pointer" width="22" height="22" viewBox="0 0 26 26" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -49,8 +51,17 @@
                         fill="black" />
                 </svg>
             </header>
-            <div class="checkbox-container max-h-[600px] overflow-y-auto grid grid-cols-3"></div>
-            <button class="save-btn mt-4">Save</button>
+            <div class="checkbox-container hidden max-h-[600px] overflow-y-auto grid-cols-3"></div>
+            <div class="endgame-container hidden max-h-[600px] overflow-y-auto">
+                <table>
+                    <thead>
+                        <th>Word</th>
+                        <th>Translation</th>
+                    </thead>
+                </table>
+            </div>
+            <button class="save-btn mt-4 hidden">Save</button>
+            <button class="restart-btn mt-4 hidden">Restart Game</button>
         </div>
     </div>
 </body>

@@ -1,4 +1,5 @@
 import convertSnakeCase from "../../../utils/convertSnakeCase.js";
+import { hideSettingsPopup } from "./hidePopups.js"
 
 // This is going to take gameArr as an argument
 // It's going to copy that arr
@@ -23,8 +24,8 @@ export default function startGame(combinedISO, vocabEntries) {
     const inputEl = document.querySelector('.game-wrap input')
     inputEl.addEventListener('keydown', inputFunc)
 
-    const restartBtn = document.querySelector('.restart-btn')
-    restartBtn.addEventListener('click', restartFunc)
+    const restartBtnList = document.querySelectorAll('.restart-btn')
+    restartBtnList.forEach((restartBtn) => restartBtn.addEventListener('click', restartFunc))
 
     // Hints
     const hintBtn = document.querySelector('.hint-btn')
@@ -63,8 +64,9 @@ export default function startGame(combinedISO, vocabEntries) {
         }
 
         function handleNextWord() {
-            if (gameArr.length === 0) {
-                wordWrapEl.innerHTML = `<span>Nice job!</span>`
+            if (gameArr.length === 0) { // Game over
+                showEndgamePopup(wrongInputArr);
+                wordEl.innerText = '';
                 inputEl.value = '';
                 inputEl.removeEventListener('keydown', inputFunc)
             } else {
@@ -89,11 +91,55 @@ export default function startGame(combinedISO, vocabEntries) {
         startGame(combinedISO, vocabEntries)
     }
 
-    // Add GUI later, cba rn
     function hintFunc() {
         const example = gameArr[0][1][0].example.native
         if (example === null) return
 
         hintEl.innerText = example !== null ? example : '';
     }
+}
+
+function showEndgamePopup(wrongInputArr) {
+    hideSettingsPopup()
+    const popupWindow = document.querySelector('.popup-window')
+    const endgamePopup = popupWindow.querySelector('.endgame-container')
+    const endgameTitle = popupWindow.querySelector('.endgame-title')
+
+    if (wrongInputArr.length === 0) { // Didn't get anything wrong
+        endgameTitle.innerText = 'Good job, You got everything right!'
+    } else {
+        endgameTitle.innerText = 'These are the words you got wrong'
+    }
+
+    const table = endgamePopup.querySelector('table')
+    const oldTbody = table.querySelector('tbody')
+
+    if (oldTbody) {
+        table.removeChild(oldTbody)
+    }
+
+    const tbody = document.createElement('tbody')
+    for (const [word, wordDataArr] of wrongInputArr) {
+        for (const wordDataEl of wordDataArr) {
+            const wordTd = document.createElement('td')
+            wordTd.innerText = convertSnakeCase(word, true);
+
+            const translationTd = document.createElement('td')
+            const translationUl = document.createElement('ul')
+
+            for (const translation of wordDataEl.translations) {
+                const translationLi = document.createElement('li')
+                translationLi.innerText = translation;
+                translationUl.append(translationLi)
+            }
+
+            translationTd.append(translationUl)
+
+            tbody.append(wordTd, translationTd)
+        }
+    }
+
+    table.append(tbody)
+
+    popupWindow.style.display = 'flex';
 }

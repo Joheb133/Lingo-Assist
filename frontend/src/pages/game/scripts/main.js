@@ -2,6 +2,7 @@ import { getData } from "../../../messages.js";
 import convertSnakeCase from "../../../utils/convertSnakeCase.js"
 import startGame from "./game.js";
 import createSettings from "./settings/index.js";
+import { hideEndgamePopup } from "./hidePopups.js";
 
 const combinedISO = await getData('combinedISO')
 const vocab = await getData(combinedISO)
@@ -20,8 +21,8 @@ createSettings(combinedISO, vocabEntries)
 const settingsBtn = document.querySelector('.options-btn')
 const popupWindow = document.querySelector('.popup-window');
 settingsBtn.addEventListener('click', () => {
+    hideEndgamePopup()
     createSettings(combinedISO, vocabEntries)
-    // Show popup window
     popupWindow.style.display = 'flex';
 })
 
