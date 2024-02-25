@@ -51,24 +51,32 @@ export default function startGame(combinedISO, vocabEntries) {
             } else {
                 gameArr.shift()
             }
+            handleNextWord()
         } else {
             // Move first word to end of array
             wrongInputArr.push(gameArr.shift());
+            wordEl.classList.add('wrong-input'); // Add the shake animation class
+            wordEl.addEventListener('animationend', () => {
+                wordEl.classList.remove('wrong-input'); // Remove the shake animation class after the animation ends
+                handleNextWord()
+            }, { once: true });
         }
 
-        if (gameArr.length === 0) {
-            wordWrapEl.innerHTML = `<span>Nice job!</span>`
-            inputEl.value = '';
-            inputEl.removeEventListener('keydown', inputFunc)
-        } else {
-            inputEl.value = '';
-            wordEl.innerText = convertSnakeCase(gameArr[0][0], true)
-            wordPosEl.innerText = gameArr[0][1][0].pos
+        function handleNextWord() {
+            if (gameArr.length === 0) {
+                wordWrapEl.innerHTML = `<span>Nice job!</span>`
+                inputEl.value = '';
+                inputEl.removeEventListener('keydown', inputFunc)
+            } else {
+                inputEl.value = '';
+                wordEl.innerText = convertSnakeCase(gameArr[0][0], true)
+                wordPosEl.innerText = gameArr[0][1][0].pos
 
-            const doesExampleExist = gameArr[0][1][0].example.native !== null
-            hintBtn.classList.toggle('example-exists', doesExampleExist);
-            hintBtn.classList.toggle('bg-neutral-300', !doesExampleExist)
-            hintEl.innerText = ''
+                const doesExampleExist = gameArr[0][1][0].example.native !== null
+                hintBtn.classList.toggle('example-exists', doesExampleExist);
+                hintBtn.classList.toggle('bg-neutral-300', !doesExampleExist)
+                hintEl.innerText = ''
+            }
         }
     }
 
