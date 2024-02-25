@@ -1,38 +1,38 @@
-import { getData } from "../../../../messages.js";
+import handleSaveCheckBox from "./handleSaveCheckBox.js";
 import returnCheckBox from "./returnCheckBox.js";
 
-// code for settings btn
-export default async function settingsInit() {
-    const settingsBtn = document.querySelector('.options-btn')
-    const popupWindow = document.querySelector('.popup-window');
-    settingsBtn.addEventListener('click', () => {
-        // Show popup window
-        popupWindow.style.display = 'flex';
-    })
+let saveBtnHandler; // Needed to store the right func reference for removeEventListener
 
-    // Turn the popup window on and off
-    popupWindow.addEventListener('mousedown', (event) => {
-        if (event.target === popupWindow || event.target.closest('.esc-btn')) {
-            popupWindow.style.display = 'none'
-        }
-    })
+// Create the settings checkboxes
+export default async function createSettings(combinedISO, vocabEntries) {
+    const saveBtn = document.querySelector('.save-btn')
+    const checkBoxContainer = document.querySelector('.checkbox-container')
+
+    // Cleanup old resources
+    saveBtn.removeEventListener('click', saveBtnHandler)
+    checkBoxContainer.innerHTML = ''
 
     // Get words
-    const combinedISO = await getData('combinedISO')
-    const vocab = await getData(combinedISO);
+    let checkedWords = JSON.parse(localStorage.getItem('checkedWords'))
 
-    /* Filter out invalid words */
-
-    // Temporarily remove verbs
-    const vocabArr = Object.entries(vocab).map(([word, dataArr]) => [
-        word,
-        dataArr.filter((dataEl) => dataEl.pos !== 'Verb' && dataEl.translations.length !== 0)
-    ]).filter(([_, dataArr]) => dataArr.length > 0)
+    if (!checkedWords || !checkedWords[combinedISO]) {
+        // Update checkedWords to the selected course
+        checkedWords = { [combinedISO]: {} }
+    }
 
     // Create a checkbox for each word
-    const checkBoxContainer = document.querySelector('.checkbox-container')
-    for (const [word, _] of vocabArr) {
-        const checkBox = returnCheckBox(word)
+
+    for (const [word, _] of vocabEntries) {
+        if (checkedWords[combinedISO][word] === undefined) {
+            // If checkedWords doesn't have the vocab word, add it to checkedWords
+            checkedWords[combinedISO][word] = true;
+        }
+        const checkBox = returnCheckBox(word, checkedWords[combinedISO][word])
         checkBoxContainer.append(checkBox)
     }
+
+    localStorage.setItem('checkedWords', JSON.stringify(checkedWords))
+
+    saveBtnHandler = () => handleSaveCheckBox(checkedWords, combinedISO)
+    saveBtn.addEventListener('click', saveBtnHandler)
 }
