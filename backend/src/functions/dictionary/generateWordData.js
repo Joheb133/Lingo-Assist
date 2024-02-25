@@ -58,7 +58,11 @@ module.exports = function generateWordData(response, word, wordDataArr, isInfini
             wordObj.infinitive === null &&
             resWordObj.partOfSpeech.toLowerCase() === 'verb') {
             infinitive = wikiInfinitive
-            wikiInfinitives[infinitive] = null;
+            wikiInfinitives[infinitive] = {
+                strength: wordObj.strength,
+                last_practiced_ms: wordObj.last_practiced_ms,
+                pos: 'Verb'
+            };
         }
 
         // Check defintion error
@@ -85,13 +89,15 @@ module.exports = function generateWordData(response, word, wordDataArr, isInfini
             infinitive,
             pos,
             translations,
-            example
+            example,
+            strength: wordObj.strength,
+            last_practiced_ms: wordObj.last_practiced_ms
         }
 
         resDataArr.push(generatedWordObj)
     }
 
-    return { resDataArr, wikiInfinitives: Object.keys(wikiInfinitives) }
+    return { resDataArr, wikiInfinitives }
 }
 
 function sanitizeTranslation(text) {

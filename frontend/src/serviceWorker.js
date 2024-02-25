@@ -156,7 +156,9 @@ function storeDuolingoData(res) {
                 infinitive: element.infinitive,
                 pos: element.pos,
                 translations: [],
-                duolingo_id: element.id
+                duolingo_id: element.id,
+                strength: element.strength,
+                last_practiced_ms: element.last_practiced_ms
             }
 
             if (vocabObj[formattedWord] === undefined) { // key doesnt exist
