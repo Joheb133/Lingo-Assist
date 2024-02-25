@@ -1,9 +1,10 @@
 import convertSnakeCase from "../../../utils/convertSnakeCase.js";
 import { hideSettingsPopup } from "./hidePopups.js"
+import shuffleArray from "../../../utils/shuffleArray.js";
 
 export default function startGame(combinedISO, vocabEntries) {
     const checkedWords = JSON.parse(localStorage.getItem('checkedWords'))[combinedISO]
-    const gameArr = vocabEntries.filter(([word, _]) => checkedWords[word] === true)
+    const gameArr = shuffleArray(vocabEntries.filter(([word, _]) => checkedWords[word] === true))
     const wrongInputArr = [];
 
     // -- Game stuff -- //
