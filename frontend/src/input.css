@@ -18,6 +18,7 @@ a:active {
 }
 
 button {
+  position: relative;
   background-color: #36abff;
   color: white;
   padding: 6px 16px;
@@ -25,10 +26,16 @@ button {
   cursor: pointer;
   border-radius: 3px;
   font-size: 14px;
+  transition-duration: 0.4s;
 }
 
 button:hover {
-  background-color: #228cd8;
+  transition-duration: 0.1s;
+  background-color: #2599ec;
+}
+
+button:active {
+  top: 5px;
 }
 
 /* Options page */

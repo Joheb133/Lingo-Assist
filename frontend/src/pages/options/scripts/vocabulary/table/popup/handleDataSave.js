@@ -5,7 +5,6 @@ export default async function handleDataSave(row, wordDataEl, vocab, combinedISO
     const popup = document.querySelector('.settings-popup')
     const saveBtn = popup.querySelector('.save-btn')
     saveBtn.disabled = true;
-    saveBtn.innerText = 'Saving...'
 
     /* Get data in different elements */
 
@@ -64,13 +63,5 @@ export default async function handleDataSave(row, wordDataEl, vocab, combinedISO
     wordDataEl.example.native = llExample;
     wordDataEl.example.translation = englishExample;
 
-    // Create a function that resolves after a specified time
-    function delay(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    await delay(150);
-
-    saveBtn.innerText = 'Save'
     saveBtn.disabled = false;
 }
