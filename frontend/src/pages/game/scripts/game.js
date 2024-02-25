@@ -1,12 +1,6 @@
 import convertSnakeCase from "../../../utils/convertSnakeCase.js";
 import { hideSettingsPopup } from "./hidePopups.js"
 
-// This is going to take gameArr as an argument
-// It's going to copy that arr
-// We're going to get checkedWords, compare the two and filter out words that aren't checked true
-// Then we play the game
-
-
 export default function startGame(combinedISO, vocabEntries) {
     const checkedWords = JSON.parse(localStorage.getItem('checkedWords'))[combinedISO]
     const gameArr = vocabEntries.filter(([word, _]) => checkedWords[word] === true)
@@ -87,8 +81,12 @@ export default function startGame(combinedISO, vocabEntries) {
         console.log('...Restarting game')
         inputEl.removeEventListener('keydown', inputFunc)
         hintBtn.removeEventListener('click', hintFunc)
-        restartBtn.removeEventListener('click', restartFunc)
+        restartBtnList.forEach((restartBtn) => restartBtn.removeEventListener('click', restartFunc))
+
         startGame(combinedISO, vocabEntries)
+
+        const popupWindow = document.querySelector('.popup-window')
+        popupWindow.style.display = 'none' // Close the window
     }
 
     function hintFunc() {
