@@ -34,7 +34,7 @@ button:hover {
   background-color: #2599ec;
 }
 
-button:active {
+button:active:not([disabled]) {
   top: 5px;
 }
 
