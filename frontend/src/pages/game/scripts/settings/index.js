@@ -7,6 +7,17 @@ let saveBtnHandler; // Needed to store the right func reference for removeEventL
 export default async function createSettings(combinedISO, vocabEntries) {
     const saveBtn = document.querySelector('.save-btn')
     const checkBoxContainer = document.querySelector('.checkbox-container')
+    const noWordsContainer = document.querySelector('.game-popup .no-words-container')
+
+    // No words to select
+    if (vocabEntries.length === 0) {
+        saveBtn.classList.add('hidden')
+        noWordsContainer.classList.remove('hidden')
+        return;
+    }
+
+    saveBtn.classList.remove('hidden')
+    noWordsContainer.classList.add('hidden')
 
     // Cleanup old resources
     saveBtn.removeEventListener('click', saveBtnHandler)
