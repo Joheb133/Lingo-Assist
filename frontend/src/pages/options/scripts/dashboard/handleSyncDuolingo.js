@@ -5,7 +5,6 @@ export default function handleSyncDuolingo() {
     duolingoSync();
     const duolingoSyncBtn = document.querySelector('.duolingo-sync-btn');
     duolingoSyncBtn.addEventListener('click', async function () {
-        duolingoSyncBtn.disabled = true;
         duolingoSync()
     });
 }

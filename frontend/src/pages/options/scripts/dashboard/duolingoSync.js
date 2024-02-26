@@ -38,6 +38,7 @@ export default async function duolingoSync() {
 
     if (vocabKeys.length === 0) {
         failEl.innerText = `${syncStatus ? '' : baseFailMsg} ${combinedISO === null ? 'No course code cached' : 'No vocab in storage'}`
+        duolingoSyncBtn.disabled = false;
         return
     }
 
