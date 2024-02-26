@@ -2,42 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-a {
-  color: blue;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-a:hover {
-  text-decoration: underline;
-  color: darkblue;
-}
-
-a:active {
-  color: red;
-}
-
-button {
-  position: relative;
-  background-color: #36abff;
-  color: white;
-  padding: 6px 16px;
-  text-decoration: none;
-  cursor: pointer;
-  border-radius: 3px;
-  font-size: 14px;
-  transition-duration: 0.4s;
-}
-
-button:hover {
-  transition-duration: 0.1s;
-  background-color: #2599ec;
-}
-
-button:active:not([disabled]) {
-  top: 5px;
-}
-
 /* Options page */
 
 .dashboard-container ol {
@@ -145,12 +109,6 @@ table tbody tr:hover {
   border-radius: 8px;
   font-size: 16px;
   padding: 4px;
-}
-
-.word-data-container textarea:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(54, 171, 255, 0.5);
-  transition: box-shadow 200ms;
 }
 
 .options-popup .translations-wrap li {
@@ -331,3 +289,49 @@ input:checked + .slider:before {
 }
 
 /* --W3Schools */
+
+a {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: darkblue;
+}
+
+a:active {
+  color: red;
+}
+
+button {
+  position: relative;
+  background-color: #36abff;
+  color: white;
+  padding: 6px 16px;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 14px;
+  transition-duration: 0.4s;
+}
+
+button:hover {
+  transition-duration: 0.1s;
+  background-color: #2599ec;
+}
+
+button:active:not([disabled]) {
+  top: 5px;
+}
+
+textarea {
+  transition: box-shadow 150ms;
+}
+
+textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(54, 171, 255, 0.5);
+  transition: box-shadow 200ms;
+}
