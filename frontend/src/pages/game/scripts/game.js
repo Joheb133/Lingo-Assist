@@ -11,13 +11,21 @@ export default function startGame(combinedISO, vocabEntries) {
     const wordWrapEl = document.querySelector('.word-wrap')
     const inputWrap = document.querySelector('.input-wrapper')
 
+    const restartBtnList = document.querySelectorAll('.restart-btn')
+    restartBtnList.forEach((restartBtn) => restartBtn.addEventListener('click', restartFunc))
+
     if (gameArr.length === 0) {
-        noGameWrap.classList.toggle('hidden')
-        noGameWrap.classList.toggle('flex')
-        wordWrapEl.classList.toggle('hidden')
-        inputWrap.classList.toggle('hidden')
+        noGameWrap.classList.remove('hidden')
+        noGameWrap.classList.add('flex')
+        wordWrapEl.classList.add('hidden')
+        inputWrap.classList.add('hidden')
         return
     }
+
+    noGameWrap.classList.add('hidden')
+    noGameWrap.classList.remove('flex')
+    wordWrapEl.classList.remove('hidden')
+    inputWrap.classList.remove('hidden')
 
     const wordEl = wordWrapEl.querySelector('#word')
     wordEl.innerText = convertSnakeCase(gameArr[0][0], true)
@@ -27,9 +35,6 @@ export default function startGame(combinedISO, vocabEntries) {
 
     const inputEl = inputWrap.querySelector('input')
     inputEl.addEventListener('keydown', inputFunc)
-
-    const restartBtnList = document.querySelectorAll('.restart-btn')
-    restartBtnList.forEach((restartBtn) => restartBtn.addEventListener('click', restartFunc))
 
     // Hints
     const hintBtn = document.querySelector('.hint-btn')
@@ -89,6 +94,8 @@ export default function startGame(combinedISO, vocabEntries) {
     function restartFunc() {
         // Remove listeners
         console.log('...Restarting game')
+        const inputEl = inputWrap.querySelector('input')
+        const hintBtn = document.querySelector('.hint-btn')
         inputEl.removeEventListener('keydown', inputFunc)
         hintBtn.removeEventListener('click', hintFunc)
         restartBtnList.forEach((restartBtn) => restartBtn.removeEventListener('click', restartFunc))
