@@ -7,16 +7,25 @@ export default function startGame(combinedISO, vocabEntries) {
     const gameArr = shuffleArray(vocabEntries.filter(([word, _]) => checkedWords[word] === true))
     const wrongInputArr = [];
 
-    // -- Game stuff -- //
+    const noGameWrap = document.querySelector('.no-words-wrap')
     const wordWrapEl = document.querySelector('.word-wrap')
-    const wordEl = wordWrapEl.querySelector('#word')
+    const inputWrap = document.querySelector('.input-wrapper')
 
+    if (gameArr.length === 0) {
+        noGameWrap.classList.toggle('hidden')
+        noGameWrap.classList.toggle('flex')
+        wordWrapEl.classList.toggle('hidden')
+        inputWrap.classList.toggle('hidden')
+        return
+    }
+
+    const wordEl = wordWrapEl.querySelector('#word')
     wordEl.innerText = convertSnakeCase(gameArr[0][0], true)
     const wordPosEl = wordWrapEl.querySelector('#pos')
     wordPosEl.innerText = gameArr[0][1][0].pos
     console.log(gameArr[0][1][0].translations[0])
 
-    const inputEl = document.querySelector('.game-wrap input')
+    const inputEl = inputWrap.querySelector('input')
     inputEl.addEventListener('keydown', inputFunc)
 
     const restartBtnList = document.querySelectorAll('.restart-btn')
