@@ -37,7 +37,7 @@ export default function startGame(combinedISO, vocabEntries) {
     wordEl.innerText = convertSnakeCase(gameArr[0][0], true)
     const wordPosEl = wordWrapEl.querySelector('#pos')
     wordPosEl.innerText = gameArr[0][1].pos
-    console.log(gameArr[0][1].translations[0])
+    console.log(gameArr[0][1].translations)
 
     const inputEl = inputWrap.querySelector('input')
     inputEl.addEventListener('keydown', inputFunc)

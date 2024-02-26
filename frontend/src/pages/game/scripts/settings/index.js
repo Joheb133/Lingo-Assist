@@ -1,4 +1,5 @@
 import handleSaveCheckBox from "./handleSaveCheckBox.js";
+import { orderByAlphabet, orderByLastPracticed, orderByStrength } from "./orderWords.js";
 import returnCheckBox from "./returnCheckBox.js";
 
 let saveBtnHandler; // Needed to store the right func reference for removeEventListener
@@ -32,7 +33,6 @@ export default async function createSettings(combinedISO, vocabEntries) {
     }
 
     // Create a checkbox for each word
-
     for (const [word, _] of vocabEntries) {
         if (checkedWords[combinedISO][word] === undefined) {
             // If checkedWords doesn't have the vocab word, add it to checkedWords

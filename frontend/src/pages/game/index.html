@@ -64,7 +64,24 @@
                     translations, words
                     without translations cannot be tested on.</p>
             </div>
-            <div class="checkbox-container hidden max-h-[600px] overflow-y-auto grid-cols-3"></div>
+            <div class="game-settings-container max-h-[600px] overflow-y-auto">
+                <div class="settings-filter-container">
+                    <label class="radio-wrap">
+                        <input type="radio" name="order" id="order-alphabet" checked>
+                        <span>Order by Alphabet</span>
+                    </label>
+                    <label class="radio-wrap">
+                        <input type="radio" name="order" id="order-strength">
+                        <span>Order by Strength</span>
+                    </label>
+                    <label class="radio-wrap">
+                        <input type="radio" name="order" id="order-last-practiced">
+                        <span>Order by Last Practiced</span>
+                    </label>
+                </div>
+                <div class="checkbox-container grid grid-cols-3">
+                </div>
+            </div>
             <div class="endgame-container hidden max-h-[600px] overflow-y-auto">
                 <div class="endgame-table-container">
                     <table>

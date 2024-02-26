@@ -2,11 +2,11 @@
 export function hideEndgamePopup() {
     const popupWindow = document.querySelector('.popup-window')
     // Show setting popup elements
-    const settingsContainer = popupWindow.querySelector('.checkbox-container')
+    const settingsContainer = popupWindow.querySelector('.game-settings-container ')
     const settingsBtn = popupWindow.querySelector('.save-btn')
     const settingsPara = popupWindow.querySelector('.settings-title')
     settingsContainer.classList.remove('hidden')
-    settingsContainer.classList.add('grid')
+    settingsContainer.classList.add('block')
     settingsBtn.classList.remove('hidden')
     settingsPara.classList.remove('hidden')
 
@@ -22,11 +22,11 @@ export function hideEndgamePopup() {
 export function hideSettingsPopup() {
     const popupWindow = document.querySelector('.popup-window')
     // Show endgame popupt elements
-    const settingsContainer = popupWindow.querySelector('.checkbox-container')
+    const settingsContainer = popupWindow.querySelector('.game-settings-container ')
     const settingsBtn = popupWindow.querySelector('.save-btn')
     const settingsPara = popupWindow.querySelector('.settings-title')
     settingsContainer.classList.add('hidden')
-    settingsContainer.classList.remove('grid')
+    settingsContainer.classList.remove('block')
     settingsBtn.classList.add('hidden')
     settingsPara.classList.add('hidden')
 
