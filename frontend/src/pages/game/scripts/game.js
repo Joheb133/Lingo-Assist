@@ -4,8 +4,15 @@ import shuffleArray from "../../../utils/shuffleArray.js";
 
 export default function startGame(combinedISO, vocabEntries) {
     const checkedWords = JSON.parse(localStorage.getItem('checkedWords'))[combinedISO]
-    const gameArr = shuffleArray(vocabEntries.filter(([word, _]) => checkedWords[word] === true))
+    const gameArr = shuffleArray(
+        vocabEntries
+            .filter(([word, _]) => checkedWords[word] === true) // Ensure word is checked
+            .flatMap(([word, dataArr]) => // Ensure each wordData element is it's own element in gameArr
+                dataArr.map((dataEl) => [word, dataEl])
+            )
+    );
     const wrongInputArr = [];
+    console.log(gameArr)
 
     const noGameWrap = document.querySelector('.no-words-wrap')
     const wordWrapEl = document.querySelector('.word-wrap')
@@ -30,8 +37,8 @@ export default function startGame(combinedISO, vocabEntries) {
     const wordEl = wordWrapEl.querySelector('#word')
     wordEl.innerText = convertSnakeCase(gameArr[0][0], true)
     const wordPosEl = wordWrapEl.querySelector('#pos')
-    wordPosEl.innerText = gameArr[0][1][0].pos
-    console.log(gameArr[0][1][0].translations[0])
+    wordPosEl.innerText = gameArr[0][1].pos
+    console.log(gameArr[0][1].translations[0])
 
     const inputEl = inputWrap.querySelector('input')
     inputEl.addEventListener('keydown', inputFunc)
@@ -39,7 +46,7 @@ export default function startGame(combinedISO, vocabEntries) {
     // Hints
     const hintBtn = document.querySelector('.hint-btn')
     const hintEl = wordWrapEl.querySelector('#hint-el')
-    const example = gameArr[0][1][0].example.native
+    const example = gameArr[0][1].example.native
     const doesExampleExist = example !== null
     hintBtn.classList.toggle('example-exists', doesExampleExist);
     hintBtn.classList.toggle('bg-neutral-300', !doesExampleExist)
@@ -48,19 +55,11 @@ export default function startGame(combinedISO, vocabEntries) {
 
     function inputFunc(e) {
         if (e.code !== 'Enter') return
-
-        const wordDataArr = gameArr[0][1]
-        const firstWordData = wordDataArr[0]
-
         // Compare word on screen with translation(s)
 
-        if (firstWordData.translations.includes(inputEl.value.toLowerCase())) { // User input right
+        if (gameArr[0][1].translations.includes(inputEl.value.toLowerCase())) { // User input right
             // Remove that word data from gameArr
-            if (gameArr[0][1].length >= 2) {
-                gameArr[0][1].shift()
-            } else {
-                gameArr.shift()
-            }
+            gameArr.shift()
             handleNextWord()
         } else {
             // Move first word to end of array
@@ -81,9 +80,9 @@ export default function startGame(combinedISO, vocabEntries) {
             } else {
                 inputEl.value = '';
                 wordEl.innerText = convertSnakeCase(gameArr[0][0], true)
-                wordPosEl.innerText = gameArr[0][1][0].pos
+                wordPosEl.innerText = gameArr[0][1].pos
 
-                const doesExampleExist = gameArr[0][1][0].example.native !== null
+                const doesExampleExist = gameArr[0][1].example.native !== null
                 hintBtn.classList.toggle('example-exists', doesExampleExist);
                 hintBtn.classList.toggle('bg-neutral-300', !doesExampleExist)
                 hintEl.innerText = ''
@@ -107,7 +106,7 @@ export default function startGame(combinedISO, vocabEntries) {
     }
 
     function hintFunc() {
-        const example = gameArr[0][1][0].example.native
+        const example = gameArr[0][1].example.native
         if (example === null) return
 
         hintEl.innerText = example !== null ? example : '';
@@ -134,24 +133,25 @@ function showEndgamePopup(wrongInputArr) {
     }
 
     const tbody = document.createElement('tbody')
-    for (const [word, wordDataArr] of wrongInputArr) {
-        for (const wordDataEl of wordDataArr) {
-            const wordTd = document.createElement('td')
-            wordTd.innerText = convertSnakeCase(word, true);
+    for (const [word, wordDataEl] of wrongInputArr) {
+        const row = document.createElement('tr')
 
-            const translationTd = document.createElement('td')
-            const translationUl = document.createElement('ul')
+        const wordTd = document.createElement('td')
+        wordTd.innerText = convertSnakeCase(word, true);
 
-            for (const translation of wordDataEl.translations) {
-                const translationLi = document.createElement('li')
-                translationLi.innerText = translation;
-                translationUl.append(translationLi)
-            }
+        const translationTd = document.createElement('td')
+        const translationUl = document.createElement('ul')
 
-            translationTd.append(translationUl)
-
-            tbody.append(wordTd, translationTd)
+        for (const translation of wordDataEl.translations) {
+            const translationLi = document.createElement('li')
+            translationLi.innerText = translation;
+            translationUl.append(translationLi)
         }
+
+        translationTd.append(translationUl)
+        row.append(wordTd, translationTd)
+
+        tbody.append(row)
     }
 
     table.append(tbody)
