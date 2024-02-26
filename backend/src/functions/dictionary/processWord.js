@@ -25,7 +25,6 @@ module.exports = async function processWord(promises, combinedISO, word, wordDat
         for (let i = 0; i < wikiInfinitives.length; i++) {
             const wikiInfinitive = wikiInfinitives[i][0]
             const wikiInfinitiveData = wikiInfinitives[i][1]
-            console.log(wikiInfinitive, wikiInfinitiveData)
             if (wikiInfinitive.length > 0 && recursionCount < 1) {
                 recursionCount++
                 // Add the extracted word to be searched at the end of all promises

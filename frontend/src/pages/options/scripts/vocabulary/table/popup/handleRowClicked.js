@@ -65,6 +65,10 @@ export default function editRowClicked(event, rowWordDataArr, vocab, combinedISO
 
         // Save changes made in popup
         const saveBtn = document.querySelector('.options-popup button')
-        saveBtn.addEventListener('click', () => handleDataSave(clickedRow, wordDataEl, vocab, combinedISO))
+
+        const saveBtnClone = saveBtn.cloneNode(true); // Ensure old listener is removed
+        popup.replaceChild(saveBtnClone, saveBtn)
+
+        saveBtnClone.addEventListener('click', () => handleDataSave(clickedRow, wordDataEl, vocab, combinedISO))
     }
 }
