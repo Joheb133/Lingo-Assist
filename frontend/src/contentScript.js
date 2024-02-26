@@ -45,8 +45,8 @@ function reverseStructure(wordsObj) {
 
     for (const [word, dataArr] of Object.entries(wordsObj)) {
         for (const dataEl of dataArr) {
-            // Ignore verbs and infinitives for now
-            if (dataEl.pos !== 'Verb' && dataEl.pos !== 'Infinitive') {
+            // Ignore verbs and infinitives for now & don't transform words with a strength higher than 3
+            if (dataEl.pos !== 'Verb' && dataEl.pos !== 'Infinitive' && dataEl.strength < 3) {
                 // If the key doesn't exist, add it to the object above
                 for (const translation of dataEl.translations) {
                     if (!reversedData.hasOwnProperty(translation)) {
