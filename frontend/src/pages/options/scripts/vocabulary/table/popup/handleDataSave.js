@@ -25,8 +25,8 @@ export default async function handleDataSave(row, wordDataEl, vocab, combinedISO
     const infinitive = infinitiveInputEl === '' ? null : infinitiveInputEl.value
 
     // Examples // plans to change to text area
-    const llInputEl = popup.querySelector('#learning-language-input')
-    const englishInputEl = popup.querySelector('#english-input')
+    const llInputEl = popup.querySelector('#learning-language-ta')
+    const englishInputEl = popup.querySelector('#english-ta')
 
     const llExample = llInputEl.value === '' ? null : llInputEl.value;
     const englishExample = englishInputEl.value === '' ? null : englishInputEl;
