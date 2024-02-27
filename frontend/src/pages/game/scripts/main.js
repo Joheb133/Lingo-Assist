@@ -27,8 +27,7 @@ async function main() {
         dataArr.filter((dataEl) => dataEl.translations.length !== 0)
     ]).filter(([_, dataArr]) => dataArr.length > 0)
 
-    const defVocabEntries = orderByAlphabet(vocabEntries) // By default order by alphabet
-    createSettings(combinedISO, defVocabEntries)
+    createSettings(combinedISO, orderByAlphabet(vocabEntries)) // By default order by alphabet
 
     const settingsBtn = document.querySelector('.options-btn')
     const popupWindow = document.querySelector('.popup-window');

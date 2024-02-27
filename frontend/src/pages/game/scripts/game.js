@@ -11,6 +11,7 @@ export default function startGame(combinedISO, vocabEntries) {
                 dataArr.map((dataEl) => [word, dataEl])
             )
     );
+    console.log(gameArr)
     const wrongInputArr = [];
 
     const noGameWrap = document.querySelector('.no-words-wrap')
