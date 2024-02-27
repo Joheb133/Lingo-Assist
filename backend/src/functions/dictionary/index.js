@@ -32,6 +32,29 @@ app.http('dictionary', {
 
             const chunkResult = await chunkPromises(wordPromises, REQUEST_LIMIT, TIME_INTERVAL, TIME_OUT)
 
+            // Because I'm smart and definitely NOT lazy
+            // I'm not going to rewrite old code to handle infinitives and verbs
+            // For loops below make it so verbs use inifinitives translation which is more usable than wiktionaries verb translations 
+
+            // First replace verb translations with infinitive translations
+            for (const [word, wordDataArr] of Object.entries(wordRes[combinedISO])) {
+                let i = 0;
+                for (const wordDataEl of wordDataArr) {
+                    const infinitive = wordDataEl.infinitive;
+                    if (infinitive) {
+                        wordRes[combinedISO][word][i].translations = wordRes[combinedISO][infinitive][0].translations
+                    }
+                    i++;
+                }
+            }
+
+            // Second, remove the infinitives
+            for (const [word, wordDataArr] of Object.entries(wordRes[combinedISO])) {
+                if (wordDataArr[0].pos.toLowerCase() === 'infinitive') {
+                    delete wordRes[combinedISO][word]
+                }
+            }
+
             if (chunkResult) {
                 return {
                     status: 200,
