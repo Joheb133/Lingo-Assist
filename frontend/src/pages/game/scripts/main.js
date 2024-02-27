@@ -22,10 +22,9 @@ async function main() {
         return
     }
 
-    // Temporarily remove verbs
     const vocabEntries = Object.entries(vocab).map(([word, dataArr]) => [
         word,
-        dataArr.filter((dataEl) => dataEl.pos !== 'Verb' && dataEl.translations.length !== 0)
+        dataArr.filter((dataEl) => dataEl.translations.length !== 0)
     ]).filter(([_, dataArr]) => dataArr.length > 0)
 
     const defVocabEntries = orderByAlphabet(vocabEntries) // By default order by alphabet
