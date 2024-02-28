@@ -18,9 +18,9 @@
   ],
   "action": {
     "default_icon": {
-      "16": "src/assets/human-handsup.png",
-      "24": "src/assets/human-handsup.png",
-      "32": "src/assets/human-handsup.png"
+      "16": "src/assets/fluent_translate-auto-16-regular.png",
+      "24": "src/assets/fluent_translate-auto-16-regular.png",
+      "32": "src/assets/fluent_translate-auto-16-regular.png"
     },
     "default_title": "Lingo Assist",
     "default_popup": "src/popup.html"
