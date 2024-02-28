@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="/dist/output.css" />
+  <script src="scripts/main.js" defer type="module"></script>
+  <title>Lingo Assist Options</title>
+</head>
+
+<body class="w-[1000px] mx-auto font-sans my-3">
+  <section class="dashboard-container">
+    <h1 class="text-3xl mb-3">Lingo Assist Dashboard</h1>
+    <ol>
+      <li>
+        <div class="mb-1">
+          <b>Log into <a href="https://duolingo.com" target="_blank">duolingo.com</a></b>
+          <span id="login" class="ml-4 px-3 rounded-full font-semibold"></span>
+        </div>
+        <p>Make sure to log in to Doulingo and select the right course. Lingo Assist will use the words you’ve learned
+          in that specific course. </p>
+        <span id="login-fail-el" class="text-red-700"></span>
+      </li>
+      <li>
+        <button class="duolingo-sync-btn mb-1">
+          Sync Duolingo
+        </button>
+        <p>Every time you refresh this page and are logged in, you words automatically update. To do this manually,
+          press the button above.</p>
+      </li>
+      <li>
+        <button class="translate-btn mb-1">
+          Translate vocab
+        </button>
+        <span id="translate-loading" class="ml-4 px-3 rounded-full font-semibold bg-amber-300 hidden">
+          Translating...
+        </span>
+        <p>Click the translation button to translate your Duolingo vocabulary. Note that Lingo Assist currently only
+          supports translations to English. Only words without translations are translated, this means if you add custom
+          translations, those words will not be translated. </p>
+        <span id="translate-fail-el" class="text-red-700"></span>
+      </li>
+      <li>
+        <button class="clear-btn mb-1">
+          Clear vocabulary
+        </button>
+        <p>
+          Remove the words and translations of the current course from your machine.
+        </p>
+      </li>
+    </ol>
+  </section>
+  <section class="vocabulary-container">
+    <h1 class="text-3xl my-3">Vocabulary</h1>
+    <div class="text-base duolingo-msg-el mb-2">
+      <span>Current Duolingo Course: <span id="learning-language" class="font-bold"></span></span><br>
+      <span>Words learned: <span id="words-learned" class="font-bold"></span></span>
+    </div>
+    <button class="table-btn">Show words <svg class="inline -mt-[2px]" width="16" height="16" viewBox="0 0 16 16"
+        fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M12.8538 9.35375L8.35375 13.8538C8.30732 13.9002 8.25217 13.9371 8.19147 13.9623C8.13077 13.9874 8.06571 14.0004 8 14.0004C7.9343 14.0004 7.86923 13.9874 7.80853 13.9623C7.74783 13.9371 7.69269 13.9002 7.64625 13.8538L3.14625 9.35375C3.05243 9.25993 2.99973 9.13268 2.99973 9C2.99973 8.86732 3.05243 8.74007 3.14625 8.64625C3.24007 8.55243 3.36732 8.49972 3.5 8.49972C3.63269 8.49972 3.75993 8.55243 3.85375 8.64625L7.5 12.2931V2.5C7.5 2.36739 7.55268 2.24021 7.64645 2.14645C7.74022 2.05268 7.86739 2 8 2C8.13261 2 8.25979 2.05268 8.35356 2.14645C8.44733 2.24021 8.5 2.36739 8.5 2.5V12.2931L12.1463 8.64625C12.2401 8.55243 12.3673 8.49972 12.5 8.49972C12.6327 8.49972 12.7599 8.55243 12.8538 8.64625C12.9476 8.74007 13.0003 8.86732 13.0003 9C13.0003 9.13268 12.9476 9.25993 12.8538 9.35375Z"
+          fill="white" />
+      </svg>
+    </button>
+    <button class="ml-2 game-btn">Practice with our game</button>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Word</th>
+            <th>Translation</th>
+            <th>Part of Speech</th>
+            <th>Infinitive</th>
+            <th>Strength</th>
+            <th>Last practiced</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+  </section>
+  <section class="ignore-domain-container w-[440px]">
+    <h1 class="text-2xl my-3">Ignored Domains</h1>
+    <ul class="text-sm list-disc list-inside mb-3">
+      <li>Pages on these domains won't be translated.</li>
+      <li>Write each domain on a new line.</li>
+      <li>Don't include <em>http:// or https://</em> in front of the domain name.</li>
+    </ul>
+    <textarea placeholder="Example: youtube.com" rows="4"></textarea><br>
+    <button id="submit-btn">Submit</button>
+    <button id="reset-btn" class="ml-2">Reset</button>
+  </section>
+  <div class="popup-window fixed bg-[#000000a3] w-full h-full z-10 justify-center left-0 top-0">
+    <div class="options-popup bg-white w-[726px] max-h-[820px] mt-8 mb-12 rounded-lg p-14">
+      <header class="border-b-[1px] border-[#D2D2D2] m-[5px] flex justify-between">
+        <h1 class="text-4xl" id="title"></h1>
+        <svg class="esc-btn hover:cursor-pointer" width="22" height="22" viewBox="0 0 26 26" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M21.1747 19.4502C21.4037 19.6792 21.5323 19.9897 21.5323 20.3135C21.5323 20.6373 21.4037 20.9478 21.1747 21.1768C20.9458 21.4058 20.6352 21.5344 20.3114 21.5344C19.9876 21.5344 19.6771 21.4058 19.4482 21.1768L13 14.7266L6.54972 21.1748C6.32076 21.4037 6.01023 21.5324 5.68644 21.5324C5.36265 21.5324 5.05212 21.4037 4.82316 21.1748C4.5942 20.9458 4.46558 20.6353 4.46558 20.3115C4.46558 19.9877 4.5942 19.6772 4.82316 19.4482L11.2734 13L4.82519 6.54977C4.59623 6.32081 4.46761 6.01028 4.46761 5.68649C4.46761 5.36269 4.59623 5.05216 4.82519 4.82321C5.05415 4.59425 5.36468 4.46562 5.68847 4.46562C6.01226 4.46562 6.3228 4.59425 6.55175 4.82321L13 11.2734L19.4502 4.82219C19.6791 4.59323 19.9897 4.46461 20.3135 4.46461C20.6373 4.46461 20.9478 4.59323 21.1768 4.82219C21.4057 5.05115 21.5343 5.36168 21.5343 5.68547C21.5343 6.00926 21.4057 6.3198 21.1768 6.54875L14.7265 13L21.1747 19.4502Z"
+            fill="black" />
+        </svg>
+      </header>
+      <div class="word-data-container">
+        <div class="data-wrap text-base">
+          <span>Last Practiced: <span class="font-medium" id="last-practiced-el"></span></span>
+          <span>Strength <span class="font-medium" id="strength-el"></span></span>
+        </div>
+        <div class="translations-wrap">
+          <span class="title">Translations</span>
+          <ul>
+            <li class="add-trans-wrap">
+              <svg class="add-trans-btn opacity-85 rotate-45 hover:cursor-pointer" width="16" height="16"
+                viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M21.1747 19.4502C21.4037 19.6792 21.5323 19.9897 21.5323 20.3135C21.5323 20.6373 21.4037 20.9478 21.1747 21.1768C20.9458 21.4058 20.6352 21.5344 20.3114 21.5344C19.9876 21.5344 19.6771 21.4058 19.4482 21.1768L13 14.7266L6.54972 21.1748C6.32076 21.4037 6.01023 21.5324 5.68644 21.5324C5.36265 21.5324 5.05212 21.4037 4.82316 21.1748C4.5942 20.9458 4.46558 20.6353 4.46558 20.3115C4.46558 19.9877 4.5942 19.6772 4.82316 19.4482L11.2734 13L4.82519 6.54977C4.59623 6.32081 4.46761 6.01028 4.46761 5.68649C4.46761 5.36269 4.59623 5.05216 4.82519 4.82321C5.05415 4.59425 5.36468 4.46562 5.68847 4.46562C6.01226 4.46562 6.3228 4.59425 6.55175 4.82321L13 11.2734L19.4502 4.82219C19.6791 4.59323 19.9897 4.46461 20.3135 4.46461C20.6373 4.46461 20.9478 4.59323 21.1768 4.82219C21.4057 5.05115 21.5343 5.36168 21.5343 5.68547C21.5343 6.00926 21.4057 6.3198 21.1768 6.54875L14.7265 13L21.1747 19.4502Z"
+                  fill="black" />
+              </svg>
+            </li>
+          </ul>
+        </div>
+        <div class="pos-wrap">
+          <span class="title">Part of Speech</span>
+          <input type="text" placeholder="None">
+        </div>
+        <div class="infinitive-wrap">
+          <span class="title">Infinitive</span>
+          <input type="text" placeholder="None">
+        </div>
+        <div class="example-wrapper">
+          <span class="title">Example</span>
+          <textarea id="learning-language-ta" placeholder="None"></textarea>
+          <textarea id="english-ta" placeholder="English"></textarea>
+        </div>
+      </div>
+      <button class="save-btn mt-4">Save</button>
+    </div>
+  </div>
+</body>
+
+</html>

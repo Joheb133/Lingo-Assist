@@ -1,0 +1,29 @@
+{
+  "name": "Lingo Assist",
+  "version": "0.1.0",
+  "description": "Learn your duolingo word tree",
+  "permissions": ["storage", "activeTab", "tabs"],
+  "background": {
+    "service_worker": "src/serviceWorker.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "id": "word-injection-script",
+      "matches": ["https://*/*", "http://*/*"],
+      "runAt": "document_end",
+      "css": ["src/contentStyle.css"],
+      "js": ["src/contentScript.js"]
+    }
+  ],
+  "action": {
+    "default_icon": {
+      "16": "src/assets/fluent_translate-auto-16-regular.png",
+      "24": "src/assets/fluent_translate-auto-16-regular.png",
+      "32": "src/assets/fluent_translate-auto-16-regular.png"
+    },
+    "default_title": "Lingo Assist",
+    "default_popup": "src/popup.html"
+  },
+  "manifest_version": 3
+}
