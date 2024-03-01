@@ -1,3 +1,4 @@
+import { API } from "../config.js";
 import { convertBytes } from "./utils/convertBytes.js";
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
@@ -73,7 +74,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
                 return;
             }
 
-            const url = 'http://localhost:7071/api/dictionary'
+            const url = API
             const options = {
                 method: 'POST',
                 headers: {

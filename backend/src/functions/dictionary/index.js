@@ -2,9 +2,10 @@ const { app } = require('@azure/functions');
 const returnWordPromises = require('./returnWordPromises');
 const chunkPromises = require('./chunkPromises')
 
-const REQUEST_LIMIT = 25;
+const REQUEST_LIMIT = 100;
 const TIME_INTERVAL = 1000; //ms
 const TIME_OUT = 2 * 60 * 1000 // 1 minute
+let isCurrentlyRunning = false;
 
 // 100 req/2s
 
@@ -22,6 +23,16 @@ app.http('dictionary', {
                     body: 'Bad Request: Request body is required.'
                 };
             }
+
+            if (isCurrentlyRunning) {
+                isCurrentlyRunning = false;
+                return {
+                    status: 429,
+                    body: 'Too Many Requests: Currently processing a request'
+                }
+            }
+
+            isCurrentlyRunning = true;
 
             const requestData = await req.json()
             const [combinedISO, wordObjs] = Object.entries(requestData)[0];
@@ -55,6 +66,8 @@ app.http('dictionary', {
                 }
             }
 
+            isCurrentlyRunning = false;
+
             if (chunkResult) {
                 return {
                     status: 200,
@@ -74,7 +87,9 @@ app.http('dictionary', {
                 }
             }
 
+
         } catch (error) {
+            isCurrentlyRunning = false;
             context.error(`Error processing request ${error.message}`)
             return {
                 status: 500,
@@ -83,5 +98,7 @@ app.http('dictionary', {
                 }
             }
         }
+
+
     }
 });
