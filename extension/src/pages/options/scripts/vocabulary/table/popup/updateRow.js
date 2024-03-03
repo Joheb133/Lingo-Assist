@@ -5,7 +5,6 @@ export default function updateRow(row, newWordDataEl) {
     const transTd = row.cells[1]
     const posTd = row.cells[2]
     const infinitiveTd = row.cells[3]
-    const exampleTd = row.cells[4]
 
     // Update translations
     const transUl = transTd.querySelector('ul')
@@ -21,7 +20,4 @@ export default function updateRow(row, newWordDataEl) {
 
     const infinitive = newWordDataEl.infinitive
     infinitiveTd.innerText = infinitive !== null ? convertSnakeCase(infinitive, true) : '';
-
-    const exampleNative = newWordDataEl.example?.native ?? null;
-    exampleTd.innerText = exampleNative !== null ? exampleNative : '';
 }
