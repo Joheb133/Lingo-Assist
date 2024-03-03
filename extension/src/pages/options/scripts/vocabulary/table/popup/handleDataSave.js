@@ -25,7 +25,7 @@ export default async function handleDataSave(row, rowWord, vocab, combinedISO) {
 
     // Infinitive
     const infinitiveInputEl = popup.querySelector('.infinitive-wrap input')
-    const infinitive = infinitiveInputEl === '' ? null : infinitiveInputEl.value
+    const infinitive = infinitiveInputEl.value === '' ? null : infinitiveInputEl.value
 
     // Examples // plans to change to text area
     const llInputEl = popup.querySelector('#learning-language-ta')
