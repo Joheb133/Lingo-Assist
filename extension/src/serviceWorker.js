@@ -1,4 +1,4 @@
-import { API_DEV, API_PROD } from "../config.js";
+import { API_PROD } from "../config.js";
 import { convertBytes } from "./utils/convertBytes.js";
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
@@ -74,7 +74,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
                 return;
             }
 
-            const url = API_DEV
+            const url = API_PROD
             const options = {
                 method: 'POST',
                 headers: {
