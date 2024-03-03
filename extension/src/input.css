@@ -371,3 +371,21 @@ table tbody tr:hover {
   background-color: #e4e4e4;
   cursor: pointer;
 }
+
+/* Apply custom styling to all scrollbars */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

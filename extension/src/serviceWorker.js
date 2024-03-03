@@ -177,24 +177,6 @@ function storeDuolingoData(res) {
 }
 
 // Store data in local storage
-// , write JSDoc later
-// data
-/* {
-    "es_en": {
-        "adiós": [
-            {
-                "infinitive": null,
-                "pos": "Interjection",
-                "translation": ""
-            },
-            {
-                "infinitive": null,
-                "pos": "Noun",
-                "translation": ""
-            }
-        ]
-    }
-} */
 function storeData(data) {
     return new Promise((res, rej) => {
         // Store data under combined ISO

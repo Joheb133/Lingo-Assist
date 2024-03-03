@@ -1,10 +1,13 @@
 import updateRow from './updateRow.js'
 
 // Save user edits to local storage
-export default async function handleDataSave(row, wordDataEl, vocab, combinedISO) {
+export default async function handleDataSave(row, rowWord, vocab, combinedISO) {
     const popup = document.querySelector('.options-popup')
     const saveBtn = popup.querySelector('.save-btn')
     saveBtn.disabled = true;
+
+    const wordDataEl = rowWord[0]
+    const wordMetaData = rowWord[1]
 
     /* Get data in different elements */
 
@@ -22,24 +25,31 @@ export default async function handleDataSave(row, wordDataEl, vocab, combinedISO
 
     // Infinitive
     const infinitiveInputEl = popup.querySelector('.infinitive-wrap input')
-    const infinitive = infinitiveInputEl === '' ? null : infinitiveInputEl.value
+    const infinitive = infinitiveInputEl.value === '' ? null : infinitiveInputEl.value
 
-    // Examples // plans to change to text area
+    // Examples
     const llInputEl = popup.querySelector('#learning-language-ta')
     const englishInputEl = popup.querySelector('#english-ta')
 
     const llExample = llInputEl.value === '' ? null : llInputEl.value;
-    const englishExample = englishInputEl.value === '' ? null : englishInputEl;
+    const englishExample = englishInputEl.value === '' ? null : englishInputEl.value;
+
+    // Note
+    const noteEl = popup.querySelector('.note-wrap textarea')
+    const note = noteEl.value === '' ? null : noteEl.value;
 
     // Create new wordDataEl
     const newWordDataEl = {
         translations,
         pos,
         infinitive,
+        'last_practiced_ms': wordDataEl['last_practiced_ms'],
+        strength: wordDataEl.strength,
         example: {
             native: llExample,
             translation: englishExample
-        }
+        },
+        note
     }
 
     // Check if wordDataEl.duolingo_id exists
@@ -47,8 +57,8 @@ export default async function handleDataSave(row, wordDataEl, vocab, combinedISO
         newWordDataEl.duolingo_id = wordDataEl.duolingo_id;
     }
 
-    const wordDataElIndex = wordDataEl.index;
-    const word = wordDataEl.word;
+    const wordDataElIndex = wordMetaData.wordDataArrIndex;
+    const word = wordMetaData.word;
 
     /* Save wordDataEl into local storage */
     vocab[word][wordDataElIndex] = newWordDataEl
@@ -60,8 +70,10 @@ export default async function handleDataSave(row, wordDataEl, vocab, combinedISO
     wordDataEl.translations = translations;
     wordDataEl.pos = pos;
     wordDataEl.infinitive = infinitive;
-    wordDataEl.example.native = llExample;
-    wordDataEl.example.translation = englishExample;
+    wordDataEl.example = {
+        native: llExample,
+        translation: englishExample
+    }
 
     saveBtn.disabled = false;
 }

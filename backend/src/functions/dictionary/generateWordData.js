@@ -73,17 +73,22 @@ module.exports = function generateWordData(response, word, wordDataArr, isInfini
             translations = sanitizeTranslation(translation)
         }
 
-        // Wiktionary provides examples for most but not all words
+        // Decide whether to use client or wiktionary example
         let example = {
             native: null,
             translation: null
         };
 
-        if (resWordObj.definitions[0].parsedExamples) {
+        if (wordObj.example?.native && wordObj.example?.translation) {
+            // Example exists & native + translation !== ''
+            example = wordObj.example;
+        } else if (resWordObj.definitions[0].parsedExamples) {
+            // Wiktionary provides examples for most but not all words
             example.native = removeHtmlTags(resWordObj.definitions[0].parsedExamples[0].example);
             example.translation = removeHtmlTags(resWordObj.definitions[0].parsedExamples[0].translation);
         }
 
+        // Return the word obj
         const generatedWordObj = {
             duolingo_id: wordObj.duolingo_id,
             infinitive,
@@ -91,7 +96,8 @@ module.exports = function generateWordData(response, word, wordDataArr, isInfini
             translations,
             example,
             strength: wordObj.strength,
-            last_practiced_ms: wordObj.last_practiced_ms
+            last_practiced_ms: wordObj.last_practiced_ms,
+            note: wordObj.note
         }
 
         resDataArr.push(generatedWordObj)

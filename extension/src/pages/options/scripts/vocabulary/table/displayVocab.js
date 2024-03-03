@@ -1,6 +1,6 @@
 import convertSnakeCase from '../../../../../utils/convertSnakeCase.js'
 import clearVocab from './clearVocab.js';
-import editRowClicked from './popup/handleRowClicked.js'
+import handleRowClicked from './popup/handleRowClicked.js'
 
 // Fill in the vocabulary table on main page with word data
 export default function displayVocab(vocab, combinedISO) {
@@ -47,11 +47,6 @@ export default function displayVocab(vocab, combinedISO) {
             const infinitive = wordDataEl.infinitive
             infinitiveTd.innerText = infinitive !== null ? convertSnakeCase(infinitive, true) : '';
 
-            // Example
-            // const exampleTd = document.createElement('td');
-            // const exampleNative = wordDataEl.example?.native ?? null;
-            // exampleTd.innerText = exampleNative !== null ? exampleNative : '';
-
             // Strength
             const strengthTd = document.createElement('td')
             strengthTd.innerText = Number(wordDataEl.strength.toFixed(2))
@@ -74,15 +69,17 @@ export default function displayVocab(vocab, combinedISO) {
             row.append(wordTd, translationTd, posTd, infinitiveTd, strengthTd, lastPracticedTd)
             tbody.append(row)
 
-            wordDataEl.index = i;
-            wordDataEl.word = word;
+            const wordMetaData = {
+                wordDataArrIndex: i,
+                word
+            }
 
             // Add row data to arr
-            rowWordDataArr.push(wordDataEl)
+            rowWordDataArr.push([wordDataEl, wordMetaData])
         }
     }
     table.append(tbody)
 
     // Responsable for enabling popup
-    tbody.addEventListener('click', (event) => { editRowClicked(event, rowWordDataArr, vocab, combinedISO) })
+    tbody.addEventListener('click', (event) => { handleRowClicked(event, rowWordDataArr, vocab, combinedISO) })
 }
