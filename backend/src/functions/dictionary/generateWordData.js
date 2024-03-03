@@ -96,7 +96,8 @@ module.exports = function generateWordData(response, word, wordDataArr, isInfini
             translations,
             example,
             strength: wordObj.strength,
-            last_practiced_ms: wordObj.last_practiced_ms
+            last_practiced_ms: wordObj.last_practiced_ms,
+            note: wordObj.note
         }
 
         resDataArr.push(generatedWordObj)

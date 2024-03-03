@@ -27,12 +27,16 @@ export default async function handleDataSave(row, rowWord, vocab, combinedISO) {
     const infinitiveInputEl = popup.querySelector('.infinitive-wrap input')
     const infinitive = infinitiveInputEl.value === '' ? null : infinitiveInputEl.value
 
-    // Examples // plans to change to text area
+    // Examples
     const llInputEl = popup.querySelector('#learning-language-ta')
     const englishInputEl = popup.querySelector('#english-ta')
 
     const llExample = llInputEl.value === '' ? null : llInputEl.value;
     const englishExample = englishInputEl.value === '' ? null : englishInputEl.value;
+
+    // Note
+    const noteEl = popup.querySelector('.note-wrap textarea')
+    const note = noteEl.value === '' ? null : noteEl.value;
 
     // Create new wordDataEl
     const newWordDataEl = {
@@ -44,7 +48,8 @@ export default async function handleDataSave(row, rowWord, vocab, combinedISO) {
         example: {
             native: llExample,
             translation: englishExample
-        }
+        },
+        note
     }
 
     // Check if wordDataEl.duolingo_id exists

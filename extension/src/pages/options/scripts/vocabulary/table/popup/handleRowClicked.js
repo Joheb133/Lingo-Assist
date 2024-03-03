@@ -63,6 +63,10 @@ export default function editRowClicked(event, rowWordDataArr, vocab, combinedISO
         learningLanguageTA.value = wordDataEl.example?.native ?? ''
         englishTA.value = wordDataEl.example?.translation ?? ''
 
+        // Note
+        const noteTa = popup.querySelector('.note-wrap textarea')
+        noteTa.value = wordDataEl.note ?? '';
+
         // Save changes made in popup
         const saveBtn = document.querySelector('.options-popup button')
 
