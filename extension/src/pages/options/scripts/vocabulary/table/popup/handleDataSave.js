@@ -1,10 +1,13 @@
 import updateRow from './updateRow.js'
 
 // Save user edits to local storage
-export default async function handleDataSave(row, wordDataEl, vocab, combinedISO) {
+export default async function handleDataSave(row, rowWord, vocab, combinedISO) {
     const popup = document.querySelector('.options-popup')
     const saveBtn = popup.querySelector('.save-btn')
     saveBtn.disabled = true;
+
+    const wordDataEl = rowWord[0]
+    const wordMetaData = rowWord[1]
 
     /* Get data in different elements */
 
@@ -49,8 +52,8 @@ export default async function handleDataSave(row, wordDataEl, vocab, combinedISO
         newWordDataEl.duolingo_id = wordDataEl.duolingo_id;
     }
 
-    const wordDataElIndex = wordDataEl.index;
-    const word = wordDataEl.word;
+    const wordDataElIndex = wordMetaData.wordDataArrIndex;
+    const word = wordMetaData.word;
 
     /* Save wordDataEl into local storage */
     vocab[word][wordDataElIndex] = newWordDataEl

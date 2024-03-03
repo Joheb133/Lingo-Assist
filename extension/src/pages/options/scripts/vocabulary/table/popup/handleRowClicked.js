@@ -8,8 +8,8 @@ export default function editRowClicked(event, rowWordDataArr, vocab, combinedISO
     const clickedRow = event.target.closest('tr')
 
     if (clickedRow) {
-        const wordDataEl = rowWordDataArr[clickedRow.rowIndex - 1] // Data associated with this row
-        const word = wordDataEl.word
+        const rowWord = rowWordDataArr[clickedRow.rowIndex - 1]
+        const wordDataEl = rowWord[0] // Data associated with this row
 
         // Show popup
         const popupWindow = document.querySelector('.popup-window');
@@ -22,7 +22,7 @@ export default function editRowClicked(event, rowWordDataArr, vocab, combinedISO
         const popup = document.querySelector('.options-popup')
 
         const heading = popup.querySelector('header #title') // Heading
-        heading.innerText = convertSnakeCase(word, true);
+        heading.innerText = convertSnakeCase(rowWord[1].word, true);
 
         const lastPracticedEl = popup.querySelector('.data-wrap #last-practiced-el')
         const lastPracticedMs = wordDataEl['last_practiced_ms']
@@ -69,6 +69,6 @@ export default function editRowClicked(event, rowWordDataArr, vocab, combinedISO
         const saveBtnClone = saveBtn.cloneNode(true); // Ensure old listener is removed
         popup.replaceChild(saveBtnClone, saveBtn)
 
-        saveBtnClone.addEventListener('click', () => handleDataSave(clickedRow, wordDataEl, vocab, combinedISO))
+        saveBtnClone.addEventListener('click', () => handleDataSave(clickedRow, rowWord, vocab, combinedISO))
     }
 }
