@@ -29,13 +29,15 @@ export default async function handleDataSave(row, wordDataEl, vocab, combinedISO
     const englishInputEl = popup.querySelector('#english-ta')
 
     const llExample = llInputEl.value === '' ? null : llInputEl.value;
-    const englishExample = englishInputEl.value === '' ? null : englishInputEl;
+    const englishExample = englishInputEl.value === '' ? null : englishInputEl.value;
 
     // Create new wordDataEl
     const newWordDataEl = {
         translations,
         pos,
         infinitive,
+        'last_practiced_ms': wordDataEl['last_practiced_ms'],
+        strength: wordDataEl.strength,
         example: {
             native: llExample,
             translation: englishExample
@@ -60,8 +62,10 @@ export default async function handleDataSave(row, wordDataEl, vocab, combinedISO
     wordDataEl.translations = translations;
     wordDataEl.pos = pos;
     wordDataEl.infinitive = infinitive;
-    wordDataEl.example.native = llExample;
-    wordDataEl.example.translation = englishExample;
+    wordDataEl.example = {
+        native: llExample,
+        translation: englishExample
+    }
 
     saveBtn.disabled = false;
 }

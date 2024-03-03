@@ -1,3 +1,4 @@
+import { API_DEV, API_PROD } from "../config.js";
 import { convertBytes } from "./utils/convertBytes.js";
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
@@ -73,7 +74,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
                 return;
             }
 
-            const url = 'http://localhost:7071/api/dictionary'
+            const url = API_DEV
             const options = {
                 method: 'POST',
                 headers: {
@@ -176,24 +177,6 @@ function storeDuolingoData(res) {
 }
 
 // Store data in local storage
-// , write JSDoc later
-// data
-/* {
-    "es_en": {
-        "adiós": [
-            {
-                "infinitive": null,
-                "pos": "Interjection",
-                "translation": ""
-            },
-            {
-                "infinitive": null,
-                "pos": "Noun",
-                "translation": ""
-            }
-        ]
-    }
-} */
 function storeData(data) {
     return new Promise((res, rej) => {
         // Store data under combined ISO
