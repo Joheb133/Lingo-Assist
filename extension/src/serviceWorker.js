@@ -74,7 +74,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendRes) {
                 return;
             }
 
-            const url = API_PROD
+            const url = 'https://lingo-assist-translate.azurewebsites.net/api/dictionary'
             const options = {
                 method: 'POST',
                 headers: {
